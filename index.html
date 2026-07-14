@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GMube Edu</title>
+  <meta name="description" content="منصة GMube Edu التعليمية الجزائرية - دروس، كتب، اختبارات">
+  <meta name="theme-color" content="#0a0a0a">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Feather Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+  <!-- Appwrite SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@16/dist/iife/sdk.min.js"></script>
+
+  <!-- Plyr (video player) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.css">
+  <script src="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app-shell">
+  <div id="app-view">
+    <!-- Pages render here -->
+    <div style="display:flex;align-items:center;justify-content:center;height:100vh">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav id="bottom-nav">
+    <button class="nav-item active" data-page="home">
+      <i data-feather="home"></i>
+      <span>الرئيسية</span>
+    </button>
+    <button class="nav-item" data-page="teachers">
+      <i data-feather="users"></i>
+      <span>الأساتذة</span>
+    </button>
+    <button class="nav-item" data-page="books">
+      <i data-feather="book"></i>
+      <span>الكتب</span>
+    </button>
+    <button class="nav-item" data-page="tests">
+      <i data-feather="check-square"></i>
+      <span>اختبارات</span>
+    </button>
+    <button class="nav-item" data-page="profile">
+      <i data-feather="user"></i>
+      <span>حسابي</span>
+    </button>
+  </nav>
+</div>
+
+<!-- JS: Config first -->
+<script src="js/config.js"></script>
+
+<!-- JS: API layer -->
+<script src="js/api.js"></script>
+
+<!-- JS: Auth -->
+<script src="js/auth.js"></script>
+
+<!-- JS: Utilities -->
+<script src="js/utils.js"></script>
+
+<!-- JS: Router -->
+<script src="js/router.js"></script>
+
+<!-- JS: Pages -->
+<script src="js/pages/home.js"></script>
+<script src="js/pages/teachers.js"></script>
+<script src="js/pages/books.js"></script>
+<script src="js/pages/tests.js"></script>
+<script src="js/pages/profile.js"></script>
+<script src="js/pages/login.js"></script>
+<script src="js/pages/watch.js"></script>
+<script src="js/pages/subject.js"></script>
+<script src="js/pages/channel.js"></script>
+<script src="js/pages/playlist.js"></script>
+<script src="js/pages/notifications.js"></script>
+<script src="js/pages/take-test.js"></script>
+
+<!-- JS: App bootstrap -->
+<script src="js/app.js"></script>
+
+<!-- Init Feather Icons -->
+<script>feather.replace();</script>
+
+</body>
+</html>
