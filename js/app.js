@@ -1,7 +1,19 @@
 // ── App Bootstrap ───────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   // Init auth from localStorage
   Auth.init();
+
+  // 1. تحميل المواد من قاعدة البيانات أولاً
+  try {
+    const subjects = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SUBJECTS, []);
+    // استخراج الأسماء وإضافتها إلى القائمة مع "الكل"
+    const subjectNames = subjects.documents.map(s => s.name);
+    CATEGORIES = ["الكل", ...subjectNames];
+  } catch (e) {
+    // في حال فشل التحميل، نستخدم قائمة احتياطية
+    CATEGORIES = ["الكل", "رياضيات", "علوم", "كيمياء", "فيزياء", "عربي", "إنجليزي", "فرنسي", "تاريخ", "جغرافيا", "معلوماتية"];
+    console.warn("تعذر تحميل المواد من قاعدة البيانات، استخدام القائمة الاحتياطية.");
+  }
 
   // Register routes
   Router.add("/", renderHome);
