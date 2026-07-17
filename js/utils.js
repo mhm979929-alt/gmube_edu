@@ -73,13 +73,13 @@ function videoCardHtml(video) {
   </div>`;
 }
 
-// ── هنا التعديل المهم ──
 function categoryBarHtml(selected, onSelect, navigateToSubject = true) {
   return `<div class="cat-bar">
     ${CATEGORIES.map(c => `<button class="cat-btn${c === selected ? " active" : ""}" data-cat="${escHtml(c)}">${escHtml(c)}</button>`).join("")}
   </div>`;
 }
 
+// ✅ تم تحديث هذه الدالة لتستخدم الصفوف السورية
 function gradeBarHtml(selected) {
   return `<div class="grade-bar">
     <button class="grade-btn${!selected ? " active" : ""}" data-grade="">الكل</button>
