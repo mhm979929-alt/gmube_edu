@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>GMube Edu</title>
-  <meta name="description" content="منصة GMube Edu التعليمية الجزائرية - دروس، كتب، اختبارات">
+  <meta name="description" content="منصة GMube Edu التعليمية السورية - دروس، كتب، اختبارات">
   <meta name="theme-color" content="#0a0a0a">
 
   <!-- Favicon -->
@@ -63,28 +63,34 @@
   </nav>
 </div>
 
-<!-- JS: Config first -->
+<!-- ============================================ -->
+<!--  سكربتات الجافاسكريبت (الترتيب مهم جداً هنا)  -->
+<!-- ============================================ -->
+
+<!-- 1. Config (الإعدادات الأساسية) -->
 <script src="js/config.js"></script>
 
-<!-- JS: API layer -->
+<!-- 2. API Layer (التواصل مع قاعدة البيانات) -->
 <script src="js/api.js"></script>
 
-<!-- JS: Auth -->
+<!-- 3. Auth (المصادقة وتسجيل الدخول) -->
 <script src="js/auth.js"></script>
 
-<!-- JS: Utilities -->
+<!-- 4. Utils (الدوال المساعدة) -->
 <script src="js/utils.js"></script>
 
-<!-- JS: Router -->
+<!-- 5. Router (التنقل بين الصفحات) -->
 <script src="js/router.js"></script>
 
-<!-- JS: Pages -->
+<!-- ============================================ -->
+<!-- 6. Pages (جميع صفحات التطبيق)                -->
+<!-- ============================================ -->
 <script src="js/pages/home.js"></script>
 <script src="js/pages/teachers.js"></script>
 <script src="js/pages/books.js"></script>
 <script src="js/pages/tests.js"></script>
 <script src="js/pages/profile.js"></script>
-<script src="js/pages/login.js"></script>
+<script src="js/pages/login.js"></script>   <!-- ✅ ملف تسجيل الدخول -->
 <script src="js/pages/watch.js"></script>
 <script src="js/pages/subject.js"></script>
 <script src="js/pages/channel.js"></script>
@@ -92,7 +98,9 @@
 <script src="js/pages/notifications.js"></script>
 <script src="js/pages/take-test.js"></script>
 
-<!-- JS: App bootstrap -->
+<!-- ============================================ -->
+<!-- 7. App Bootstrap (تشغيل التطبيق)             -->
+<!-- ============================================ -->
 <script src="js/app.js"></script>
 
 <!-- Init Feather Icons -->
