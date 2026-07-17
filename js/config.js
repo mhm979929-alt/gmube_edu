@@ -17,10 +17,10 @@ const COLLECTIONS = {
   SUMMARIES: "summaries",
   AUDIOS: "audios",
   PHOTOS: "photos",
-  SUBJECTS: "subjects" // تمت إضافة هذا
+  SUBJECTS: "subjects" // تم إضافة هذا ليدعم المواد الجديدة
 };
 
-// تم استبدال هذه القائمة بمتغير ديناميكي سيتم تعبئته من قاعدة البيانات
+// تم تحويل هذه القائمة إلى متغير ديناميكي يتم تعبئته من قاعدة البيانات
 let CATEGORIES = ["الكل"]; 
 
 const GRADES = [
