@@ -2,7 +2,7 @@
 function renderLogin() {
   setPageTitle("تسجيل الدخول");
 
-  renderPage(`
+  const htmlContent = `
     <div class="page">
       <div class="login-wrap">
         <button class="back-btn" onclick="goBack()" style="align-self:flex-start;margin-bottom:16px"><i data-feather="arrow-right"></i></button>
@@ -41,26 +41,28 @@ function renderLogin() {
         </button>
       </div>
     </div>
-  `);
+  `;
+  
+  renderPage(htmlContent);
   featherRefresh();
 
   let userType = "student";
 
   // Tabs
   document.querySelectorAll("#login-tabs .ltab").forEach(btn => {
-    btn.addEventListener("click", () => {
-      userType = btn.dataset.type;
+    btn.addEventListener("click", function() {
+      userType = this.dataset.type;
       document.querySelectorAll("#login-tabs .ltab").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+      this.classList.add("active");
     });
   });
 
   // Show/hide password
-  document.getElementById("eye-btn").addEventListener("click", () => {
+  document.getElementById("eye-btn").addEventListener("click", function() {
     const inp = document.getElementById("login-pass");
     const showing = inp.type === "text";
     inp.type = showing ? "password" : "text";
-    document.getElementById("eye-btn").innerHTML = showing ? `<i data-feather="eye"></i>` : `<i data-feather="eye-off"></i>`;
+    this.innerHTML = showing ? `<i data-feather="eye"></i>` : `<i data-feather="eye-off"></i>`;
     featherRefresh();
   });
 
@@ -68,8 +70,12 @@ function renderLogin() {
   ["name-wrap", "pass-wrap"].forEach(wrapId => {
     const wrap = document.getElementById(wrapId);
     const input = wrap.querySelector("input");
-    input.addEventListener("focus", () => wrap.classList.add("focused"));
-    input.addEventListener("blur", () => wrap.classList.remove("focused"));
+    input.addEventListener("focus", function() {
+      wrap.classList.add("focused");
+    });
+    input.addEventListener("blur", function() {
+      wrap.classList.remove("focused");
+    });
   });
 
   // Submit
@@ -105,7 +111,9 @@ function renderLogin() {
   }
 
   document.getElementById("login-submit").addEventListener("click", handleLogin);
-  document.getElementById("login-pass").addEventListener("keydown", e => { 
-    if (e.key === "Enter") handleLogin(); 
+  document.getElementById("login-pass").addEventListener("keydown", function(e) { 
+    if (e.key === "Enter") {
+      handleLogin();
+    }
   });
 }
