@@ -9,7 +9,7 @@ function renderLogin() {
         <div class="login-logo">
           <div class="logo-icon big"><i data-feather="book-open"></i></div>
           <h1 class="logo-text" style="font-size:24px;margin-top:12px">GMube Edu</h1>
-          <p style="color:#777;font-size:14px;margin-top:4px">منصة التعليم الجزائري</p>
+          <p style="color:#777;font-size:14px;margin-top:4px">منصة التعليم السوري</p>
         </div>
 
         <div class="login-tabs" id="login-tabs">
@@ -46,7 +46,6 @@ function renderLogin() {
 
   let userType = "student";
 
-  // Tabs
   el("login-tabs").querySelectorAll(".ltab").forEach(btn => {
     btn.addEventListener("click", () => {
       userType = btn.dataset.type;
@@ -55,7 +54,6 @@ function renderLogin() {
     });
   });
 
-  // Show/hide password
   el("eye-btn").addEventListener("click", () => {
     const inp = el("login-pass");
     const showing = inp.type === "text";
@@ -64,7 +62,6 @@ function renderLogin() {
     featherRefresh();
   });
 
-  // Focus style
   ["name-wrap", "pass-wrap"].forEach(wrapId => {
     const wrap = el(wrapId);
     const input = wrap.querySelector("input");
@@ -72,7 +69,6 @@ function renderLogin() {
     input.addEventListener("blur", () => wrap.classList.remove("focused"));
   });
 
-  // Submit
   async function handleLogin() {
     const name = (el("login-name").value || "").trim();
     const pass = (el("login-pass").value || "").trim();
@@ -106,4 +102,4 @@ function renderLogin() {
 
   el("login-submit").addEventListener("click", handleLogin);
   el("login-pass").addEventListener("keydown", e => { if (e.key === "Enter") handleLogin(); });
-}
+});
