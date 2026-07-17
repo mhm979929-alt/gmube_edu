@@ -1,5 +1,5 @@
 // ── App Bootstrap ───────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async function() {
   // Init auth from localStorage
   Auth.init();
 
@@ -28,9 +28,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   Router.add("/take-test/([^/]+)", renderTakeTest);
 
   // Bottom nav click handlers
-  document.querySelectorAll(".nav-item").forEach(item => {
-    item.addEventListener("click", () => {
-      const page = item.dataset.page;
+  document.querySelectorAll(".nav-item").forEach(function(item) {
+    item.addEventListener("click", function() {
+      const page = this.dataset.page;
       const routes = {
         home: "/",
         teachers: "/teachers",
