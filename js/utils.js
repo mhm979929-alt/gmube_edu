@@ -73,6 +73,7 @@ function videoCardHtml(video) {
   </div>`;
 }
 
+// ── هنا التعديل المهم ──
 function categoryBarHtml(selected, onSelect, navigateToSubject = true) {
   return `<div class="cat-bar">
     ${CATEGORIES.map(c => `<button class="cat-btn${c === selected ? " active" : ""}" data-cat="${escHtml(c)}">${escHtml(c)}</button>`).join("")}
