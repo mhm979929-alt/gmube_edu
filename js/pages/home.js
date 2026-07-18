@@ -49,7 +49,6 @@ async function renderHome() {
   let currentCategory = "الكل";
   let searchTerm = "";
 
-  // Category bar
   function renderCatBar() {
     const wrap = el("cat-bar-wrap");
     if (!wrap) return;
@@ -70,7 +69,6 @@ async function renderHome() {
     });
   }
 
-  // Videos
   async function loadVideos() {
     const grid = el("videos-grid");
     if (!grid) return;
@@ -103,7 +101,6 @@ async function renderHome() {
     });
   }
 
-  // Teachers row
   async function loadTeachers() {
     const row = el("teachers-row");
     if (!row) return;
@@ -126,7 +123,6 @@ async function renderHome() {
     }
   }
 
-  // Ad banner
   function renderAd() {
     const section = document.createElement("div");
     section.className = "ad-section";
@@ -138,7 +134,6 @@ async function renderHome() {
     }
   }
 
-  // Search
   function setupSearch() {
     const input = el("search-input");
     if (!input) return;
