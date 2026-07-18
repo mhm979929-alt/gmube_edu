@@ -17,7 +17,6 @@ const Router = {
         return;
       }
     }
-    // fallback to home
     navigateTo("/");
   },
 
