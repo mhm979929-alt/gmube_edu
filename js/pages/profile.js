@@ -71,7 +71,6 @@ async function renderProfile() {
   `);
   featherRefresh();
 
-  // Load avatar for teacher
   if (session.type === "teacher") {
     getTeacherByUserId(session.user_id).then(t => {
       if (t && t.avatar) {
@@ -81,7 +80,6 @@ async function renderProfile() {
     }).catch(() => {});
   }
 
-  // Load stats
   if (session.type === "teacher") {
     getVideosByTeacher(session.user_id).then(videos => {
       const sv = el("stat-videos"), svw = el("stat-views");
@@ -94,7 +92,6 @@ async function renderProfile() {
     if (st) st.textContent = results.length;
   }).catch(() => {});
 
-  // Logout
   el("logout-btn").addEventListener("click", () => {
     confirm("هل تريد الخروج من حسابك؟", () => {
       Auth.logout();
