@@ -67,14 +67,15 @@ function confirm(msg, onOk) {
 function featherRefresh() { if (window.feather) feather.replace(); }
 function setPageTitle(title) { document.title = title ? `${title} | GMube Edu` : "GMube Edu"; }
 
-// ── دالة عرض نوع القائمة (تم تعديلها للعربية) ──
+// ── دالة عرض نوع القائمة (تم تعديلها للعربية ودعم "صور") ──
 function getPlaylistTypeLabel(type) {
   const map = {
     video: 'فيديو',
     book: 'كتاب',
     audio: 'صوتيات',
     summary: 'ملخص',
-    test: 'اختبار'
+    test: 'اختبار',
+    photo: 'صور' // ✅ تمت إضافة هذا السطر
   };
   return map[type] || type;
 }
