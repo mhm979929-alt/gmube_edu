@@ -83,7 +83,6 @@ async function renderTakeTest(testId) {
         const oi = parseInt(btn.dataset.oi);
         answers[qi] = oi;
 
-        // Update radio UI
         body.querySelectorAll(`.option-btn[data-qi="${qi}"]`).forEach(b => {
           b.classList.remove("selected");
           body.querySelector(`#radio-${qi}-${parseInt(b.dataset.oi)}`).classList.remove("selected");
@@ -91,7 +90,6 @@ async function renderTakeTest(testId) {
         btn.classList.add("selected");
         body.querySelector(`#radio-${qi}-${oi}`).classList.add("selected");
 
-        // Update progress
         const answered = Object.keys(answers).length;
         const pt = el("progress-text");
         if (pt) pt.textContent = `أُجيب عن: ${answered} / ${questions.length}`;
