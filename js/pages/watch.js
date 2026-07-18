@@ -29,13 +29,11 @@ async function renderWatch(videoId) {
   setPageTitle(video.title);
   if (el("watch-title")) el("watch-title").textContent = video.title;
 
-  // Check liked state
   try {
     const likedList = JSON.parse(localStorage.getItem("liked_videos") || "[]");
     liked = likedList.includes(video.$id);
   } catch {}
 
-  // Update views
   updateVideoViews(video.$id, (video.views || 0) + 1).catch(() => {});
 
   function buildPlayerHtml(url) {
@@ -69,10 +67,7 @@ async function renderWatch(videoId) {
     if (!playerEl || typeof Plyr === "undefined") return;
     try {
       const p = new Plyr(playerEl, {
-        controls: [
-          "play-large","play","progress","current-time","duration",
-          "mute","volume","captions","settings","pip","airplay","fullscreen"
-        ],
+        controls: ["play-large","play","progress","current-time","duration","mute","volume","captions","settings","pip","airplay","fullscreen"],
         settings: ["quality","speed","loop"],
         youtube: { noCookie: false, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1 },
         i18n: {
@@ -82,7 +77,6 @@ async function renderWatch(videoId) {
         },
         tooltips: { controls: true, seek: true },
       });
-      // Plyr default color override
       const root = document.getElementById("plyr-container");
       if (root) {
         root.style.setProperty("--plyr-color-main", "#4CAF50");
@@ -176,7 +170,6 @@ async function renderWatch(videoId) {
     featherRefresh();
     initPlyr();
 
-    // Suggestions
     const sugGrid = el("suggestions-grid");
     if (sugGrid) {
       sugGrid.querySelectorAll(".video-card").forEach(card => {
@@ -184,7 +177,6 @@ async function renderWatch(videoId) {
       });
     }
 
-    // Like button
     const likeBtn = el("like-btn");
     if (likeBtn) {
       likeBtn.addEventListener("click", async () => {
@@ -204,10 +196,8 @@ async function renderWatch(videoId) {
       });
     }
 
-    // Star rating
     setupInteractiveStars();
 
-    // Comment submit
     if (session) {
       let replyTo = null, replyName = null;
 
@@ -216,7 +206,6 @@ async function renderWatch(videoId) {
         el("reply-banner").style.display = "none";
       };
 
-      // Reply buttons (delegated)
       el("comments-list").addEventListener("click", e => {
         const btn = e.target.closest(".reply-to-btn");
         if (btn) {
@@ -239,7 +228,8 @@ async function renderWatch(videoId) {
           el("comment-input").value = "";
           userRating = 0;
           clearReply();
-          // Refresh comments
+          // مسح الكاش وإعادة التحميل
+          sessionStorage.removeItem(`comments_${videoId}`);
           const newComments = await getComments(videoId).catch(() => []);
           const topC = newComments.filter(c => !c.parent_id);
           const repC = newComments.filter(c => c.parent_id);
