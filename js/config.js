@@ -17,7 +17,7 @@ const COLLECTIONS = {
   SUMMARIES: "summaries",
   AUDIOS: "audios",
   PHOTOS: "photos",
-  SUBJECTS: "subjects" // تم التأكد من وجودها
+  SUBJECTS: "subjects"
 };
 
 let CATEGORIES = ["الكل"]; 
