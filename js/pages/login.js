@@ -2,7 +2,7 @@
 function renderLogin() {
   setPageTitle("تسجيل الدخول");
 
-  const htmlContent = `
+  renderPage(`
     <div class="page">
       <div class="login-wrap">
         <button class="back-btn" onclick="goBack()" style="align-self:flex-start;margin-bottom:16px"><i data-feather="arrow-right"></i></button>
@@ -41,49 +41,39 @@ function renderLogin() {
         </button>
       </div>
     </div>
-  `;
-  
-  renderPage(htmlContent);
+  `);
   featherRefresh();
 
   let userType = "student";
 
-  // Tabs
-  document.querySelectorAll("#login-tabs .ltab").forEach(btn => {
-    btn.addEventListener("click", function() {
-      userType = this.dataset.type;
-      document.querySelectorAll("#login-tabs .ltab").forEach(b => b.classList.remove("active"));
-      this.classList.add("active");
+  el("login-tabs").querySelectorAll(".ltab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      userType = btn.dataset.type;
+      el("login-tabs").querySelectorAll(".ltab").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
     });
   });
 
-  // Show/hide password
-  document.getElementById("eye-btn").addEventListener("click", function() {
-    const inp = document.getElementById("login-pass");
+  el("eye-btn").addEventListener("click", () => {
+    const inp = el("login-pass");
     const showing = inp.type === "text";
     inp.type = showing ? "password" : "text";
-    this.innerHTML = showing ? `<i data-feather="eye"></i>` : `<i data-feather="eye-off"></i>`;
+    el("eye-btn").innerHTML = showing ? `<i data-feather="eye"></i>` : `<i data-feather="eye-off"></i>`;
     featherRefresh();
   });
 
-  // Focus style
   ["name-wrap", "pass-wrap"].forEach(wrapId => {
-    const wrap = document.getElementById(wrapId);
+    const wrap = el(wrapId);
     const input = wrap.querySelector("input");
-    input.addEventListener("focus", function() {
-      wrap.classList.add("focused");
-    });
-    input.addEventListener("blur", function() {
-      wrap.classList.remove("focused");
-    });
+    input.addEventListener("focus", () => wrap.classList.add("focused"));
+    input.addEventListener("blur", () => wrap.classList.remove("focused"));
   });
 
-  // Submit
   async function handleLogin() {
-    const name = (document.getElementById("login-name").value || "").trim();
-    const pass = (document.getElementById("login-pass").value || "").trim();
-    const errBox = document.getElementById("login-error");
-    const submitBtn = document.getElementById("login-submit");
+    const name = (el("login-name").value || "").trim();
+    const pass = (el("login-pass").value || "").trim();
+    const errBox = el("login-error");
+    const submitBtn = el("login-submit");
 
     if (!name || !pass) {
       errBox.style.display = "flex";
@@ -110,10 +100,6 @@ function renderLogin() {
     }
   }
 
-  document.getElementById("login-submit").addEventListener("click", handleLogin);
-  document.getElementById("login-pass").addEventListener("keydown", function(e) { 
-    if (e.key === "Enter") {
-      handleLogin();
-    }
-  });
+  el("login-submit").addEventListener("click", handleLogin);
+  el("login-pass").addEventListener("keydown", e => { if (e.key === "Enter") handleLogin(); });
 }
