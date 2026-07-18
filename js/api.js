@@ -90,13 +90,6 @@ async function getVideosByTeacher(userId) {
   return result.documents;
 }
 
-async function getVideosByPlaylist(playlistId) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VIDEOS, [
-    Query.equal("playlist_id", playlistId), Query.orderDesc("created_at"), Query.limit(100)
-  ]);
-  return result.documents;
-}
-
 async function updateVideoViews(id, views) {
   try { await databases.updateDocument(DATABASE_ID, COLLECTIONS.VIDEOS, id, { views }); } catch {}
 }
@@ -139,7 +132,7 @@ async function addComment(videoId, userId, userName, text, rating, parentId) {
   });
 }
 
-// ── Playlists ───────────────────────────────────────────────────
+// ── Playlists (قديم) ────────────────────────────────────────────
 async function getPlaylists(teacherId) {
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PLAYLISTS, [
     Query.equal("teacher_id", teacherId), Query.orderDesc("created_at"), Query.limit(100)
@@ -254,6 +247,70 @@ async function getNotifications(userId) {
 
 async function markNotificationAsRead(id) {
   await databases.updateDocument(DATABASE_ID, COLLECTIONS.NOTIFICATIONS, id, { is_read: true });
+}
+
+// ── Playlists (جديد: دوال عرض القوائم ومحتواها) ──
+async function getPlaylistsBySubject(subject) {
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PLAYLISTS, [
+    Query.equal("subject", subject),
+    Query.orderDesc("$createdAt"),
+    Query.limit(50)
+  ]);
+  return result.documents;
+}
+
+async function getVideosByPlaylist(playlistId) {
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VIDEOS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  return result.documents;
+}
+
+async function getBooksByPlaylist(playlistId) {
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.BOOKS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  return result.documents;
+}
+
+async function getTestsByPlaylist(playlistId) {
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TESTS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  return result.documents;
+}
+
+async function getSummariesByPlaylist(playlistId) {
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SUMMARIES, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  return result.documents;
+}
+
+async function getAudiosByPlaylist(playlistId) {
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.AUDIOS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  return result.documents;
+}
+
+async function getPhotosByPlaylist(playlistId) {
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PHOTOS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  return result.documents;
 }
 
 // ── Format helpers ──────────────────────────────────────────────
