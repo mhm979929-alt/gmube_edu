@@ -30,6 +30,8 @@ async function renderPlaylist(playlistId) {
       items = await getSummariesByPlaylist(playlistId);
     } else if (playlist.type === 'test') {
       items = await getTestsByPlaylist(playlistId);
+    } else if (playlist.type === 'photo') {
+      items = await getPhotosByPlaylist(playlistId);
     }
 
     const body = el("playlist-body");
@@ -80,14 +82,114 @@ async function renderPlaylist(playlistId) {
           navigateTo(`/take-test/${item.dataset.id}`);
         });
       });
-    } else {
-      // عرض افتراضي للملخصات، الصوتيات، الصور
-      body.innerHTML = `<p style="text-align:center;color:#777;padding:20px">هذا النوع من المحتوى قيد التطوير</p>`;
+    } else if (playlist.type === 'summary') {
+      body.innerHTML = items.map(s => `
+        <div class="generic-card" style="margin:0 14px 8px">
+          <div class="generic-icon orange"><i data-feather="file-text"></i></div>
+          <div class="generic-info">
+            <span class="generic-title">${escHtml(s.title)}</span>
+            <span class="generic-meta">${escHtml(s.teacher_name || "")} · ${formatDate(s.created_at)}</span>
+          </div>
+          <i data-feather="chevron-left" class="chevron"></i>
+        </div>
+      `).join("");
       featherRefresh();
+      body.querySelectorAll(".generic-card").forEach((card, i) => {
+        card.addEventListener("click", () => {
+          const s = items[i];
+          showSummaryModal(s);
+        });
+      });
+    } else if (playlist.type === 'audio') {
+      body.innerHTML = items.map(a => `
+        <div class="generic-card audio-card" data-url="${escHtml(a.url)}" style="margin:0 14px 8px">
+          <div class="generic-icon purple"><i data-feather="headphones"></i></div>
+          <div class="generic-info">
+            <span class="generic-title">${escHtml(a.title)}</span>
+            <span class="generic-meta">${escHtml(a.teacher_name || "")} · ${formatNumber(a.plays || 0)} تشغيل</span>
+          </div>
+          <i data-feather="play" class="chevron" style="color:#9C27B0"></i>
+        </div>
+      `).join("");
+      featherRefresh();
+      body.querySelectorAll(".audio-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const url = card.dataset.url;
+          showAudioModal(url, card.querySelector(".generic-title").textContent);
+        });
+      });
+    } else if (playlist.type === 'photo') {
+      body.innerHTML = `<div class="photos-grid">${items.map(p => `
+        <div class="photo-card" data-url="${escHtml(p.url)}" style="margin:0 14px 8px">
+          <div class="photo-preview">
+            <img src="${escHtml(p.url)}" alt="${escHtml(p.title)}" loading="lazy"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-fallback" style="display:none"><i data-feather="image"></i></div>
+          </div>
+          <p class="photo-title">${escHtml(p.title)}</p>
+        </div>
+      `).join("")}</div>`;
+      featherRefresh();
+      body.querySelectorAll(".photo-card").forEach(card => {
+        card.addEventListener("click", () => showPhotoModal(card.dataset.url));
+      });
     }
 
   } catch (err) {
     el("playlist-body").innerHTML = errorBox("فشل تحميل القائمة", () => renderPlaylist(playlistId));
     featherRefresh();
   }
+}
+
+// ── دوال النوافذ المنبثقة للملخصات والصور والصوتيات ──
+
+function showSummaryModal(summary) {
+  const modal = document.createElement("div");
+  modal.className = "modal-overlay";
+  modal.innerHTML = `<div class="modal-box summary-modal">
+    <div class="modal-header">
+      <span class="modal-title">${escHtml(summary.title)}</span>
+      <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i data-feather="x"></i></button>
+    </div>
+    <div class="modal-body">
+      <p class="summary-meta">${escHtml(summary.teacher_name || "")} · ${formatDate(summary.created_at)}</p>
+      <div class="summary-content">${escHtml(summary.content)}</div>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  featherRefresh();
+  modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+}
+
+function showAudioModal(url, title) {
+  const existing = qs(".audio-modal-overlay");
+  if (existing) existing.remove();
+  const modal = document.createElement("div");
+  modal.className = "modal-overlay audio-modal-overlay";
+  modal.innerHTML = `<div class="modal-box" style="max-width:400px">
+    <div class="modal-header">
+      <span class="modal-title">${escHtml(title)}</span>
+      <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i data-feather="x"></i></button>
+    </div>
+    <div class="modal-body" style="padding:20px">
+      <audio controls autoplay style="width:100%;border-radius:8px" src="${escHtml(url)}">
+        متصفحك لا يدعم الصوت
+      </audio>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  featherRefresh();
+  modal.addEventListener("click", e => { if (e.target === modal) { modal.querySelector("audio").pause(); modal.remove(); } });
+}
+
+function showPhotoModal(url) {
+  const modal = document.createElement("div");
+  modal.className = "modal-overlay";
+  modal.innerHTML = `<div class="photo-modal-inner">
+    <button class="modal-close-abs" onclick="this.closest('.modal-overlay').remove()"><i data-feather="x"></i></button>
+    <img src="${escHtml(url)}" alt="صورة" style="max-width:94vw;max-height:90vh;border-radius:12px;object-fit:contain">
+  </div>`;
+  document.body.appendChild(modal);
+  featherRefresh();
+  modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
 }
