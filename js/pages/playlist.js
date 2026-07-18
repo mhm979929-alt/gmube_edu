@@ -18,6 +18,8 @@ async function renderPlaylist(playlistId) {
     setPageTitle(playlist.name);
     if (el("playlist-title")) el("playlist-title").textContent = playlist.name;
 
+    console.log(`🔍 تم فتح قائمة: ${playlist.name} (النوع: ${playlist.type})`); // سجل نوع القائمة
+
     let items = [];
     // 2. جلب العناصر بناءً على النوع
     if (playlist.type === 'video') {
@@ -33,6 +35,8 @@ async function renderPlaylist(playlistId) {
     } else if (playlist.type === 'photo') {
       items = await getPhotosByPlaylist(playlistId);
     }
+
+    console.log(`📦 عدد العناصر الموجودة في القائمة: ${items.length}`); // سجل عدد العناصر
 
     const body = el("playlist-body");
     if (!items.length) {
@@ -84,7 +88,7 @@ async function renderPlaylist(playlistId) {
       });
     } else if (playlist.type === 'summary') {
       body.innerHTML = items.map(s => `
-        <div class="generic-card" style="margin:0 14px 8px">
+        <div class="generic-card" style="margin:0 14px 8px;cursor:pointer">
           <div class="generic-icon orange"><i data-feather="file-text"></i></div>
           <div class="generic-info">
             <span class="generic-title">${escHtml(s.title)}</span>
@@ -102,7 +106,7 @@ async function renderPlaylist(playlistId) {
       });
     } else if (playlist.type === 'audio') {
       body.innerHTML = items.map(a => `
-        <div class="generic-card audio-card" data-url="${escHtml(a.url)}" style="margin:0 14px 8px">
+        <div class="generic-card audio-card" data-url="${escHtml(a.url)}" style="margin:0 14px 8px;cursor:pointer">
           <div class="generic-icon purple"><i data-feather="headphones"></i></div>
           <div class="generic-info">
             <span class="generic-title">${escHtml(a.title)}</span>
@@ -142,7 +146,6 @@ async function renderPlaylist(playlistId) {
 }
 
 // ── دوال النوافذ المنبثقة للملخصات والصور والصوتيات ──
-
 function showSummaryModal(summary) {
   const modal = document.createElement("div");
   modal.className = "modal-overlay";
@@ -191,5 +194,6 @@ function showPhotoModal(url) {
   </div>`;
   document.body.appendChild(modal);
   featherRefresh();
-  modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+  modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); }
+  );
 }
