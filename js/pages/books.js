@@ -106,44 +106,53 @@ async function renderBooks() {
   await loadBooks();
 }
 
-// ── دالة المشاركة العالمية (يمكن استخدامها مع الكتب، الصوت، الصور، الملخصات) ──
+// ── دالة المشاركة الذكية (تتعامل مع الأخطاء) ──
 async function shareFile(url, title, type = 'ملف') {
   try {
-    // 1. جلب الملف كـ Blob
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('فشل تحميل الملف للمشاركة');
-    const blob = await response.blob();
+    // محاولة جلب الملف
+    let fileToShare = null;
+    let fileName = '';
 
-    // 2. استخراج الامتداد (مثل pdf, mp4, mp3, jpg)
-    const ext = url.split('.').pop().split('?')[0] || 'file';
-    
-    // 3. إنشاء اسم الملف الجديد: [اسم الملف] - [ملف من المنصة التعليمية السورية].امتداد
-    const fileName = `${title} - [ملف من المنصة التعليمية السورية].${ext}`;
+    try {
+      const response = await fetch(url, { mode: 'cors' }); // محاولة جلب بسيط
+      if (response.ok) {
+        const blob = await response.blob();
+        const ext = url.split('.').pop().split('?')[0] || 'file';
+        fileName = `${title} - [ملف من المنصة التعليمية السورية].${ext}`;
+        fileToShare = new File([blob], fileName, { type: blob.type });
+      }
+    } catch (fetchError) {
+      // إذا فشل الجلب، نتعامل مع الرابط كنص
+      console.warn('تعذر تحميل الملف، سيتم مشاركة الرابط بدلاً من ذلك:', fetchError.message);
+      fileToShare = null;
+    }
 
-    // 4. إنشاء ملف جديد بالاسم الجديد
-    const file = new File([blob], fileName, { type: blob.type });
-
-    // 5. المشاركة باستخدام Web Share API
-    if (navigator.share) {
+    // إذا نجحنا في تحميل الملف، شاركه كملف
+    if (fileToShare && navigator.share) {
       await navigator.share({
         title: title,
         text: `شارك هذا ${type} من المنصة التعليمية السورية`,
-        files: [file]
+        files: [fileToShare]
       });
-    } else {
-      // في حال المتصفح لا يدعم المشاركة، نقوم بتحميله مباشرة
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(file);
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(a.href);
-      toast('تم تحميل الملف (متصفحك لا يدعم المشاركة المباشرة)', 'info');
+    } 
+    // إذا فشل التحميل أو المتصفح لا يدعم مشاركة الملفات، شارك الرابط كنص
+    else {
+      if (navigator.share) {
+        await navigator.share({
+          title: title,
+          text: `📚 ${title}\n\nتمت المشاركة من المنصة التعليمية السورية\nرابط الملف: ${url}`
+        });
+      } else {
+        // إذا كان المتصفح لا يدعم المشاركة نهائياً، انسخ الرابط للحافظة
+        await navigator.clipboard.writeText(`${title}\nرابط الملف: ${url}`);
+        toast('تم نسخ الرابط للحافظة! يمكنك مشاركته الآن.', 'success');
+      }
     }
+
   } catch (err) {
     if (err.name !== 'AbortError') {
-      toast('حدث خطأ أثناء المشاركة: ' + err.message, 'error');
+      console.error('خطأ المشاركة:', err);
+      toast('حدث خطأ أثناء المشاركة، حاول مرة أخرى.', 'error');
     }
   }
 }
