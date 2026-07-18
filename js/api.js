@@ -71,9 +71,14 @@ async function logoutUser() {
 
 // ── Videos ─────────────────────────────────────────────────────
 async function getVideos(category) {
+  const key = `videos_${category || 'all'}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const queries = [Query.orderDesc("created_at"), Query.limit(100)];
   if (category && category !== "الكل") queries.push(Query.equal("category", category));
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VIDEOS, queries);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
 }
 
@@ -84,9 +89,14 @@ async function getVideoById(id) {
 }
 
 async function getVideosByTeacher(userId) {
+  const key = `videos_teacher_${userId}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VIDEOS, [
     Query.equal("user_id", userId), Query.orderDesc("created_at"), Query.limit(100)
   ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
 }
 
@@ -104,9 +114,14 @@ async function updateVideoRating(id, avgRating, ratingCount) {
 
 // ── Teachers ────────────────────────────────────────────────────
 async function getTeachers() {
+  const key = 'teachers_all';
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TEACHERS, [
     Query.orderDesc("created_at"), Query.limit(100)
   ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
 }
 
@@ -126,38 +141,142 @@ async function getComments(videoId) {
 }
 
 async function addComment(videoId, userId, userName, text, rating, parentId) {
+  // مسح الكاش عند إضافة تعليق جديد
+  sessionStorage.removeItem(`comments_${videoId}`);
   return await databases.createDocument(DATABASE_ID, COLLECTIONS.COMMENTS, ID.unique(), {
     video_id: videoId, user_id: userId, user_name: userName, text,
     rating: rating || 0, parent_id: parentId ?? null, created_at: new Date().toISOString(),
   });
 }
 
-// ── Playlists (قديم) ────────────────────────────────────────────
-async function getPlaylists(teacherId) {
+// ── Playlists (جديد: دوال عرض القوائم ومحتواها) ──
+async function getPlaylistsBySubject(subject) {
+  const key = `playlists_subject_${subject}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PLAYLISTS, [
-    Query.equal("teacher_id", teacherId), Query.orderDesc("created_at"), Query.limit(100)
+    Query.equal("subject", subject),
+    Query.orderDesc("$createdAt"),
+    Query.limit(50)
   ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
+  return result.documents;
+}
+
+async function getVideosByPlaylist(playlistId) {
+  const key = `videos_playlist_${playlistId}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VIDEOS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
+  return result.documents;
+}
+
+async function getBooksByPlaylist(playlistId) {
+  const key = `books_playlist_${playlistId}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.BOOKS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
+  return result.documents;
+}
+
+async function getTestsByPlaylist(playlistId) {
+  const key = `tests_playlist_${playlistId}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TESTS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
+  return result.documents;
+}
+
+async function getSummariesByPlaylist(playlistId) {
+  const key = `summaries_playlist_${playlistId}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SUMMARIES, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
+  return result.documents;
+}
+
+async function getAudiosByPlaylist(playlistId) {
+  const key = `audios_playlist_${playlistId}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.AUDIOS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
+  return result.documents;
+}
+
+async function getPhotosByPlaylist(playlistId) {
+  const key = `photos_playlist_${playlistId}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PHOTOS, [
+    Query.equal("playlist_id", playlistId),
+    Query.orderDesc("created_at"),
+    Query.limit(100)
+  ]);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
 }
 
 // ── Books ───────────────────────────────────────────────────────
 async function getBooks(subject, grade) {
+  const key = `books_${subject || 'all'}_${grade || 'all'}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const queries = [Query.orderDesc("created_at"), Query.limit(100)];
   if (subject && subject !== "الكل") queries.push(Query.equal("subject", subject));
   if (grade) queries.push(Query.equal("grade", grade));
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.BOOKS, queries);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
 }
 
 // ── Tests ───────────────────────────────────────────────────────
 async function getTests(subject) {
+  const key = `tests_${subject || 'all'}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const queries = [Query.orderDesc("created_at"), Query.limit(100)];
   if (subject && subject !== "الكل") queries.push(Query.equal("subject", subject));
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TESTS, queries);
-  return result.documents.map(doc => ({
+  const docs = result.documents.map(doc => ({
     ...doc,
     questions: typeof doc.questions === "string" ? JSON.parse(doc.questions) : doc.questions,
   }));
+  sessionStorage.setItem(key, JSON.stringify(docs));
+  return docs;
 }
 
 async function getTestById(id) {
@@ -171,6 +290,8 @@ async function getTestById(id) {
 }
 
 async function submitTestResult(data) {
+  // مسح الكاش عند تقديم نتيجة جديدة
+  sessionStorage.removeItem(`results_${data.user_id}`);
   return await databases.createDocument(DATABASE_ID, COLLECTIONS.TEST_RESULTS, ID.unique(), {
     user_id: data.user_id, test_id: data.test_id,
     score: data.score, total: data.total,
@@ -179,39 +300,60 @@ async function submitTestResult(data) {
 }
 
 async function getTestResults(userId) {
+  const key = `results_${userId}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TEST_RESULTS, [
     Query.equal("user_id", userId), Query.orderDesc("created_at"), Query.limit(100)
   ]);
-  return result.documents.map(doc => ({
+  const docs = result.documents.map(doc => ({
     ...doc,
     answers: typeof doc.answers === "string" ? JSON.parse(doc.answers) : doc.answers,
   }));
+  sessionStorage.setItem(key, JSON.stringify(docs));
+  return docs;
 }
 
 // ── Summaries ───────────────────────────────────────────────────
 async function getSummaries(subject, grade) {
+  const key = `summaries_${subject || 'all'}_${grade || 'all'}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const queries = [Query.orderDesc("created_at"), Query.limit(100)];
   if (subject && subject !== "الكل") queries.push(Query.equal("subject", subject));
   if (grade) queries.push(Query.equal("grade", grade));
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SUMMARIES, queries);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
 }
 
 // ── Audios ──────────────────────────────────────────────────────
 async function getAudios(subject, grade) {
+  const key = `audios_${subject || 'all'}_${grade || 'all'}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const queries = [Query.orderDesc("created_at"), Query.limit(100)];
   if (subject && subject !== "الكل") queries.push(Query.equal("subject", subject));
   if (grade) queries.push(Query.equal("grade", grade));
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.AUDIOS, queries);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
 }
 
 // ── Photos ──────────────────────────────────────────────────────
 async function getPhotos(subject, grade) {
+  const key = `photos_${subject || 'all'}_${grade || 'all'}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
   const queries = [Query.orderDesc("created_at"), Query.limit(100)];
   if (subject && subject !== "الكل") queries.push(Query.equal("subject", subject));
   if (grade) queries.push(Query.equal("grade", grade));
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PHOTOS, queries);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
 }
 
@@ -249,70 +391,6 @@ async function markNotificationAsRead(id) {
   await databases.updateDocument(DATABASE_ID, COLLECTIONS.NOTIFICATIONS, id, { is_read: true });
 }
 
-// ── Playlists (جديد: دوال عرض القوائم ومحتواها) ──
-async function getPlaylistsBySubject(subject) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PLAYLISTS, [
-    Query.equal("subject", subject),
-    Query.orderDesc("$createdAt"),
-    Query.limit(50)
-  ]);
-  return result.documents;
-}
-
-async function getVideosByPlaylist(playlistId) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VIDEOS, [
-    Query.equal("playlist_id", playlistId),
-    Query.orderDesc("created_at"),
-    Query.limit(100)
-  ]);
-  return result.documents;
-}
-
-async function getBooksByPlaylist(playlistId) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.BOOKS, [
-    Query.equal("playlist_id", playlistId),
-    Query.orderDesc("created_at"),
-    Query.limit(100)
-  ]);
-  return result.documents;
-}
-
-async function getTestsByPlaylist(playlistId) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TESTS, [
-    Query.equal("playlist_id", playlistId),
-    Query.orderDesc("created_at"),
-    Query.limit(100)
-  ]);
-  return result.documents;
-}
-
-async function getSummariesByPlaylist(playlistId) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SUMMARIES, [
-    Query.equal("playlist_id", playlistId),
-    Query.orderDesc("created_at"),
-    Query.limit(100)
-  ]);
-  return result.documents;
-}
-
-async function getAudiosByPlaylist(playlistId) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.AUDIOS, [
-    Query.equal("playlist_id", playlistId),
-    Query.orderDesc("created_at"),
-    Query.limit(100)
-  ]);
-  return result.documents;
-}
-
-async function getPhotosByPlaylist(playlistId) {
-  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.PHOTOS, [
-    Query.equal("playlist_id", playlistId),
-    Query.orderDesc("created_at"),
-    Query.limit(100)
-  ]);
-  return result.documents;
-}
-
 // ── Format helpers ──────────────────────────────────────────────
 function formatNumber(n) {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
@@ -322,5 +400,5 @@ function formatNumber(n) {
 
 function formatDate(dateStr) {
   const date = new Date(dateStr);
-  return date.toLocaleDateString("ar-DZ", { year: "numeric", month: "short", day: "numeric" });
+  return date.toLocaleDateString("ar-SY", { year: "numeric", month: "short", day: "numeric" });
 }
