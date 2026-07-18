@@ -70,7 +70,6 @@ async function renderChannel(userId) {
     card.addEventListener("click", () => navigateTo(`/watch/${card.dataset.id}`));
   });
 
-  // Follow button
   const followBtn = el("follow-btn");
   if (followBtn && session) {
     followBtn.addEventListener("click", async () => {
