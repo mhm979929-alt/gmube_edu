@@ -61,19 +61,39 @@ async function renderBooks() {
         return;
       }
       grid.innerHTML = books.map(b => `
-        <div class="book-card" data-url="${escHtml(b.url)}">
-          <div class="book-icon"><i data-feather="book-open"></i></div>
-          <div class="book-info">
+        <div class="book-card" data-title="${escHtml(b.title)}" data-url="${escHtml(b.url)}" style="cursor:pointer;display:flex;align-items:center;gap:12px;background:#141414;border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.04);margin-bottom:8px">
+          <div class="book-icon" style="width:48px;height:48px;border-radius:12px;background:rgba(33,150,243,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i data-feather="book-open" style="color:#2196F3;width:22px;height:22px"></i>
+          </div>
+          <div class="book-info" style="flex:1;text-align:right">
             <span class="book-title">${escHtml(b.title)}</span>
             <span class="book-meta">${escHtml(b.subject)} · ${escHtml(b.grade)}</span>
             ${b.description ? `<span class="book-desc">${escHtml(b.description)}</span>` : ""}
           </div>
-          <div class="book-open-btn"><i data-feather="external-link"></i></div>
+          <button class="share-btn" style="background:rgba(255,255,255,0.05);border:none;color:#aaa;padding:8px;border-radius:8px;cursor:pointer;display:flex;align-items:center" title="مشاركة">
+            <i data-feather="share-2" style="width:18px;height:18px"></i>
+          </button>
         </div>
       `).join("");
       featherRefresh();
-      grid.querySelectorAll(".book-card").forEach(card => {
-        card.addEventListener("click", () => window.open(card.dataset.url, "_blank"));
+
+      // إضافة حدث المشاركة
+      grid.querySelectorAll('.book-card').forEach(card => {
+        const shareBtn = card.querySelector('.share-btn');
+        const url = card.dataset.url;
+        const title = card.dataset.title;
+
+        if (shareBtn) {
+          shareBtn.addEventListener('click', async (e) => {
+            e.stopPropagation(); // منع فتح الرابط عند الضغط على زر المشاركة
+            await shareFile(url, title, 'كتاب');
+          });
+        }
+
+        // فتح الرابط عند الضغط على البطاقة
+        card.addEventListener('click', () => {
+          window.open(url, '_blank');
+        });
       });
     } catch {
       grid.innerHTML = errorBox("فشل تحميل الكتب", loadBooks);
@@ -84,4 +104,46 @@ async function renderBooks() {
   renderCatBar();
   renderGradeBar();
   await loadBooks();
+}
+
+// ── دالة المشاركة العالمية (يمكن استخدامها مع الكتب، الصوت، الصور، الملخصات) ──
+async function shareFile(url, title, type = 'ملف') {
+  try {
+    // 1. جلب الملف كـ Blob
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('فشل تحميل الملف للمشاركة');
+    const blob = await response.blob();
+
+    // 2. استخراج الامتداد (مثل pdf, mp4, mp3, jpg)
+    const ext = url.split('.').pop().split('?')[0] || 'file';
+    
+    // 3. إنشاء اسم الملف الجديد: [اسم الملف] - [ملف من المنصة التعليمية السورية].امتداد
+    const fileName = `${title} - [ملف من المنصة التعليمية السورية].${ext}`;
+
+    // 4. إنشاء ملف جديد بالاسم الجديد
+    const file = new File([blob], fileName, { type: blob.type });
+
+    // 5. المشاركة باستخدام Web Share API
+    if (navigator.share) {
+      await navigator.share({
+        title: title,
+        text: `شارك هذا ${type} من المنصة التعليمية السورية`,
+        files: [file]
+      });
+    } else {
+      // في حال المتصفح لا يدعم المشاركة، نقوم بتحميله مباشرة
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(file);
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+      toast('تم تحميل الملف (متصفحك لا يدعم المشاركة المباشرة)', 'info');
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      toast('حدث خطأ أثناء المشاركة: ' + err.message, 'error');
+    }
+  }
 }
