@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   Router.add("/watch/([^/]+)", renderWatch);
   Router.add("/subject/([^/]+)", renderSubject);
   Router.add("/channel/([^/]+)", renderChannel);
-  Router.add("/playlist/([^/]+)", renderPlaylist);
+  Router.add("/playlist/([^/]+)", renderPlaylist); // ── مسار جديد ──
   Router.add("/take-test/([^/]+)", renderTakeTest);
 
   // Bottom nav click handlers
