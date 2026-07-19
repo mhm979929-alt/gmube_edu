@@ -88,13 +88,16 @@ async function getVideoById(id) {
   } catch { return null; }
 }
 
-async function getVideosByTeacher(userId) {
-  const key = `videos_teacher_${userId}`;
+// ── تم إصلاح هذه الدالة لتعتمد على teacher_doc_id ──
+async function getVideosByTeacher(teacherDocId) {
+  const key = `videos_teacher_${teacherDocId}`;
   const cached = sessionStorage.getItem(key);
   if (cached) return JSON.parse(cached);
 
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.VIDEOS, [
-    Query.equal("user_id", userId), Query.orderDesc("created_at"), Query.limit(100)
+    Query.equal("teacher_doc_id", teacherDocId),
+    Query.orderDesc("created_at"),
+    Query.limit(50)
   ]);
   sessionStorage.setItem(key, JSON.stringify(result.documents));
   return result.documents;
