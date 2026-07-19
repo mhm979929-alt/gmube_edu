@@ -2,6 +2,7 @@
 document.addEventListener("DOMContentLoaded", async function() {
   Auth.init();
 
+  // 1. تحميل المواد من قاعدة البيانات
   try {
     const subjects = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SUBJECTS, []);
     const subjectNames = subjects.documents.map(s => s.name);
@@ -11,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     console.warn("تعذر تحميل المواد من قاعدة البيانات، استخدام القائمة الاحتياطية.");
   }
 
+  // 2. Register routes
   Router.add("/", renderHome);
   Router.add("/teachers", renderTeachers);
   Router.add("/books", renderBooks);
@@ -20,10 +22,12 @@ document.addEventListener("DOMContentLoaded", async function() {
   Router.add("/notifications", renderNotifications);
   Router.add("/watch/([^/]+)", renderWatch);
   Router.add("/subject/([^/]+)", renderSubject);
+  // تم تعديل مسار القناة ليدعم معرف الوثيقة
   Router.add("/channel/([^/]+)", renderChannel);
   Router.add("/playlist/([^/]+)", renderPlaylist);
   Router.add("/take-test/([^/]+)", renderTakeTest);
 
+  // 3. Bottom nav click handlers
   document.querySelectorAll(".nav-item").forEach(function(item) {
     item.addEventListener("click", function() {
       const page = this.dataset.page;
@@ -32,5 +36,6 @@ document.addEventListener("DOMContentLoaded", async function() {
     });
   });
 
+  // 4. Start router
   Router.start();
 });
