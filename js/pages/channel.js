@@ -1,5 +1,5 @@
 // ── Channel Page ────────────────────────────────────────────────
-async function renderChannel(docId) { // استقبل معرف الوثيقة الخاص بالأستاذ
+async function renderChannel(teacherDocId) {
   setPageTitle("القناة");
   renderPage(`
     <div class="page">
@@ -16,11 +16,11 @@ async function renderChannel(docId) { // استقبل معرف الوثيقة ا
   let videos = [];
 
   try {
-    // 1. جلب معلومات الأستاذ بناءً على معرف الوثيقة الخاص به
-    teacher = await databases.getDocument(DATABASE_ID, COLLECTIONS.TEACHERS, docId);
+    // جلب الأستاذ مباشرة باستخدام معرف الوثيقة
+    teacher = await databases.getDocument(DATABASE_ID, COLLECTIONS.TEACHERS, teacherDocId);
     
-    // 2. جلب فيديوهاته بناءً على معرف الوثيقة الخاص به
-    videos = await getVideosByTeacher(docId);
+    // جلب الفيديوهات الخاصة بهذا الأستاذ
+    videos = await getVideosByTeacher(teacherDocId);
   } catch (err) {
     console.error("خطأ في تحميل القناة:", err);
   }
