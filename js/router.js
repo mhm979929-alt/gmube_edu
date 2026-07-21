@@ -54,9 +54,6 @@ function updateBottomNav(active) {
 // تسجيل المسارات (Routes)
 // ============================================
 
-// ⚠️ تأكد من أن دوال الصفحات معرفة قبل تسجيلها
-// يجب تحميل ملفات الصفحات قبل هذا الكود
-
 // تسجيل المسارات
 Router.add("/", renderHome);
 Router.add("/home", renderHome);
@@ -71,7 +68,7 @@ Router.add("/channel/(.+)", (uid) => renderChannel(uid));
 Router.add("/playlist/(.+)", (id) => renderPlaylist(id));
 Router.add("/notifications", renderNotifications);
 Router.add("/take-test/(.+)", (id) => renderTakeTest(id));
-Router.add("/ask-book", renderAskBook); // ✅ صفحة اسأل كتابك
+Router.add("/ask-book", renderAskBook);
 
 // ============================================
 // بدء التشغيل
@@ -79,7 +76,6 @@ Router.add("/ask-book", renderAskBook); // ✅ صفحة اسأل كتابك
 
 // تأكد من وجود الدوال قبل بدء التشغيل
 document.addEventListener("DOMContentLoaded", function() {
-  // ابدأ الروتر بعد تحميل الصفحات
   Router.start();
 });
 
