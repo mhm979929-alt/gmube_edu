@@ -1,11 +1,14 @@
 // ============================================
-// صفحة "اسأل كتابك" - مدمجة في نظام SPA
+// صفحة "اسأل كتابك" - متوافقة مع Hash Router
 // ============================================
 
 async function renderAskBook() {
   updateBottomNav("ask-book");
-  setPageTitle("اسأل كتابك");
-  const session = Auth.get();
+  
+  // تغيير عنوان الصفحة
+  document.title = "اسأل كتابك | GMube Edu";
+  
+  const session = Auth ? Auth.get() : null;
 
   // التحقق من تسجيل الدخول
   if (!session) {
@@ -95,7 +98,11 @@ async function renderAskBook() {
   function loadAskHistory() {
     const saved = localStorage.getItem('askbook_history');
     if (saved) {
-      conversationHistory = JSON.parse(saved);
+      try {
+        conversationHistory = JSON.parse(saved);
+      } catch (e) {
+        conversationHistory = [];
+      }
       renderAskDrawerHistory();
     }
   }
@@ -201,16 +208,20 @@ async function renderAskBook() {
     let allResults = [];
 
     for (let word of words) {
-      const url = `${SUPABASE_URL}/rest/v1/knowledge_base?select=chunk_text&chunk_text=ilike.*${encodeURIComponent(word)}*&limit=3`;
-      const response = await fetch(url, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
-      if (!response.ok) continue;
-      const data = await response.json();
-      allResults = [...allResults, ...data.map(item => item.chunk_text)];
+      try {
+        const url = `${SUPABASE_URL}/rest/v1/knowledge_base?select=chunk_text&chunk_text=ilike.*${encodeURIComponent(word)}*&limit=3`;
+        const response = await fetch(url, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          }
+        });
+        if (!response.ok) continue;
+        const data = await response.json();
+        allResults = [...allResults, ...data.map(item => item.chunk_text)];
+      } catch (e) {
+        console.error('Search error:', e);
+      }
     }
 
     return [...new Set(allResults)].slice(0, 5);
@@ -329,11 +340,9 @@ ${context}
 }
 
 // ============================================
-// تسجيل الصفحة في الراوتر
+// تسجيل الصفحة في الراوتر (اختياري - يمكن التسجيل من router.js)
 // ============================================
-if (typeof Router !== 'undefined') {
-  Router.register({
-    name: 'ask-book',
-    render: renderAskBook
-  });
-  }
+// إذا لم يتم التسجيل من router.js، يمكن التسجيل هنا:
+// if (typeof Router !== 'undefined') {
+//   Router.add("/ask-book", renderAskBook);
+// }
