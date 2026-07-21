@@ -13,8 +13,15 @@ async function renderHome() {
         </div>
         <div class="top-actions">
           ${session
-            ? `<button class="icon-btn" onclick="navigateTo('/notifications')" title="الإشعارات"><i data-feather="bell"></i></button>
-               <button class="icon-btn" onclick="navigateTo('/profile')" title="حسابي"><i data-feather="user"></i></button>`
+            ? `<button class="icon-btn" onclick="navigateTo('/ask-book')" title="اسأل كتابك">
+                 <i data-feather="message-square"></i>
+               </button>
+               <button class="icon-btn" onclick="navigateTo('/notifications')" title="الإشعارات">
+                 <i data-feather="bell"></i>
+               </button>
+               <button class="icon-btn" onclick="navigateTo('/profile')" title="حسابي">
+                 <i data-feather="user"></i>
+               </button>`
             : `<button class="login-pill" onclick="navigateTo('/login')">دخول</button>`}
         </div>
       </div>
