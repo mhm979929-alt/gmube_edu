@@ -49,3 +49,43 @@ function updateBottomNav(active) {
     item.classList.toggle("active", item.dataset.page === active);
   });
 }
+
+// ============================================
+// تسجيل المسارات (Routes)
+// ============================================
+
+// ⚠️ تأكد من أن دوال الصفحات معرفة قبل تسجيلها
+// يجب تحميل ملفات الصفحات قبل هذا الكود
+
+// تسجيل المسارات
+Router.add("/", renderHome);
+Router.add("/home", renderHome);
+Router.add("/teachers", renderTeachers);
+Router.add("/books", renderBooks);
+Router.add("/tests", renderTests);
+Router.add("/profile", renderProfile);
+Router.add("/login", renderLogin);
+Router.add("/watch/(.+)", (id) => renderWatch(id));
+Router.add("/subject/(.+)", (subject) => renderSubject(subject));
+Router.add("/channel/(.+)", (uid) => renderChannel(uid));
+Router.add("/playlist/(.+)", (id) => renderPlaylist(id));
+Router.add("/notifications", renderNotifications);
+Router.add("/take-test/(.+)", (id) => renderTakeTest(id));
+Router.add("/ask-book", renderAskBook); // ✅ صفحة اسأل كتابك
+
+// ============================================
+// بدء التشغيل
+// ============================================
+
+// تأكد من وجود الدوال قبل بدء التشغيل
+document.addEventListener("DOMContentLoaded", function() {
+  // ابدأ الروتر بعد تحميل الصفحات
+  Router.start();
+});
+
+// بدء التشغيل فوراً إذا كان الـ DOM جاهزاً
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => Router.start());
+} else {
+  Router.start();
+}
