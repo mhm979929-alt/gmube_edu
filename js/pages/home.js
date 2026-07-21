@@ -13,9 +13,9 @@ async function renderHome() {
         </div>
         <div class="top-actions">
           ${session
-            ? `<button class="icon-btn" onclick="navigateTo('/ask-book')" title="اسأل كتابك">
+            ? `<a href="ask-book.html" class="icon-btn" title="اسأل كتابك" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
                  <i data-feather="message-square"></i>
-               </button>
+               </a>
                <button class="icon-btn" onclick="navigateTo('/notifications')" title="الإشعارات">
                  <i data-feather="bell"></i>
                </button>
