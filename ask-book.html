@@ -8,17 +8,22 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Cairo', sans-serif; background: #0a0a0a; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 0; margin: 0; }
+        
         .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: #0f0f1a; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
+        
+        /* الشريط العلوي */
         .app-header { background: linear-gradient(135deg, #1a1a2e, #2d1b4e); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .app-header h1 { font-size: 20px; font-weight: 900; margin: 0; display: flex; align-items: center; gap: 8px; color: #fff; }
         .app-header h1 span { font-weight: 400; opacity: 0.8; color: #a78bfa; }
+        
         .app-content { padding: 16px 20px 20px; flex: 1; display: flex; flex-direction: column; }
         
-        /* تنسيق صفحة اختيار الكتاب */
-        .selection-screen { display: block; }
-        .chat-screen { display: none; }
-        .chat-screen.active { display: flex; flex-direction: column; flex: 1; }
+        /* شاشات التطبيق */
+        .selection-screen { display: none; }
+        .chat-screen { display: none; flex-direction: column; flex: 1; }
+        .active-screen { display: flex !important; }
         
+        /* صفحة اختيار الكتاب */
         .subtitle { color: #8888aa; font-size: 13px; text-align: center; margin-bottom: 16px; font-weight: 400; }
         .book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
         .book-card { background: #1a1a2e; border: 2px solid #2a2a4e; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; color: #e0e0f0; }
@@ -26,12 +31,12 @@
         .book-card .icon { font-size: 30px; display: block; margin-bottom: 8px; }
         .book-card .name { font-weight: 700; font-size: 16px; }
         
-        /* تنسيق الدردشة */
+        /* شاشة المحادثة */
         .input-group { display: flex; gap: 10px; margin-bottom: 12px; }
         input { flex: 1; padding: 14px 16px; border: 2px solid #2a2a3e; border-radius: 14px; font-size: 15px; font-family: 'Cairo', sans-serif; outline: none; transition: 0.3s; background: #1a1a2e; color: #e0e0f0; }
         input:focus { border-color: #6C63FF; box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15); background: #1e1e32; }
         button.ask-btn { padding: 14px 24px; background: linear-gradient(135deg, #6C63FF, #8b7aff); color: white; border: none; border-radius: 14px; font-size: 15px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3); }
-        button.ask-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(108, 99, 255, 0.4); }
+        button.ask-btn:disabled { background: #3a3a5a; transform: none; box-shadow: none; opacity: 0.6; }
         
         .loading { display: none; text-align: center; padding: 10px 0; color: #a78bfa; font-weight: 600; font-size: 14px; }
         .loading.show { display: block; }
@@ -41,32 +46,71 @@
         .answer-box { background: #1a1a2e; padding: 18px 20px; border-radius: 16px; min-height: 60px; margin-top: 6px; border-right: 4px solid #6C63FF; line-height: 1.8; font-size: 15px; color: #e0e0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .answer-placeholder { color: #555570; }
         .footer { text-align: center; padding: 10px 0 14px; color: #333355; font-size: 11px; margin-top: auto; }
-        .back-btn { background: rgba(255,255,255,0.08); border: none; color: white; font-size: 14px; padding: 8px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: 'Cairo', sans-serif; transition: 0.2s; }
-        .back-btn:hover { background: rgba(255,255,255,0.15); }
+
+        /* أزرار التحكم */
         .header-btn-group { display: flex; gap: 8px; align-items: center; }
+        .btn-icon { background: rgba(255,255,255,0.08); border: none; color: white; font-size: 14px; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: 'Cairo', sans-serif; transition: 0.2s; }
+        .btn-icon:hover { background: rgba(255,255,255,0.15); }
+
+        /* ===== الشريط الجانبي (القائمة) المُصحح ===== */
+        .drawer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 30; backdrop-filter: blur(4px); }
+        .drawer-overlay.open { display: block; }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -320px; /* تعديل: بدأ من اليسار ليخرج من اليمين في RTL */
+            width: 280px;
+            height: 100%;
+            background: #12121f;
+            z-index: 40;
+            transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(108, 99, 255, 0.1);
+        }
+        .drawer.open { left: 0; }
+
+        .drawer-header { background: linear-gradient(135deg, #1a1a2e, #2d1b4e); color: white; padding: 20px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(108, 99, 255, 0.15); }
+        .drawer-header h2 { font-size: 18px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; color: #fff; }
+        .drawer-close { background: rgba(255,255,255,0.08); border: none; color: white; font-size: 20px; padding: 4px 10px; border-radius: 10px; cursor: pointer; }
+
+        .drawer-body { flex: 1; overflow-y: auto; padding: 12px 14px; }
+        .drawer-body::-webkit-scrollbar { width: 4px; }
+        .drawer-body::-webkit-scrollbar-track { background: #1a1a2e; }
+        .drawer-body::-webkit-scrollbar-thumb { background: #6C63FF; border-radius: 4px; }
+
+        .drawer-body .history-item { padding: 12px 14px; margin-bottom: 6px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 14px; color: #c0c0e0; background: #1a1a2e; display: flex; flex-direction: column; border-right: 3px solid transparent; }
+        .drawer-body .history-item:hover { background: #22223a; border-right-color: #6C63FF; }
+        .drawer-body .history-item .q-text { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .drawer-body .history-item .q-time { font-size: 11px; color: #555570; margin-top: 2px; }
+        .drawer-body .empty-history { color: #555570; text-align: center; padding: 30px 20px; font-size: 14px; }
+
+        .drawer-footer { padding: 12px 14px; border-top: 1px solid #1a1a2e; }
+        .drawer-footer button { width: 100%; padding: 10px; background: #1a1a2e; border: 1px solid #2a2a4e; border-radius: 12px; color: #c0c0e0; font-family: 'Cairo', sans-serif; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .drawer-footer button:hover { background: #2a2a4e; border-color: #6C63FF; color: #fff; }
     </style>
 </head>
 <body>
     <div class="app-container">
-        
         <!-- الشريط العلوي -->
         <div class="app-header">
-            <div></div>
-            <h1>📖 اسأل <span>كتابك</span></h1>
             <div class="header-btn-group">
-                <button class="back-btn" id="changeBookBtn" style="display:none;" onclick="goHome()">🔀 تغيير</button>
-                <button class="menu-btn" id="menuBtn" style="display:none;" onclick="toggleDrawer()">☰</button>
+                <button class="btn-icon" id="changeBookBtn" style="display:none;" onclick="goHome()">🔀 تغيير</button>
+                <button class="btn-icon" id="menuBtn" style="display:none;" onclick="toggleDrawer()">☰</button>
             </div>
+            <h1>📖 اسأل <span>كتابك</span></h1>
+            <div></div> <!-- فراغ لضبط التوسيط -->
         </div>
 
         <!-- شاشة اختيار الكتاب -->
-        <div id="selectionScreen" class="app-content selection-screen">
+        <div id="selectionScreen" class="app-content selection-screen active-screen">
             <div class="subtitle" style="margin-top: 30px;"><strong>📚</strong> اختر الكتاب الذي تريد البحث فيه</div>
             <div id="bookGrid" class="book-grid">
-                <!-- سيتم تحميل الكتب هنا عبر JavaScript -->
                 <div style="color: #555570; text-align: center; grid-column: 1/-1;">جاري تحميل الكتب...</div>
             </div>
-            <div class="footer"><strong>GMube Edu</strong></div>
+            <div class="footer"><strong>GMube Edu</strong> — جميع الحقوق محفوظة</div>
         </div>
 
         <!-- شاشة المحادثة -->
@@ -80,7 +124,7 @@
 
             <div id="loadingIndicator" class="loading"><div class="spinner"></div> <span>جاري البحث في كتابك...</span></div>
             <div id="answerContainer" class="answer-box"><span class="answer-placeholder">📚 ستظهر الإجابة من كتابك هنا</span></div>
-            <div class="footer"><strong>GMube Edu</strong></div>
+            <div class="footer"><strong>GMube Edu</strong> — جميع الحقوق محفوظة</div>
         </div>
 
         <!-- الشريط الجانبي للتاريخ -->
@@ -93,16 +137,13 @@
     </div>
 
     <script>
-        // المفاتيح
         const SUPABASE_URL = 'https://omcdeuyumsyrwhtkvono.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tY2RldXl1bXN5cndodGt2b25vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0ODUwOTcsImV4cCI6MjEwMDA2MTA5N30.-HWniBIpRDxvpwugATN8TWsVaaOrxbH-P4KJC77w7Bc';
         const GROQ_KEY = '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';
 
-        // متغيرات الحالة
         let currentBook = localStorage.getItem('askbook_current_book') || null;
         let conversationHistory = JSON.parse(localStorage.getItem('askbook_history')) || [];
 
-        // عناصر DOM
         const selectionScreen = document.getElementById('selectionScreen');
         const chatScreen = document.getElementById('chatScreen');
         const bookGrid = document.getElementById('bookGrid');
@@ -117,14 +158,12 @@
             loadBooks();
         }
 
-        // تحميل قائمة الكتب من قاعدة البيانات
         async function loadBooks() {
             const url = `${SUPABASE_URL}/rest/v1/books?select=id,book_name,book_description&is_active=eq.true`;
             const res = await fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
             const data = await res.json();
 
             if (data.length === 0) {
-                // إذا لم يجد كتباً (احتياطي)
                 bookGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center;color:#555570;">لا توجد كتب متاحة حالياً.</div>`;
                 return;
             }
@@ -138,38 +177,34 @@
             `).join('');
         }
 
-        // اختيار كتاب
         function selectBook(bookName) {
             currentBook = bookName;
             localStorage.setItem('askbook_current_book', bookName);
             showChatScreen(bookName);
         }
 
-        // العودة للصفحة الرئيسية
         function goHome() {
             localStorage.removeItem('askbook_current_book');
             currentBook = null;
-            chatScreen.classList.remove('active');
-            selectionScreen.style.display = 'block';
+            chatScreen.classList.remove('active-screen');
+            selectionScreen.classList.add('active-screen');
             changeBookBtn.style.display = 'none';
             menuBtn.style.display = 'none';
             loadBooks();
         }
 
-        // إظهار شاشة المحادثة
         function showChatScreen(bookName) {
-            selectionScreen.style.display = 'none';
-            chatScreen.classList.add('active');
+            selectionScreen.classList.remove('active-screen');
+            chatScreen.classList.add('active-screen');
             selectedBookDisplay.textContent = bookName;
             changeBookBtn.style.display = 'flex';
             menuBtn.style.display = 'block';
             renderDrawerHistory();
         }
 
-        // البحث والرد (نفس الدالة السابقة ولكن مع إضافة book_name)
         async function askQuestion() {
             const question = document.getElementById('questionInput').value.trim();
-            if (!question) return alert('اكتب سؤالاً أولاً');
+            if (!question) return;
 
             const btn = document.getElementById('askBtn');
             const loader = document.getElementById('loadingIndicator');
@@ -180,7 +215,6 @@
             container.innerHTML = '';
 
             try {
-                // البحث في قاعدة البيانات مع تحديد الكتاب الحالي
                 const words = question.split(' ').filter(w => w.length > 2);
                 let allResults = [];
                 
@@ -202,28 +236,25 @@
                 const context = results.join('\n\n');
                 const answer = await askGroq(question, context);
                 container.innerHTML = answer.replace(/\n/g, '<br>');
-                container.classList.add('has-answer');
                 
-                // حفظ التاريخ
                 conversationHistory.push({ question, answer, timestamp: new Date().toLocaleString('ar-EG') });
                 if (conversationHistory.length > 50) conversationHistory = conversationHistory.slice(-50);
                 localStorage.setItem('askbook_history', JSON.stringify(conversationHistory));
                 renderDrawerHistory();
 
             } catch (error) {
-                container.innerHTML = `<div class="error">⚠️ خطأ: ${error.message}</div>`;
+                container.innerHTML = `<div style="color:#ff6b6b;">⚠️ خطأ: ${error.message}</div>`;
             } finally {
                 btn.disabled = false;
                 loader.classList.remove('show');
             }
         }
 
-        // دالة الاتصال بـ Groq
         async function askGroq(question, context) {
             const lastQuestions = conversationHistory.slice(-3);
             let historyText = lastQuestions.map((item, idx) => `السؤال ${idx+1}: ${item.question}\nالإجابة: ${item.answer.substring(0, 150)}...`).join('\n');
             
-            const prompt = `أنت مساعد ذكي متخصص في المنهج الدراسي. أجب بناءً على النص المرفق فقط. لا تخترع. استخدم السياق.${historyText ? '\n\nالمحادثة السابقة:\n'+historyText : ''}\n\nالنص المرفق:\n${context}\n\nسؤال الطالب: ${question}\n\nالإجابة:`;
+            const prompt = `أنت مساعد ذكي. أجب بناءً على النص المرفق فقط. لا تخترع.${historyText ? '\n\nالمحادثة السابقة:\n'+historyText : ''}\n\nالنص المرفق:\n${context}\n\nسؤال الطالب: ${question}\n\nالإجابة:`;
 
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
@@ -234,7 +265,6 @@
             return data.choices[0].message.content;
         }
 
-        // دوال الشريط الجانبي
         function toggleDrawer() {
             document.getElementById('drawer').classList.toggle('open');
             document.getElementById('drawerOverlay').classList.toggle('open');
