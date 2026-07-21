@@ -784,3 +784,394 @@ input, textarea { font-family: inherit; }
   height: 18px;
   color: #555;
 }
+
+
+
+
+
+
+/* ============================================
+   صفحة اسأل كتابك (SPA)
+   ============================================ */
+
+.page-ask-book {
+  min-height: 100vh;
+  background: #0f0f1a;
+  padding-bottom: 80px;
+}
+
+/* الهيدر */
+.ask-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #1a1a2e, #2d1b4e);
+  border-bottom: 1px solid rgba(108, 99, 255, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.ask-header h1 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  margin: 0;
+}
+.ask-header h1 span {
+  font-weight: 400;
+  color: #a78bfa;
+}
+.ask-header .back-btn,
+.ask-header .menu-btn {
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ask-header .back-btn:hover,
+.ask-header .menu-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+.ask-header .back-btn i,
+.ask-header .menu-btn i {
+  width: 20px;
+  height: 20px;
+}
+
+/* المحتوى */
+.ask-content {
+  padding: 16px 20px 20px;
+}
+.ask-subtitle {
+  color: #8888aa;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.ask-subtitle strong {
+  color: #a78bfa;
+}
+
+/* الإدخال */
+.ask-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ask-input-group input {
+  flex: 1;
+  padding: 14px 16px;
+  border: 2px solid #2a2a3e;
+  border-radius: 14px;
+  font-size: 15px;
+  font-family: 'Cairo', sans-serif;
+  outline: none;
+  transition: 0.3s;
+  background: #1a1a2e;
+  color: #e0e0f0;
+}
+.ask-input-group input:focus {
+  border-color: #6C63FF;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+  background: #1e1e32;
+}
+.ask-input-group input::placeholder {
+  color: #555570;
+}
+.ask-submit-btn {
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #6C63FF, #8b7aff);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ask-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(108, 99, 255, 0.4);
+}
+.ask-submit-btn:disabled {
+  background: #3a3a5a;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+.ask-submit-btn i {
+  width: 18px;
+  height: 18px;
+}
+
+/* التحميل */
+.ask-loading {
+  display: none;
+  text-align: center;
+  padding: 10px 0;
+  color: #a78bfa;
+  font-weight: 600;
+  font-size: 14px;
+}
+.ask-loading.show {
+  display: block;
+}
+.ask-loading .spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #2a2a4e;
+  border-top: 3px solid #6C63FF;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* الإجابة */
+.ask-answer-box {
+  background: #1a1a2e;
+  padding: 18px 20px;
+  border-radius: 16px;
+  min-height: 60px;
+  margin-top: 6px;
+  border-right: 4px solid #6C63FF;
+  line-height: 1.8;
+  font-size: 15px;
+  color: #e0e0f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+.ask-answer-box.has-answer {
+  border-color: #8b7aff;
+}
+.ask-placeholder {
+  color: #555570;
+}
+.ask-error {
+  color: #ff6b6b;
+  padding: 14px 18px;
+  background: #2a1a1a;
+  border-radius: 12px;
+  margin-top: 8px;
+  border-right: 4px solid #ff6b6b;
+}
+.ask-answer-box strong {
+  color: #a78bfa;
+}
+.ask-answer-box ul,
+.ask-answer-box ol {
+  padding-right: 20px;
+  margin: 8px 0;
+}
+.ask-answer-box li {
+  margin-bottom: 4px;
+}
+
+/* التذييل */
+.ask-footer {
+  text-align: center;
+  padding: 20px 0 10px;
+  color: #333355;
+  font-size: 11px;
+  margin-top: auto;
+}
+.ask-footer strong {
+  color: #555588;
+}
+
+/* ===== الشريط الجانبي ===== */
+.ask-drawer-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 30;
+  backdrop-filter: blur(4px);
+}
+.ask-drawer-overlay.open {
+  display: block;
+}
+
+.ask-drawer {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 280px;
+  height: 100%;
+  background: #12121f;
+  z-index: 40;
+  transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -4px 0 30px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(108, 99, 255, 0.1);
+}
+.ask-drawer.open {
+  right: 0;
+}
+
+.ask-drawer-header {
+  background: linear-gradient(135deg, #1a1a2e, #2d1b4e);
+  color: white;
+  padding: 20px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(108, 99, 255, 0.15);
+}
+.ask-drawer-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+.ask-drawer-header h2 i {
+  color: #a78bfa;
+}
+.ask-drawer-close {
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.ask-drawer-close:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.ask-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px;
+}
+.ask-drawer-body::-webkit-scrollbar {
+  width: 4px;
+}
+.ask-drawer-body::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+.ask-drawer-body::-webkit-scrollbar-thumb {
+  background: #6C63FF;
+  border-radius: 4px;
+}
+
+.ask-history-item {
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 14px;
+  color: #c0c0e0;
+  background: #1a1a2e;
+  display: flex;
+  flex-direction: column;
+  border-right: 3px solid transparent;
+}
+.ask-history-item:hover {
+  background: #22223a;
+  border-right-color: #6C63FF;
+  transform: translateX(-4px);
+}
+.ask-q-text {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ask-q-time {
+  font-size: 11px;
+  color: #555570;
+  margin-top: 2px;
+}
+.ask-empty-history {
+  color: #555570;
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 14px;
+}
+
+.ask-drawer-footer {
+  padding: 12px 14px;
+  border-top: 1px solid #1a1a2e;
+}
+.ask-drawer-footer button {
+  width: 100%;
+  padding: 10px;
+  background: #1a1a2e;
+  border: 1px solid #2a2a4e;
+  border-radius: 12px;
+  color: #c0c0e0;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.ask-drawer-footer button:hover {
+  background: #2a2a4e;
+  border-color: #6C63FF;
+  color: #fff;
+}
+
+/* ===== تسجيل الدخول المطلوب ===== */
+.ask-login-required {
+  text-align: center;
+  padding: 80px 20px;
+  background: #0f0f1a;
+  min-height: 100vh;
+}
+.ask-login-required h2 {
+  color: #e0e0f0;
+  margin: 16px 0 8px;
+}
+.ask-login-required p {
+  color: #8888aa;
+  margin-bottom: 24px;
+}
+.ask-login-required .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #6C63FF, #8b7aff);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.ask-login-required .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(108, 99, 255, 0.4);
+}
+
+/* ===== أنيميشن ===== */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
