@@ -1,11 +1,11 @@
 // ============================================
-// صفحة "اسأل كتابك" - متوافقة مع Hash Router
+// صفحة "اسأل كتابك"
 // ============================================
 
 async function renderAskBook() {
-  updateBottomNav("ask-book");
+  console.log("✅ renderAskBook تم استدعاؤها");
   
-  // تغيير عنوان الصفحة
+  updateBottomNav("ask-book");
   document.title = "اسأل كتابك | GMube Edu";
   
   const session = Auth ? Auth.get() : null;
@@ -339,10 +339,7 @@ ${context}
   }
 }
 
-// ============================================
-// تسجيل الصفحة في الراوتر (اختياري - يمكن التسجيل من router.js)
-// ============================================
-// إذا لم يتم التسجيل من router.js، يمكن التسجيل هنا:
-// if (typeof Router !== 'undefined') {
-//   Router.add("/ask-book", renderAskBook);
-// }
+// جعل الدالة متاحة عالمياً
+window.renderAskBook = renderAskBook;
+
+console.log("✅ تم تحميل صفحة ask-book.js");
