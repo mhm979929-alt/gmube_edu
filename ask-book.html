@@ -6,7 +6,7 @@
     <title>اسأل كتابك | GMube Edu</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- إضافة MathJax لعرض المعادلات الرياضية -->
+    <!-- MathJax -->
     <script>
         MathJax = {
             tex: {
@@ -25,14 +25,13 @@
         
         .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: #0d1f0d; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.8); display: flex; flex-direction: column; }
         
-        /* الشريط العلوي - أخضر داكن */
+        /* الشريط العلوي */
         .app-header { background: linear-gradient(135deg, #0a1a0a, #1a4a1a); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.5); border-bottom: 1px solid rgba(42, 106, 42, 0.3); }
         .app-header h1 { font-size: 20px; font-weight: 900; margin: 0; display: flex; align-items: center; gap: 8px; color: #e0f0e0; }
         .app-header h1 span { font-weight: 400; opacity: 0.8; color: #6a9a6a; }
         
         .app-content { padding: 16px 20px 20px; flex: 1; display: flex; flex-direction: column; }
         
-        /* شاشات التطبيق */
         .selection-screen { display: none; }
         .chat-screen { display: none; flex-direction: column; flex: 1; }
         .active-screen { display: flex !important; }
@@ -105,7 +104,6 @@
         .drawer-footer button { width: 100%; padding: 10px; background: #1a2a1a; border: 1px solid #2a4a2a; border-radius: 12px; color: #a0c0a0; font-family: 'Cairo', sans-serif; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .drawer-footer button:hover { background: #2a4a2a; border-color: #4a8a4a; color: #e0f0e0; }
 
-        /* تنسيق خاص للمعادلات الرياضية */
         .answer-box mjx-container {
             display: inline-block;
             margin: 0 2px;
@@ -115,6 +113,44 @@
             background: #0a1a0a;
             padding: 2px 6px;
             border-radius: 4px;
+        }
+
+        /* ===== عداد الأسئلة اليومية ===== */
+        .daily-limit-container {
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .daily-limit-text {
+            display: flex;
+            justify-content: space-between;
+            color: #6a8a6a;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .daily-limit-text .remaining {
+            color: #4a8a4a;
+        }
+        .daily-limit-text .used {
+            color: #8aba8a;
+        }
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: #1a2a1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2a8a2a, #4a8a4a);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .progress-fill.full {
+            background: #8a3a3a;
         }
     </style>
 </head>
@@ -127,7 +163,7 @@
                 <button class="btn-icon" id="menuBtn" style="display:none;" onclick="toggleDrawer()">☰</button>
             </div>
             <h1>📖 اسأل <span>كتابك</span></h1>
-            <div></div> <!-- فراغ لضبط التوسيط -->
+            <div></div>
         </div>
 
         <!-- شاشة اختيار الكتاب -->
@@ -143,6 +179,17 @@
         <div id="chatScreen" class="app-content chat-screen">
             <div class="subtitle" id="selectedBookDisplay">🔍 أنت تتصفح: <strong></strong></div>
 
+            <!-- ===== عداد الأسئلة ===== -->
+            <div class="daily-limit-container">
+                <div class="daily-limit-text">
+                    <span class="used">اليوم: <span id="usedCount">0</span></span>
+                    <span class="remaining">بقي: <span id="remainingCount">25</span></span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+            </div>
+
             <div class="input-group">
                 <input type="text" id="questionInput" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key=='Enter') askQuestion()">
                 <button class="ask-btn" id="askBtn" onclick="askQuestion()">اسأل</button>
@@ -153,7 +200,7 @@
             <div class="footer"><strong>GMube Edu</strong> — جميع الحقوق محفوظة</div>
         </div>
 
-        <!-- الشريط الجانبي للتاريخ -->
+        <!-- الشريط الجانبي -->
         <div id="drawerOverlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
         <div id="drawer" class="drawer">
             <div class="drawer-header"><h2>📜 سجلي</h2><button class="drawer-close" onclick="toggleDrawer()">✕</button></div>
@@ -173,11 +220,10 @@
         const DAILY_LIMIT = 25;
         
         function checkDailyLimit() {
-            const today = new Date().toLocaleDateString('en-GB'); // تنسيق اليوم (مثلاً 22/07/2026)
+            const today = new Date().toLocaleDateString('en-GB');
             const savedDate = localStorage.getItem('askbook_last_date');
             let count = parseInt(localStorage.getItem('askbook_daily_count')) || 0;
 
-            // إذا كان اليوم مختلفاً (يوم جديد)، نعيد العداد للصفر
             if (savedDate !== today) {
                 count = 0;
                 localStorage.setItem('askbook_last_date', today);
@@ -191,7 +237,6 @@
             const today = new Date().toLocaleDateString('en-GB');
             let count = parseInt(localStorage.getItem('askbook_daily_count')) || 0;
             
-            // التأكد من اليوم
             const savedDate = localStorage.getItem('askbook_last_date');
             if (savedDate !== today) {
                 count = 0;
@@ -201,6 +246,23 @@
             count++;
             localStorage.setItem('askbook_daily_count', count.toString());
             return count;
+        }
+
+        function updateDailyUI() {
+            const count = checkDailyLimit();
+            const remaining = Math.max(0, DAILY_LIMIT - count);
+            const percentage = Math.min(100, (count / DAILY_LIMIT) * 100);
+
+            document.getElementById('usedCount').textContent = count;
+            document.getElementById('remainingCount').textContent = remaining;
+            
+            const fill = document.getElementById('progressFill');
+            fill.style.width = percentage + '%';
+            if (count >= DAILY_LIMIT) {
+                fill.classList.add('full');
+            } else {
+                fill.classList.remove('full');
+            }
         }
         // ==========================================
 
@@ -264,15 +326,17 @@
             menuBtn.style.display = 'block';
             renderDrawerHistory();
 
-            // التحقق من الحد اليومي عند فتح الشاشة
-            const dailyCount = checkDailyLimit();
+            // تحديث العداد
+            updateDailyUI();
+
             const askBtn = document.getElementById('askBtn');
-            if (dailyCount >= DAILY_LIMIT) {
+            const count = checkDailyLimit();
+            if (count >= DAILY_LIMIT) {
                 askBtn.disabled = true;
-                // عرض رسالة في مكان الإجابة
                 document.getElementById('answerContainer').innerHTML = `<span style="color:#ff6b6b;">⚠️ لقد استخدمت حد الـ ${DAILY_LIMIT} سؤالاً لهذا اليوم. عد غداً.</span>`;
             } else {
                 askBtn.disabled = false;
+                document.getElementById('answerContainer').innerHTML = '<span class="answer-placeholder">📚 ستظهر الإجابة من كتابك هنا</span>';
             }
         }
 
@@ -280,15 +344,11 @@
             const question = document.getElementById('questionInput').value.trim();
             if (!question) return;
 
-            // ==========================================
-            // التحقق من الحد اليومي قبل الإجابة
-            // ==========================================
             const currentCount = checkDailyLimit();
             if (currentCount >= DAILY_LIMIT) {
                 document.getElementById('answerContainer').innerHTML = `<span style="color:#ff6b6b;">⚠️ لقد استخدمت حد الـ ${DAILY_LIMIT} سؤالاً لهذا اليوم. عد غداً.</span>`;
                 return;
             }
-            // ==========================================
 
             const btn = document.getElementById('askBtn');
             const loader = document.getElementById('loadingIndicator');
@@ -320,10 +380,8 @@
                 const context = results.join('\n\n');
                 const answer = await askGroq(question, context, currentBook);
                 
-                // عرض الإجابة مع تنشيط MathJax
                 container.innerHTML = answer.replace(/\n/g, '<br>');
                 
-                // إعادة حساب المعادلات الرياضية
                 if (window.MathJax && MathJax.typesetPromise) {
                     MathJax.typesetPromise([container]).catch(() => {});
                 }
@@ -333,16 +391,13 @@
                 localStorage.setItem('askbook_history', JSON.stringify(conversationHistory));
                 renderDrawerHistory();
 
-                // ==========================================
-                // زيادة العداد اليومي بعد إجابة ناجحة
-                // ==========================================
                 const newCount = incrementDailyCount();
+                updateDailyUI();
+                
                 if (newCount >= DAILY_LIMIT) {
                     btn.disabled = true;
-                    // تحديث الرسالة
                     container.innerHTML += `<br><br><span style="color:#ff6b6b;">⚠️ لقد وصلت إلى حد الـ ${DAILY_LIMIT} سؤالاً. استخدمت جميع أسئلتك لهذا اليوم.</span>`;
                 }
-                // ==========================================
 
             } catch (error) {
                 container.innerHTML = `<div style="color:#ff6b6b;">⚠️ خطأ: ${error.message}</div>`;
@@ -352,9 +407,6 @@
             }
         }
 
-        // ---------------------------------------------------------
-        // دالة "إدارة حالة الكتاب"
-        // ---------------------------------------------------------
         async function askGroq(question, context, bookName) {
             const lastQuestions = conversationHistory.slice(-3);
             let historyText = lastQuestions.map((item, idx) => `السؤال ${idx+1}: ${item.question}\nالإجابة: ${item.answer.substring(0, 150)}...`).join('\n');
