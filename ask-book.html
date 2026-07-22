@@ -260,7 +260,7 @@
                 }
 
                 const context = results.join('\n\n');
-                const answer = await askGroq(question, context);
+                const answer = await askGroq(question, context, currentBook);
                 
                 // عرض الإجابة مع تنشيط MathJax
                 container.innerHTML = answer.replace(/\n/g, '<br>');
@@ -283,16 +283,36 @@
             }
         }
 
-        async function askGroq(question, context) {
+        // ---------------------------------------------------------
+        // التعديل الجديد: دالة "إدارة حالة الكتاب"
+        // ---------------------------------------------------------
+        async function askGroq(question, context, bookName) {
             const lastQuestions = conversationHistory.slice(-3);
             let historyText = lastQuestions.map((item, idx) => `السؤال ${idx+1}: ${item.question}\nالإجابة: ${item.answer.substring(0, 150)}...`).join('\n');
+
+            // 1. تحديد القالب الأساسي للتعليمات
+            let basePrompt = `أنت مساعد ذكي. أجب بناءً على النص المرفق فقط. لا تخترع.`;
+
+            // 2. تحديد التعليمات الخاصة بالفيزياء
+            let physicsInstruction = `تعليمات مهمة جداً للعرض: عند كتابة أي معادلة رياضية، اكتبها بصيغة LaTeX بين علامتي $ (مثال: $\\sqrt{2}$). لا تستخدم صيغ برمجية مثل sqrt() أو * للضرب، بل استخدم الرموز الرياضية الصحيحة.`;
+
+            // 3. دمج التعليمات بناءً على اسم الكتاب
+            let finalPrompt = '';
             
-            const prompt = `أنت مساعد ذكي. أجب بناءً على النص المرفق فقط. لا تخترع.${historyText ? '\n\nالمحادثة السابقة:\n'+historyText : ''}\n\nالنص المرفق:\n${context}\n\nسؤال الطالب: ${question}\n\nالإجابة:`;
+            // التحقق مما إذا كان الكتاب هو "الفيزياء" (أو أي كتاب فيزياء آخر في المستقبل)
+            if (bookName === 'الفيزياء') {
+                finalPrompt = `${basePrompt} ${physicsInstruction}`;
+            } else {
+                finalPrompt = basePrompt; // للكتب الأخرى، لا نضيف تعليمات الرياضيات
+            }
+
+            // إضافة السياق والتاريخ
+            finalPrompt += `${historyText ? '\n\nالمحادثة السابقة:\n'+historyText : ''}\n\nالنص المرفق:\n${context}\n\nسؤال الطالب: ${question}\n\nالإجابة:`;
 
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${GROQ_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], temperature: 0.3 })
+                body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: finalPrompt }], temperature: 0.3 })
             });
             const data = await response.json();
             return data.choices[0].message.content;
