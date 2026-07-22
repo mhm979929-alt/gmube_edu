@@ -167,6 +167,43 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tY2RldXl1bXN5cndodGt2b25vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0ODUwOTcsImV4cCI6MjEwMDA2MTA5N30.-HWniBIpRDxvpwugATN8TWsVaaOrxbH-P4KJC77w7Bc';
         const GROQ_KEY = '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';
 
+        // ==========================================
+        // إدارة حد الأسئلة اليومية (25 سؤال)
+        // ==========================================
+        const DAILY_LIMIT = 25;
+        
+        function checkDailyLimit() {
+            const today = new Date().toLocaleDateString('en-GB'); // تنسيق اليوم (مثلاً 22/07/2026)
+            const savedDate = localStorage.getItem('askbook_last_date');
+            let count = parseInt(localStorage.getItem('askbook_daily_count')) || 0;
+
+            // إذا كان اليوم مختلفاً (يوم جديد)، نعيد العداد للصفر
+            if (savedDate !== today) {
+                count = 0;
+                localStorage.setItem('askbook_last_date', today);
+                localStorage.setItem('askbook_daily_count', '0');
+            }
+
+            return count;
+        }
+
+        function incrementDailyCount() {
+            const today = new Date().toLocaleDateString('en-GB');
+            let count = parseInt(localStorage.getItem('askbook_daily_count')) || 0;
+            
+            // التأكد من اليوم
+            const savedDate = localStorage.getItem('askbook_last_date');
+            if (savedDate !== today) {
+                count = 0;
+                localStorage.setItem('askbook_last_date', today);
+            }
+
+            count++;
+            localStorage.setItem('askbook_daily_count', count.toString());
+            return count;
+        }
+        // ==========================================
+
         let currentBook = localStorage.getItem('askbook_current_book') || null;
         let conversationHistory = JSON.parse(localStorage.getItem('askbook_history')) || [];
 
@@ -226,11 +263,32 @@
             changeBookBtn.style.display = 'flex';
             menuBtn.style.display = 'block';
             renderDrawerHistory();
+
+            // التحقق من الحد اليومي عند فتح الشاشة
+            const dailyCount = checkDailyLimit();
+            const askBtn = document.getElementById('askBtn');
+            if (dailyCount >= DAILY_LIMIT) {
+                askBtn.disabled = true;
+                // عرض رسالة في مكان الإجابة
+                document.getElementById('answerContainer').innerHTML = `<span style="color:#ff6b6b;">⚠️ لقد استخدمت حد الـ ${DAILY_LIMIT} سؤالاً لهذا اليوم. عد غداً.</span>`;
+            } else {
+                askBtn.disabled = false;
+            }
         }
 
         async function askQuestion() {
             const question = document.getElementById('questionInput').value.trim();
             if (!question) return;
+
+            // ==========================================
+            // التحقق من الحد اليومي قبل الإجابة
+            // ==========================================
+            const currentCount = checkDailyLimit();
+            if (currentCount >= DAILY_LIMIT) {
+                document.getElementById('answerContainer').innerHTML = `<span style="color:#ff6b6b;">⚠️ لقد استخدمت حد الـ ${DAILY_LIMIT} سؤالاً لهذا اليوم. عد غداً.</span>`;
+                return;
+            }
+            // ==========================================
 
             const btn = document.getElementById('askBtn');
             const loader = document.getElementById('loadingIndicator');
@@ -275,6 +333,17 @@
                 localStorage.setItem('askbook_history', JSON.stringify(conversationHistory));
                 renderDrawerHistory();
 
+                // ==========================================
+                // زيادة العداد اليومي بعد إجابة ناجحة
+                // ==========================================
+                const newCount = incrementDailyCount();
+                if (newCount >= DAILY_LIMIT) {
+                    btn.disabled = true;
+                    // تحديث الرسالة
+                    container.innerHTML += `<br><br><span style="color:#ff6b6b;">⚠️ لقد وصلت إلى حد الـ ${DAILY_LIMIT} سؤالاً. استخدمت جميع أسئلتك لهذا اليوم.</span>`;
+                }
+                // ==========================================
+
             } catch (error) {
                 container.innerHTML = `<div style="color:#ff6b6b;">⚠️ خطأ: ${error.message}</div>`;
             } finally {
@@ -284,29 +353,22 @@
         }
 
         // ---------------------------------------------------------
-        // التعديل الجديد: دالة "إدارة حالة الكتاب"
+        // دالة "إدارة حالة الكتاب"
         // ---------------------------------------------------------
         async function askGroq(question, context, bookName) {
             const lastQuestions = conversationHistory.slice(-3);
             let historyText = lastQuestions.map((item, idx) => `السؤال ${idx+1}: ${item.question}\nالإجابة: ${item.answer.substring(0, 150)}...`).join('\n');
 
-            // 1. تحديد القالب الأساسي للتعليمات
             let basePrompt = `أنت مساعد ذكي. أجب بناءً على النص المرفق فقط. لا تخترع.`;
-
-            // 2. تحديد التعليمات الخاصة بالفيزياء
             let physicsInstruction = `تعليمات مهمة جداً للعرض: عند كتابة أي معادلة رياضية، اكتبها بصيغة LaTeX بين علامتي $ (مثال: $\\sqrt{2}$). لا تستخدم صيغ برمجية مثل sqrt() أو * للضرب، بل استخدم الرموز الرياضية الصحيحة.`;
 
-            // 3. دمج التعليمات بناءً على اسم الكتاب
             let finalPrompt = '';
-            
-            // التحقق مما إذا كان الكتاب هو "الفيزياء" (أو أي كتاب فيزياء آخر في المستقبل)
             if (bookName === 'الفيزياء') {
                 finalPrompt = `${basePrompt} ${physicsInstruction}`;
             } else {
-                finalPrompt = basePrompt; // للكتب الأخرى، لا نضيف تعليمات الرياضيات
+                finalPrompt = basePrompt;
             }
 
-            // إضافة السياق والتاريخ
             finalPrompt += `${historyText ? '\n\nالمحادثة السابقة:\n'+historyText : ''}\n\nالنص المرفق:\n${context}\n\nسؤال الطالب: ${question}\n\nالإجابة:`;
 
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -339,7 +401,6 @@
             document.getElementById('questionInput').value = item.question;
             document.getElementById('answerContainer').innerHTML = item.answer.replace(/\n/g, '<br>');
             
-            // إعادة حساب المعادلات عند تحميل سؤال سابق
             if (window.MathJax && MathJax.typesetPromise) {
                 MathJax.typesetPromise([document.getElementById('answerContainer')]).catch(() => {});
             }
