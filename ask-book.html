@@ -5,16 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>اسأل كتابك | GMube Edu</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- إضافة MathJax لعرض المعادلات الرياضية -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Cairo', sans-serif; background: #0a0a0a; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 0; margin: 0; }
+        body { font-family: 'Cairo', sans-serif; background: #0a1a0a; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 0; margin: 0; }
         
-        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: #0f0f1a; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
+        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: #0d1f0d; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.8); display: flex; flex-direction: column; }
         
-        /* الشريط العلوي */
-        .app-header { background: linear-gradient(135deg, #1a1a2e, #2d1b4e); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-        .app-header h1 { font-size: 20px; font-weight: 900; margin: 0; display: flex; align-items: center; gap: 8px; color: #fff; }
-        .app-header h1 span { font-weight: 400; opacity: 0.8; color: #a78bfa; }
+        /* الشريط العلوي - أخضر داكن */
+        .app-header { background: linear-gradient(135deg, #0a1a0a, #1a4a1a); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.5); border-bottom: 1px solid rgba(42, 106, 42, 0.3); }
+        .app-header h1 { font-size: 20px; font-weight: 900; margin: 0; display: flex; align-items: center; gap: 8px; color: #e0f0e0; }
+        .app-header h1 span { font-weight: 400; opacity: 0.8; color: #6a9a6a; }
         
         .app-content { padding: 16px 20px 20px; flex: 1; display: flex; flex-direction: column; }
         
@@ -24,72 +38,84 @@
         .active-screen { display: flex !important; }
         
         /* صفحة اختيار الكتاب */
-        .subtitle { color: #8888aa; font-size: 13px; text-align: center; margin-bottom: 16px; font-weight: 400; }
+        .subtitle { color: #6a8a6a; font-size: 13px; text-align: center; margin-bottom: 16px; font-weight: 400; }
         .book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .book-card { background: #1a1a2e; border: 2px solid #2a2a4e; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; color: #e0e0f0; }
-        .book-card:hover { border-color: #6C63FF; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(108, 99, 255, 0.2); }
+        .book-card { background: #1a2a1a; border: 2px solid #2a4a2a; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; color: #c0e0c0; }
+        .book-card:hover { border-color: #4a8a4a; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(26, 107, 26, 0.2); }
         .book-card .icon { font-size: 30px; display: block; margin-bottom: 8px; }
         .book-card .name { font-weight: 700; font-size: 16px; }
         
         /* شاشة المحادثة */
         .input-group { display: flex; gap: 10px; margin-bottom: 12px; }
-        input { flex: 1; padding: 14px 16px; border: 2px solid #2a2a3e; border-radius: 14px; font-size: 15px; font-family: 'Cairo', sans-serif; outline: none; transition: 0.3s; background: #1a1a2e; color: #e0e0f0; }
-        input:focus { border-color: #6C63FF; box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15); background: #1e1e32; }
-        button.ask-btn { padding: 14px 24px; background: linear-gradient(135deg, #6C63FF, #8b7aff); color: white; border: none; border-radius: 14px; font-size: 15px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3); }
-        button.ask-btn:disabled { background: #3a3a5a; transform: none; box-shadow: none; opacity: 0.6; }
+        input { flex: 1; padding: 14px 16px; border: 2px solid #2a4a2a; border-radius: 14px; font-size: 15px; font-family: 'Cairo', sans-serif; outline: none; transition: 0.3s; background: #1a2a1a; color: #c0e0c0; }
+        input:focus { border-color: #4a8a4a; box-shadow: 0 0 0 3px rgba(74, 138, 74, 0.15); background: #1e2e1e; }
+        button.ask-btn { padding: 14px 24px; background: linear-gradient(135deg, #1a6a1a, #2a8a2a); color: white; border: none; border-radius: 14px; font-size: 15px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; box-shadow: 0 4px 15px rgba(26, 106, 26, 0.3); }
+        button.ask-btn:disabled { background: #3a5a3a; transform: none; box-shadow: none; opacity: 0.6; }
         
-        .loading { display: none; text-align: center; padding: 10px 0; color: #a78bfa; font-weight: 600; font-size: 14px; }
+        .loading { display: none; text-align: center; padding: 10px 0; color: #6a9a6a; font-weight: 600; font-size: 14px; }
         .loading.show { display: block; }
-        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid #2a2a4e; border-top: 3px solid #6C63FF; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 8px; vertical-align: middle; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid #2a4a2a; border-top: 3px solid #4a8a4a; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 8px; vertical-align: middle; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .answer-box { background: #1a1a2e; padding: 18px 20px; border-radius: 16px; min-height: 60px; margin-top: 6px; border-right: 4px solid #6C63FF; line-height: 1.8; font-size: 15px; color: #e0e0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .answer-placeholder { color: #555570; }
-        .footer { text-align: center; padding: 10px 0 14px; color: #333355; font-size: 11px; margin-top: auto; }
+        .answer-box { background: #1a2a1a; padding: 18px 20px; border-radius: 16px; min-height: 60px; margin-top: 6px; border-right: 4px solid #4a8a4a; line-height: 1.8; font-size: 15px; color: #c0e0c0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); overflow-x: auto; }
+        .answer-placeholder { color: #6a8a6a; }
+        .footer { text-align: center; padding: 10px 0 14px; color: #4a6a4a; font-size: 11px; margin-top: auto; }
 
         /* أزرار التحكم */
         .header-btn-group { display: flex; gap: 8px; align-items: center; }
         .btn-icon { background: rgba(255,255,255,0.08); border: none; color: white; font-size: 14px; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: 'Cairo', sans-serif; transition: 0.2s; }
         .btn-icon:hover { background: rgba(255,255,255,0.15); }
 
-        /* ===== الشريط الجانبي (القائمة) المُصحح ===== */
+        /* الشريط الجانبي */
         .drawer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 30; backdrop-filter: blur(4px); }
         .drawer-overlay.open { display: block; }
 
         .drawer {
             position: fixed;
             top: 0;
-            left: -320px; /* تعديل: بدأ من اليسار ليخرج من اليمين في RTL */
+            left: -320px;
             width: 280px;
             height: 100%;
-            background: #12121f;
+            background: #0d1f0d;
             z-index: 40;
             transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 4px 0 30px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
-            border-left: 1px solid rgba(108, 99, 255, 0.1);
+            border-left: 1px solid rgba(42, 106, 42, 0.1);
         }
         .drawer.open { left: 0; }
 
-        .drawer-header { background: linear-gradient(135deg, #1a1a2e, #2d1b4e); color: white; padding: 20px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(108, 99, 255, 0.15); }
-        .drawer-header h2 { font-size: 18px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; color: #fff; }
+        .drawer-header { background: linear-gradient(135deg, #0a1a0a, #1a4a1a); color: white; padding: 20px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(42, 106, 42, 0.15); }
+        .drawer-header h2 { font-size: 18px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; color: #e0f0e0; }
         .drawer-close { background: rgba(255,255,255,0.08); border: none; color: white; font-size: 20px; padding: 4px 10px; border-radius: 10px; cursor: pointer; }
 
         .drawer-body { flex: 1; overflow-y: auto; padding: 12px 14px; }
         .drawer-body::-webkit-scrollbar { width: 4px; }
-        .drawer-body::-webkit-scrollbar-track { background: #1a1a2e; }
-        .drawer-body::-webkit-scrollbar-thumb { background: #6C63FF; border-radius: 4px; }
+        .drawer-body::-webkit-scrollbar-track { background: #1a2a1a; }
+        .drawer-body::-webkit-scrollbar-thumb { background: #4a8a4a; border-radius: 4px; }
 
-        .drawer-body .history-item { padding: 12px 14px; margin-bottom: 6px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 14px; color: #c0c0e0; background: #1a1a2e; display: flex; flex-direction: column; border-right: 3px solid transparent; }
-        .drawer-body .history-item:hover { background: #22223a; border-right-color: #6C63FF; }
+        .drawer-body .history-item { padding: 12px 14px; margin-bottom: 6px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 14px; color: #a0c0a0; background: #1a2a1a; display: flex; flex-direction: column; border-right: 3px solid transparent; }
+        .drawer-body .history-item:hover { background: #222a22; border-right-color: #4a8a4a; }
         .drawer-body .history-item .q-text { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .drawer-body .history-item .q-time { font-size: 11px; color: #555570; margin-top: 2px; }
-        .drawer-body .empty-history { color: #555570; text-align: center; padding: 30px 20px; font-size: 14px; }
+        .drawer-body .history-item .q-time { font-size: 11px; color: #6a8a6a; margin-top: 2px; }
+        .drawer-body .empty-history { color: #6a8a6a; text-align: center; padding: 30px 20px; font-size: 14px; }
 
-        .drawer-footer { padding: 12px 14px; border-top: 1px solid #1a1a2e; }
-        .drawer-footer button { width: 100%; padding: 10px; background: #1a1a2e; border: 1px solid #2a2a4e; border-radius: 12px; color: #c0c0e0; font-family: 'Cairo', sans-serif; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .drawer-footer button:hover { background: #2a2a4e; border-color: #6C63FF; color: #fff; }
+        .drawer-footer { padding: 12px 14px; border-top: 1px solid #1a2a1a; }
+        .drawer-footer button { width: 100%; padding: 10px; background: #1a2a1a; border: 1px solid #2a4a2a; border-radius: 12px; color: #a0c0a0; font-family: 'Cairo', sans-serif; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .drawer-footer button:hover { background: #2a4a2a; border-color: #4a8a4a; color: #e0f0e0; }
+
+        /* تنسيق خاص للمعادلات الرياضية */
+        .answer-box mjx-container {
+            display: inline-block;
+            margin: 0 2px;
+            color: #4a8a4a;
+        }
+        .answer-box .math-inline {
+            background: #0a1a0a;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -108,7 +134,7 @@
         <div id="selectionScreen" class="app-content selection-screen active-screen">
             <div class="subtitle" style="margin-top: 30px;"><strong>📚</strong> اختر الكتاب الذي تريد البحث فيه</div>
             <div id="bookGrid" class="book-grid">
-                <div style="color: #555570; text-align: center; grid-column: 1/-1;">جاري تحميل الكتب...</div>
+                <div style="color: #6a8a6a; text-align: center; grid-column: 1/-1;">جاري تحميل الكتب...</div>
             </div>
             <div class="footer"><strong>GMube Edu</strong> — جميع الحقوق محفوظة</div>
         </div>
@@ -164,7 +190,7 @@
             const data = await res.json();
 
             if (data.length === 0) {
-                bookGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center;color:#555570;">لا توجد كتب متاحة حالياً.</div>`;
+                bookGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center;color:#6a8a6a;">لا توجد كتب متاحة حالياً.</div>`;
                 return;
             }
 
@@ -172,7 +198,7 @@
                 <div class="book-card" onclick="selectBook('${book.book_name}')">
                     <span class="icon">📖</span>
                     <div class="name">${book.book_name}</div>
-                    <div style="font-size:12px;color:#555570;margin-top:5px;">${book.book_description || ''}</div>
+                    <div style="font-size:12px;color:#6a8a6a;margin-top:5px;">${book.book_description || ''}</div>
                 </div>
             `).join('');
         }
@@ -235,7 +261,14 @@
 
                 const context = results.join('\n\n');
                 const answer = await askGroq(question, context);
+                
+                // عرض الإجابة مع تنشيط MathJax
                 container.innerHTML = answer.replace(/\n/g, '<br>');
+                
+                // إعادة حساب المعادلات الرياضية
+                if (window.MathJax && MathJax.typesetPromise) {
+                    MathJax.typesetPromise([container]).catch(() => {});
+                }
                 
                 conversationHistory.push({ question, answer, timestamp: new Date().toLocaleString('ar-EG') });
                 if (conversationHistory.length > 50) conversationHistory = conversationHistory.slice(-50);
@@ -285,6 +318,12 @@
             const item = conversationHistory[index];
             document.getElementById('questionInput').value = item.question;
             document.getElementById('answerContainer').innerHTML = item.answer.replace(/\n/g, '<br>');
+            
+            // إعادة حساب المعادلات عند تحميل سؤال سابق
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([document.getElementById('answerContainer')]).catch(() => {});
+            }
+            
             toggleDrawer();
         }
 
