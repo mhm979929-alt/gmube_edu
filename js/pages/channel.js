@@ -1,4 +1,5 @@
-// ── Channel Page ────────────────────────────────────────────────
+
+// ── Channel Page ──────────────────────────────────────────────────────────────
 async function renderChannel(teacherDocId) {
   setPageTitle("القناة");
   renderPage(`
@@ -16,11 +17,11 @@ async function renderChannel(teacherDocId) {
   let videos = [];
 
   try {
-    // جلب الأستاذ مباشرة باستخدام معرف الوثيقة
+    // جلب الأستاذ مباشرة باستخدام معرّف الوثيقة
     teacher = await databases.getDocument(DATABASE_ID, COLLECTIONS.TEACHERS, teacherDocId);
     
     // جلب الفيديوهات الخاصة بهذا الأستاذ
-    videos = await getVideosByTeacher(teacherDocId);
+    videos = await getVideosByTeacher(teacher.user_id);
   } catch (err) {
     console.error("خطأ في تحميل القناة:", err);
   }
@@ -94,3 +95,4 @@ async function renderChannel(teacherDocId) {
     });
   }
 }
+ 
