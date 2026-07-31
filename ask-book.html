@@ -19,6 +19,9 @@
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+    <!-- الإعدادات المشتركة (مفاتيح API) -->
+    <script src="js/config.js"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Cairo', sans-serif; background: #0a1a0a; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 0; margin: 0; }
@@ -210,9 +213,23 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://omcdeuyumsyrwhtkvono.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tY2RldXl1bXN5cndodGt2b25vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0ODUwOTcsImV4cCI6MjEwMDA2MTA5N30.-HWniBIpRDxvpwugATN8TWsVaaOrxbH-P4KJC77w7Bc';
-        const GROQ_KEY = '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';
+        // المفاتيح (Supabase / Groq) موجودة في js/config.js ولا تُعاد كتابتها هنا.
+
+        // ==========================================
+        // التحقق من تسجيل الدخول
+        // ==========================================
+        const storedSession = (() => {
+            try { return JSON.parse(localStorage.getItem('gmube_edu_session')); }
+            catch (e) { return null; }
+        })();
+
+        const LOGIN_REQUIRED_HTML = `
+            <div style="font-family:'Cairo',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0a1a0a;color:#c0e0c0;text-align:center;padding:20px;">
+                <div style="font-size:40px;margin-bottom:12px;">🔒</div>
+                <h1 style="font-size:20px;margin-bottom:8px;">يرجى تسجيل الدخول</h1>
+                <p style="color:#6a8a6a;margin-bottom:20px;font-size:14px;">للاستفادة من خاصية "اسأل كتابك" سجّل دخولك أولاً</p>
+                <a href="index.html#/login" style="background:#2a8a2a;color:#fff;text-decoration:none;padding:12px 28px;border-radius:14px;font-weight:700;font-size:15px;">تسجيل الدخول</a>
+            </div>`;
 
         // ==========================================
         // إدارة حد الأسئلة اليومية (25 سؤال)
@@ -276,16 +293,21 @@
         const menuBtn = document.getElementById('menuBtn');
         const changeBookBtn = document.getElementById('changeBookBtn');
 
-        // تهيئة الصفحة
-        if (currentBook) {
+        // تهيئة الصفحة (تتطلب تسجيل الدخول)
+        if (!storedSession) {
+            document.body.innerHTML = LOGIN_REQUIRED_HTML;
+        } else if (currentBook) {
             showChatScreen(currentBook);
         } else {
-            loadBooks();
+            loadBooks().catch(() => {
+                document.getElementById('bookGrid').innerHTML = '<div style="grid-column:1/-1; text-align:center;color:#ff6b6b;">فشل تحميل الكتب. تحقق من اتصالك.</div>';
+            });
         }
 
         async function loadBooks() {
             const url = `${SUPABASE_URL}/rest/v1/books?select=id,book_name,book_description&is_active=eq.true`;
             const res = await fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+            if (!res.ok) throw new Error('فشل تحميل الكتب');
             const data = await res.json();
 
             if (data.length === 0) {
@@ -315,7 +337,9 @@
             selectionScreen.classList.add('active-screen');
             changeBookBtn.style.display = 'none';
             menuBtn.style.display = 'none';
-            loadBooks();
+            loadBooks().catch(() => {
+                document.getElementById('bookGrid').innerHTML = '<div style="grid-column:1/-1; text-align:center;color:#ff6b6b;">فشل تحميل الكتب. تحقق من اتصالك.</div>';
+            });
         }
 
         function showChatScreen(bookName) {
@@ -428,6 +452,14 @@
                 headers: { 'Authorization': `Bearer ${GROQ_KEY}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: finalPrompt }], temperature: 0.3 })
             });
+            if (!response.ok) {
+                let msg = response.status;
+                try { msg = (await response.json()).error?.message || response.status; } catch (e) {}
+                if (response.status === 401) {
+                    throw new Error('مفتاح Groq غير صالح أو منتهي الصلاحية. يرجى تحديث GROQ_KEY في js/config.js.');
+                }
+                throw new Error(msg);
+            }
             const data = await response.json();
             return data.choices[0].message.content;
         }
