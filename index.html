@@ -75,6 +75,85 @@
         height: 18px;
       }
     }
+
+    /* ===== زر البث المباشر - غير مزعج ===== */
+    .live-float-btn {
+      position: fixed;
+      bottom: 80px;
+      right: 16px;
+      z-index: 1000;
+      background: rgba(108, 99, 255, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(108, 99, 255, 0.25);
+      border-radius: 50px;
+      padding: 8px 14px 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #6C63FF;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 4px 20px rgba(108, 99, 255, 0.2);
+      cursor: pointer;
+      border: none;
+    }
+    .live-float-btn i {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.5;
+    }
+    .live-float-btn .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #ff3b30;
+      border-radius: 50%;
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.3;
+        transform: scale(0.7);
+      }
+    }
+    .live-float-btn:hover {
+      background: rgba(108, 99, 255, 0.25);
+      transform: scale(1.05);
+      box-shadow: 0 6px 30px rgba(108, 99, 255, 0.35);
+    }
+    .live-float-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* إخفاء الزر في الصفحات غير الرئيسية */
+    body:not([data-page="home"]) .live-float-btn {
+      display: none;
+    }
+
+    @media (max-width: 500px) {
+      .live-float-btn {
+        bottom: 72px;
+        right: 12px;
+        padding: 6px 12px 6px 14px;
+        font-size: 11px;
+      }
+      .live-float-btn i {
+        width: 16px;
+        height: 16px;
+      }
+      .live-float-btn .live-dot {
+        width: 6px;
+        height: 6px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -86,6 +165,13 @@
       <div class="spinner"></div>
     </div>
   </div>
+
+  <!-- ===== زر البث المباشر ===== -->
+  <a href="live.html" class="live-float-btn" id="liveBtn" title="البث المباشر">
+    <span class="live-dot"></span>
+    <i data-feather="radio"></i>
+    <span>مباشر</span>
+  </a>
 
   <!-- Bottom Navigation -->
   <nav id="bottom-nav">
@@ -177,6 +263,16 @@
       if (page === currentPage) {
         item.classList.add('active');
       }
+    });
+
+    // ===== تعيين data-page على body لتحديد ظهور زر البث =====
+    const body = document.body;
+    body.setAttribute('data-page', currentPage);
+
+    // مراقبة تغييرات التجزئة (hash) لتحديث data-page
+    window.addEventListener('hashchange', function() {
+      const newPage = window.location.hash.replace('#', '') || 'home';
+      body.setAttribute('data-page', newPage);
     });
   });
 </script>
