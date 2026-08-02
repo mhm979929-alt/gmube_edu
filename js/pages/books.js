@@ -90,9 +90,9 @@ async function renderBooks() {
           });
         }
 
-        // تحميل مباشر عند الضغط على البطاقة
+        // عند الضغط على البطاقة: فتح الرابط في المتصفح الخارجي للجهاز
         card.addEventListener('click', () => {
-          downloadFile(url, title);
+          openInExternalBrowser(url);
         });
       });
     } catch {
@@ -106,25 +106,23 @@ async function renderBooks() {
   await loadBooks();
 }
 
-// ── تحميل مباشر بدون معاينة (الحل الجديد) ──
-async function downloadFile(url, title) {
-  // 1. محاولة التحميل عبر وسم <a> مع السمة download (الطريقة الأفضل والأكثر أماناً)
-  try {
-    const a = document.createElement('a');
-    a.href = url;
-    // نحدد اسم الملف الذي سيتم تحميله (نحاول استخراج الامتداد من الرابط)
-    const ext = url.split('.').pop().split('?')[0] || 'file';
-    a.download = `${title}.${ext}`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    return; // إذا نجحت هذه الطريقة، ننهي الدالة
-  } catch (e) {
-    console.warn('فشل التحميل المباشر، حاولنا طريقة بديلة:', e);
-  }
+// ── فتح الرابط في المتصفح الخارجي للجهاز (حل WebView AppCreator24) ──
+function openInExternalBrowser(url) {
+  if (!url) return;
 
-  // 2. طريقة بديلة: فتح الرابط في نافذة جديدة (لن تعمل مع كل الروابط)
-  window.open(url, '_blank');
+  // 1. الطريقة القياسية التي تعمل في معظم تطبيقات WebView (AppCreator24, Android, iOS)
+  // لفتح الرابط في متصفح خارجي وليس داخل التطبيق
+  window.open(url, '_system');
+  
+  // ملاحظة: إذا لم تعمل '_system'، جرب الطرق التالية:
+  
+  // 2. طريقة بديلة لأندرويد (تستخدم Intent)
+  // if (navigator.userAgent.toLowerCase().includes('android')) {
+  //   window.location.href = `intent://${url.replace(/^https?:\/\//, '')}#Intent;action=android.intent.action.VIEW;scheme=https;package=com.android.chrome;end;`;
+  // }
+  
+  // 3. طريقة أخرى بديلة: فتح في نافذة جديدة
+  // window.open(url, '_blank');
 }
 
 // ── دالة المشاركة الذكية (تتعامل مع الأخطاء) ──
