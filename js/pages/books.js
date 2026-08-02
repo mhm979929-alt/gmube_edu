@@ -77,7 +77,7 @@ async function renderBooks() {
       `).join("");
       featherRefresh();
 
-      // إضافة حدث المشاركة
+      // إضافة حدث المشاركة والتحميل
       grid.querySelectorAll('.book-card').forEach(card => {
         const shareBtn = card.querySelector('.share-btn');
         const url = card.dataset.url;
@@ -106,39 +106,25 @@ async function renderBooks() {
   await loadBooks();
 }
 
-// ── تحميل مباشر بدون معاينة ──
+// ── تحميل مباشر بدون معاينة (الحل الجديد) ──
 async function downloadFile(url, title) {
-  // 1) محاولة التحميل كملف (تعمل مع المصادر المتوافقة مع CORS وروابط التحميل المباشرة)
+  // 1. محاولة التحميل عبر وسم <a> مع السمة download (الطريقة الأفضل والأكثر أماناً)
   try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("fetch failed");
-    const blob = await response.blob();
-    const ext = url.split(".").pop().split("?")[0] || "file";
-    const fileName = `${title}.${ext}`;
-    const objectUrl = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = objectUrl;
-    a.download = fileName;
+    const a = document.createElement('a');
+    a.href = url;
+    // نحدد اسم الملف الذي سيتم تحميله (نحاول استخراج الامتداد من الرابط)
+    const ext = url.split('.').pop().split('?')[0] || 'file';
+    a.download = `${title}.${ext}`;
     document.body.appendChild(a);
     a.click();
     a.remove();
-    URL.revokeObjectURL(objectUrl);
-    return;
+    return; // إذا نجحت هذه الطريقة، ننهي الدالة
   } catch (e) {
-    console.warn("تعذر جلب الملف، سيتم فتحه في نافذة جديدة:", e.message);
+    console.warn('فشل التحميل المباشر، حاولنا طريقة بديلة:', e);
   }
 
-  // 2) محاولة عبر وسم <a download> (تعمل مع روابط نفس النطاق)
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${title}`;
-  a.target = "_blank";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-
-  // 3) أخيراً فتح الرابط في نافذة جديدة
-  window.open(url, "_blank");
+  // 2. طريقة بديلة: فتح الرابط في نافذة جديدة (لن تعمل مع كل الروابط)
+  window.open(url, '_blank');
 }
 
 // ── دالة المشاركة الذكية (تتعامل مع الأخطاء) ──
