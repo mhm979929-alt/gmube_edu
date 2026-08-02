@@ -77,6 +77,7 @@ async function renderBooks() {
       `).join("");
       featherRefresh();
 
+      // إضافة حدث المشاركة والتحميل
       grid.querySelectorAll('.book-card').forEach(card => {
         const shareBtn = card.querySelector('.share-btn');
         const url = card.dataset.url;
@@ -89,8 +90,9 @@ async function renderBooks() {
           });
         }
 
+        // عند الضغط على البطاقة: نسخ الرابط وطلب الفتح يدوياً
         card.addEventListener('click', () => {
-          forceDownload(url, title);
+          copyAndOpenExternal(url, title);
         });
       });
     } catch {
@@ -104,26 +106,64 @@ async function renderBooks() {
   await loadBooks();
 }
 
-// ── إجبار التحميل عبر خادم وسيط (يقهر الروابط المعاندة) ──
-function forceDownload(url, title) {
+// ── نسخ الرابط وطلب الفتح يدوياً في المتصفح (الحل الحاسم) ──
+function copyAndOpenExternal(url, title) {
   if (!url) return;
 
-  // 1. استخراج الامتداد لتسمية الملف عند التحميل
-  const ext = url.split('.').pop().split('?')[0] || 'file';
-  const fileName = `${title}.${ext}`;
+  // 1. إنشاء نافذة منبثقة (Modal) تطلب من المستخدم الفتح يدوياً
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.style.cssText = `
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex;
+    align-items: center; justify-content: center; z-index: 9999; padding: 20px;
+  `;
 
-  // 2. الخدعة: استخدام خادم وسيط مجاني (download.ir) لإجبار التحميل
-  // هذا الخادم يقوم بإضافة الرؤوس التي تجبر المتصفح على التحميل فوراً
-  const forcedDownloadUrl = `https://download.ir/api/download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(fileName)}`;
+  modal.innerHTML = `
+    <div style="background: #1a1a1a; border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; border: 1px solid rgba(255,255,255,0.08); text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 12px;">📥</div>
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #fff;">تحميل ${escHtml(title)}</h3>
+      <p style="font-size: 14px; color: #aaa; margin-bottom: 16px; line-height: 1.6;">
+        تعذر الفتح داخل التطبيق بسبب حجم الملف.<br>
+        يرجى <strong>نسخ الرابط</strong> وفتحه في <strong>المتصفح الخارجي</strong> (Chrome/Safari).
+      </p>
+      
+      <div style="background: #0a0a0a; border-radius: 10px; padding: 12px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.05); font-size: 12px; color: #4CAF50; word-break: break-all; text-align: left; direction: ltr;">
+        ${escHtml(url)}
+      </div>
 
-  // 3. محاولة الفتح في المتصفح الخارجي (لأن الرابط الآن أصبح قسري التحميل)
-  try {
-    // محاولة الطريقة القياسية أولاً
-    window.open(forcedDownloadUrl, '_system');
-  } catch (e) {
-    // إذا فشلت، جرب فتحه في نافذة جديدة
-    window.open(forcedDownloadUrl, '_blank');
-  }
+      <div style="display: flex; gap: 10px;">
+        <button onclick="copyUrl('${escHtml(url)}')" style="flex:1; padding: 12px; background: #4CAF50; border: none; border-radius: 10px; color: #fff; font-weight: 700; font-size: 14px; cursor: pointer;">
+          📋 نسخ الرابط
+        </button>
+        <button onclick="this.closest('.modal-overlay').remove()" style="flex:1; padding: 12px; background: #2a2a2a; border: none; border-radius: 10px; color: #aaa; font-weight: 600; font-size: 14px; cursor: pointer;">
+          إغلاق
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // إضافة دالة نسخ الرابط إلى النافذة العامة
+  window.copyUrl = function(url) {
+    navigator.clipboard.writeText(url).then(() => {
+      toast('✅ تم نسخ الرابط! افتح المتصفح الخارجي وضعه فيه.', 'success');
+    }).catch(() => {
+      // طريقة بديلة للنسخ إذا فشلت clipboard
+      const textarea = document.createElement('textarea');
+      textarea.value = url;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+      toast('✅ تم نسخ الرابط! افتح المتصفح الخارجي وضعه فيه.', 'success');
+    });
+  };
+
+  // إغلاق النافذة عند الضغط على الخلفية
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.remove();
+  });
 }
 
 // ── دالة المشاركة الذكية ──
