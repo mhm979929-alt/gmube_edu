@@ -90,9 +90,9 @@ async function renderBooks() {
           });
         }
 
-        // فتح الرابط عند الضغط على البطاقة
+        // تحميل مباشر عند الضغط على البطاقة
         card.addEventListener('click', () => {
-          window.open(url, '_blank');
+          downloadFile(url, title);
         });
       });
     } catch {
@@ -104,6 +104,41 @@ async function renderBooks() {
   renderCatBar();
   renderGradeBar();
   await loadBooks();
+}
+
+// ── تحميل مباشر بدون معاينة ──
+async function downloadFile(url, title) {
+  // 1) محاولة التحميل كملف (تعمل مع المصادر المتوافقة مع CORS وروابط التحميل المباشرة)
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("fetch failed");
+    const blob = await response.blob();
+    const ext = url.split(".").pop().split("?")[0] || "file";
+    const fileName = `${title}.${ext}`;
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(objectUrl);
+    return;
+  } catch (e) {
+    console.warn("تعذر جلب الملف، سيتم فتحه في نافذة جديدة:", e.message);
+  }
+
+  // 2) محاولة عبر وسم <a download> (تعمل مع روابط نفس النطاق)
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${title}`;
+  a.target = "_blank";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  // 3) أخيراً فتح الرابط في نافذة جديدة
+  window.open(url, "_blank");
 }
 
 // ── دالة المشاركة الذكية (تتعامل مع الأخطاء) ──
