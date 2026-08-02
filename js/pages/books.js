@@ -77,7 +77,6 @@ async function renderBooks() {
       `).join("");
       featherRefresh();
 
-      // إضافة حدث المشاركة والتحميل
       grid.querySelectorAll('.book-card').forEach(card => {
         const shareBtn = card.querySelector('.share-btn');
         const url = card.dataset.url;
@@ -85,14 +84,13 @@ async function renderBooks() {
 
         if (shareBtn) {
           shareBtn.addEventListener('click', async (e) => {
-            e.stopPropagation(); // منع فتح الرابط عند الضغط على زر المشاركة
+            e.stopPropagation();
             await shareFile(url, title, 'كتاب');
           });
         }
 
-        // عند الضغط على البطاقة: فتح الرابط في المتصفح الخارجي للجهاز
         card.addEventListener('click', () => {
-          openInExternalBrowser(url);
+          forceDownload(url, title);
         });
       });
     } catch {
@@ -106,34 +104,36 @@ async function renderBooks() {
   await loadBooks();
 }
 
-// ── فتح الرابط في المتصفح الخارجي للجهاز (حل WebView AppCreator24) ──
-function openInExternalBrowser(url) {
+// ── إجبار التحميل عبر خادم وسيط (يقهر الروابط المعاندة) ──
+function forceDownload(url, title) {
   if (!url) return;
 
-  // 1. الطريقة القياسية التي تعمل في معظم تطبيقات WebView (AppCreator24, Android, iOS)
-  // لفتح الرابط في متصفح خارجي وليس داخل التطبيق
-  window.open(url, '_system');
-  
-  // ملاحظة: إذا لم تعمل '_system'، جرب الطرق التالية:
-  
-  // 2. طريقة بديلة لأندرويد (تستخدم Intent)
-  // if (navigator.userAgent.toLowerCase().includes('android')) {
-  //   window.location.href = `intent://${url.replace(/^https?:\/\//, '')}#Intent;action=android.intent.action.VIEW;scheme=https;package=com.android.chrome;end;`;
-  // }
-  
-  // 3. طريقة أخرى بديلة: فتح في نافذة جديدة
-  // window.open(url, '_blank');
+  // 1. استخراج الامتداد لتسمية الملف عند التحميل
+  const ext = url.split('.').pop().split('?')[0] || 'file';
+  const fileName = `${title}.${ext}`;
+
+  // 2. الخدعة: استخدام خادم وسيط مجاني (download.ir) لإجبار التحميل
+  // هذا الخادم يقوم بإضافة الرؤوس التي تجبر المتصفح على التحميل فوراً
+  const forcedDownloadUrl = `https://download.ir/api/download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(fileName)}`;
+
+  // 3. محاولة الفتح في المتصفح الخارجي (لأن الرابط الآن أصبح قسري التحميل)
+  try {
+    // محاولة الطريقة القياسية أولاً
+    window.open(forcedDownloadUrl, '_system');
+  } catch (e) {
+    // إذا فشلت، جرب فتحه في نافذة جديدة
+    window.open(forcedDownloadUrl, '_blank');
+  }
 }
 
-// ── دالة المشاركة الذكية (تتعامل مع الأخطاء) ──
+// ── دالة المشاركة الذكية ──
 async function shareFile(url, title, type = 'ملف') {
   try {
-    // محاولة جلب الملف
     let fileToShare = null;
     let fileName = '';
 
     try {
-      const response = await fetch(url, { mode: 'cors' }); // محاولة جلب بسيط
+      const response = await fetch(url, { mode: 'cors' });
       if (response.ok) {
         const blob = await response.blob();
         const ext = url.split('.').pop().split('?')[0] || 'file';
@@ -141,28 +141,23 @@ async function shareFile(url, title, type = 'ملف') {
         fileToShare = new File([blob], fileName, { type: blob.type });
       }
     } catch (fetchError) {
-      // إذا فشل الجلب، نتعامل مع الرابط كنص
       console.warn('تعذر تحميل الملف، سيتم مشاركة الرابط بدلاً من ذلك:', fetchError.message);
       fileToShare = null;
     }
 
-    // إذا نجحنا في تحميل الملف، شاركه كملف
     if (fileToShare && navigator.share) {
       await navigator.share({
         title: title,
         text: `شارك هذا ${type} من المنصة التعليمية السورية`,
         files: [fileToShare]
       });
-    } 
-    // إذا فشل التحميل أو المتصفح لا يدعم مشاركة الملفات، شارك الرابط كنص
-    else {
+    } else {
       if (navigator.share) {
         await navigator.share({
           title: title,
           text: `📚 ${title}\n\nتمت المشاركة من المنصة التعليمية السورية\nرابط الملف: ${url}`
         });
       } else {
-        // إذا كان المتصفح لا يدعم المشاركة نهائياً، انسخ الرابط للحافظة
         await navigator.clipboard.writeText(`${title}\nرابط الملف: ${url}`);
         toast('تم نسخ الرابط للحافظة! يمكنك مشاركته الآن.', 'success');
       }
