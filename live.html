@@ -3,25 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بث مباشر</title>
+    <title>بث مباشر مع دردشة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #111;
+            background: #0f0c29;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Cairo', sans-serif;
+            padding: 12px;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            padding: 12px;
         }
         .container {
-            max-width: 880px;
+            max-width: 1200px;
             width: 100%;
-            background: #1a1a1a;
-            border-radius: 16px;
+            background: rgba(20, 20, 30, 0.9);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+        }
+        .header {
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .title {
+            color: #fff;
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .live-badge {
+            background: #fff;
+            color: #ff0000;
+            font-size: 0.8rem;
+            font-weight: 900;
+            padding: 4px 16px;
+            border-radius: 30px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.7; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); background: #ffcccc; }
+            100% { opacity: 0.7; transform: scale(0.95); }
+        }
+        .split-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+        .video-column {
+            flex: 2;
+            min-width: 300px;
+            position: relative;
+        }
+        .chat-column {
+            flex: 1;
+            min-width: 280px;
+            background: #1a1a2e;
+            border-right: 1px solid #333;
+            max-height: 600px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
         .video-wrap {
             position: relative;
@@ -37,36 +91,69 @@
             height: 100%;
             border: 0;
         }
-        .title {
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 600;
-            padding: 16px 20px 12px;
-            background: #1a1a1a;
-            border-bottom: 1px solid #333;
+        .chat-message {
+            color: #aaa;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.6;
         }
-        .title span {
-            background: #ff0000;
-            color: #fff;
-            font-size: 0.8rem;
+        .chat-message .icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+        .chat-message .highlight {
+            color: #ff6b6b;
             font-weight: bold;
-            padding: 3px 12px;
-            border-radius: 30px;
-            margin-left: 12px;
+        }
+        .footer {
+            padding: 12px 20px;
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+        @media (max-width: 768px) {
+            .split-layout { flex-direction: column; }
+            .chat-column { border-right: none; border-top: 1px solid #333; max-height: 300px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="title">
-            <span>مباشر</span> تقوية رياضيات
+        <div class="header">
+            <div class="title">
+                <span class="live-badge">🔴 مباشر</span>
+                تقوية رياضيات
+            </div>
+            <div style="color:#fff; font-size:0.9rem;">👤 142 مشاهد</div>
         </div>
-        <div class="video-wrap">
-            <iframe 
-                src="https://www.youtube.com/embed/sWVGXj1Vz9o?autoplay=1&mute=1&controls=1&rel=0" 
-                allow="autoplay; encrypted-media; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
+
+        <div class="split-layout">
+            <!-- عمود الفيديو -->
+            <div class="video-column">
+                <div class="video-wrap">
+                    <iframe 
+                        src="https://www.youtube.com/embed/sWVGXj1Vz9o?autoplay=1&mute=1&controls=1&rel=0" 
+                        allow="autoplay; encrypted-media; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- عمود الدردشة - رسالة بديلة -->
+            <div class="chat-column">
+                <div class="chat-message">
+                    <span class="icon">💬</span>
+                    الدردشة غير متاحة حالياً<br>
+                    <span class="highlight">هذا الفيديو مسجل وليس بثاً مباشراً</span><br>
+                    <small style="font-size:0.85rem; color:#666;">تواصل معنا عبر التعليقات</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            📢 تابعنا على <a href="#" style="color:#ff6b6b;">يوتيوب</a> | جميع الحقوق محفوظة © 2026
         </div>
     </div>
 </body>
