@@ -6,7 +6,6 @@
     <title>بث مباشر - تقوية رياضيات</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* إعدادات عامة */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -15,11 +14,9 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* تغيير من center إلى flex-start للجوال */
+            align-items: flex-start;
             padding-top: 20px;
         }
-        
-        /* الحاوية الرئيسية */
         .container {
             max-width: 1300px;
             width: 100%;
@@ -29,8 +26,6 @@
             overflow: hidden;
             box-shadow: 0 15px 40px rgba(0,0,0,0.8);
         }
-
-        /* رأس الصفحة */
         .header {
             background: linear-gradient(90deg, #ff416c, #ff4b2b);
             padding: 15px 25px;
@@ -69,15 +64,11 @@
             padding: 5px 15px;
             border-radius: 20px;
         }
-
-        /* تخطيط الشاشة المقسمة */
         .split-layout {
             display: flex;
             flex-wrap: wrap;
             gap: 0;
         }
-
-        /* عمود الفيديو */
         .video-column {
             flex: 2;
             min-width: 300px;
@@ -85,7 +76,7 @@
         }
         .video-wrap {
             position: relative;
-            padding-bottom: 56.25%; /* نسبة 16:9 */
+            padding-bottom: 56.25%; /* 16:9 */
             height: 0;
             background: #000;
         }
@@ -97,11 +88,11 @@
             height: 100%;
             border: 0;
         }
-
-        /* عمود الدردشة (مفتوح دائماً) */
+        
+        /* عمود الدردشة المباشرة */
         .chat-column {
             flex: 1;
-            min-width: 300px;
+            min-width: 320px;
             background: #1a1a2e;
             border-right: 1px solid #333;
             height: auto;
@@ -120,7 +111,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-shrink: 0;
         }
         .chat-header .online {
             color: #4CAF50;
@@ -130,7 +120,7 @@
             flex: 1;
             height: 100%;
             position: relative;
-            background: #1a1a2e;
+            background: #fff;
         }
         .chat-container iframe {
             width: 100%;
@@ -139,7 +129,6 @@
             border: 0;
         }
 
-        /* تذييل الصفحة */
         .footer {
             padding: 12px 20px;
             background: #1a1a2e;
@@ -147,7 +136,6 @@
             text-align: center;
             border-top: 1px solid #333;
             font-size: 0.9rem;
-            flex-shrink: 0;
         }
         .footer a {
             color: #ff6b6b;
@@ -155,82 +143,42 @@
             font-weight: bold;
         }
 
-        /* ===== تحسينات الجوال (Responsive) ===== */
+        /* ===== تحسينات الجوال ===== */
         @media (max-width: 900px) {
-            .split-layout {
-                flex-direction: column;
-            }
-            .chat-column {
-                border-right: none;
-                border-top: 1px solid #333;
-                min-height: 400px;
+            .split-layout { flex-direction: column; }
+            .chat-column { 
+                border-right: none; 
+                border-top: 1px solid #333; 
+                min-height: 400px; 
                 max-height: 500px;
                 width: 100%;
             }
-            .chat-container iframe {
-                min-height: 400px;
-            }
-            .title {
-                font-size: 1.2rem;
-            }
-            .viewers-info {
-                font-size: 0.7rem;
-                padding: 3px 10px;
-            }
+            .chat-container iframe { min-height: 400px; }
+            .title { font-size: 1.2rem; }
+            .viewers-info { font-size: 0.7rem; padding: 3px 10px; }
         }
-
         @media (max-width: 480px) {
-            body {
-                padding: 8px;
-                padding-top: 10px;
-            }
-            .header {
-                padding: 10px 15px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            .title {
-                font-size: 1rem;
-            }
-            .chat-column {
-                min-height: 350px;
-                max-height: 400px;
-            }
-            .chat-container iframe {
-                min-height: 350px;
-            }
-            .footer {
-                font-size: 0.7rem;
-                padding: 8px 15px;
-            }
-        }
-
-        /* إصلاح مشكلة التمرير */
-        .chat-column {
-            overflow: hidden;
-        }
-        .chat-container {
-            overflow: hidden;
+            body { padding: 8px; padding-top: 10px; }
+            .header { padding: 10px 15px; flex-direction: column; align-items: flex-start; gap: 5px; }
+            .title { font-size: 1rem; }
+            .chat-column { min-height: 350px; max-height: 400px; }
+            .chat-container iframe { min-height: 350px; }
+            .footer { font-size: 0.7rem; padding: 8px 15px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- رأس الصفحة -->
         <div class="header">
             <div class="title">
                 <span class="live-badge">🔴 مباشر</span>
                 تقوية رياضيات
             </div>
-            <div class="viewers-info">
-                👤 142 مشاهد
-            </div>
+            <div class="viewers-info">👤 142 مشاهد</div>
         </div>
 
-        <!-- التخطيط المقسم -->
         <div class="split-layout">
-            <!-- عمود الفيديو -->
+            <!-- الفيديو -->
             <div class="video-column">
                 <div class="video-wrap">
                     <iframe 
@@ -241,23 +189,22 @@
                 </div>
             </div>
 
-            <!-- عمود الدردشة (مفتوح دائماً) -->
+            <!-- الدردشة المباشرة (تظهر المحادثة فوراً) -->
             <div class="chat-column">
                 <div class="chat-header">
                     <span>💬 دردشة مباشرة</span>
                     <span class="online">🟢 متصل الآن</span>
                 </div>
                 <div class="chat-container">
-                    <!-- رابط دردشة Tawk.to المضمنة -->
+                    <!-- الرابط السحري: هذا الرابط يفتح المحادثة مباشرة بدون شاشة ترحيب -->
                     <iframe 
-                        src="https://tawk.to/chat/6a7074dbdc34b31d4c319c64/1jv3kgufl?lang=ar" 
+                        src="https://tawk.to/chat/6a7074dbdc34b31d4c319c64/1jv3kgufl?lang=ar&direct=true" 
                         allowfullscreen>
                     </iframe>
                 </div>
             </div>
         </div>
 
-        <!-- تذييل -->
         <div class="footer">
             📢 تابعنا على <a href="#">يوتيوب</a> | جميع الحقوق محفوظة © 2026
         </div>
