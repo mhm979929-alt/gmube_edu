@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بث مباشر مع دردشة</title>
+    <title>بث مباشر - تقوية رياضيات</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #0f0c29;
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             font-family: 'Cairo', sans-serif;
             padding: 12px;
@@ -18,7 +17,7 @@
             align-items: center;
         }
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             width: 100%;
             background: rgba(20, 20, 30, 0.9);
             backdrop-filter: blur(6px);
@@ -32,6 +31,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .title {
             color: #fff;
@@ -55,31 +56,16 @@
             50% { opacity: 1; transform: scale(1.05); background: #ffcccc; }
             100% { opacity: 0.7; transform: scale(0.95); }
         }
-        .split-layout {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0;
-        }
-        .video-column {
-            flex: 2;
-            min-width: 300px;
-            position: relative;
-        }
-        .chat-column {
-            flex: 1;
-            min-width: 280px;
-            background: #1a1a2e;
-            border-right: 1px solid #333;
-            max-height: 600px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        .viewers-info {
+            color: #fff;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
         }
         .video-wrap {
             position: relative;
-            padding-bottom: 56.25%;
+            padding-bottom: 56.25%; /* 16:9 */
             height: 0;
             background: #000;
         }
@@ -91,70 +77,66 @@
             height: 100%;
             border: 0;
         }
-        .chat-message {
-            color: #aaa;
-            text-align: center;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        .chat-message .icon {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 15px;
-        }
-        .chat-message .highlight {
-            color: #ff6b6b;
-            font-weight: bold;
-        }
         .footer {
             padding: 12px 20px;
             background: #1a1a2e;
             color: #aaa;
             text-align: center;
             border-top: 1px solid #333;
+            font-size: 0.9rem;
         }
-        @media (max-width: 768px) {
-            .split-layout { flex-direction: column; }
-            .chat-column { border-right: none; border-top: 1px solid #333; max-height: 300px; }
+        .footer a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            .title { font-size: 1.2rem; }
+            .viewers-info { font-size: 0.7rem; padding: 3px 10px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- رأس الصفحة -->
         <div class="header">
             <div class="title">
                 <span class="live-badge">🔴 مباشر</span>
                 تقوية رياضيات
             </div>
-            <div style="color:#fff; font-size:0.9rem;">👤 142 مشاهد</div>
-        </div>
-
-        <div class="split-layout">
-            <!-- عمود الفيديو -->
-            <div class="video-column">
-                <div class="video-wrap">
-                    <iframe 
-                        src="https://www.youtube.com/embed/sWVGXj1Vz9o?autoplay=1&mute=1&controls=1&rel=0" 
-                        allow="autoplay; encrypted-media; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-
-            <!-- عمود الدردشة - رسالة بديلة -->
-            <div class="chat-column">
-                <div class="chat-message">
-                    <span class="icon">💬</span>
-                    الدردشة غير متاحة حالياً<br>
-                    <span class="highlight">هذا الفيديو مسجل وليس بثاً مباشراً</span><br>
-                    <small style="font-size:0.85rem; color:#666;">تواصل معنا عبر التعليقات</small>
-                </div>
+            <div class="viewers-info">
+                👤 142 مشاهد
             </div>
         </div>
 
+        <!-- الفيديو -->
+        <div class="video-wrap">
+            <iframe 
+                src="https://www.youtube.com/embed/sWVGXj1Vz9o?autoplay=1&mute=1&controls=1&rel=0" 
+                allow="autoplay; encrypted-media; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <!-- تذييل -->
         <div class="footer">
-            📢 تابعنا على <a href="#" style="color:#ff6b6b;">يوتيوب</a> | جميع الحقوق محفوظة © 2026
+            📢 تابعنا على <a href="#">يوتيوب</a> | جميع الحقوق محفوظة © 2026
         </div>
     </div>
+
+    <!-- كود Tawk.to الذي أرسلته (سيظهر في الزاوية) -->
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6a7074dbdc34b31d4c319c64/1jv3kgufl';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!--End of Tawk.to Script-->
 </body>
 </html>
