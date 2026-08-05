@@ -11,7 +11,7 @@ const APPWRITE_API_KEY = "standard_92952f7a83daa4e338333df110bec32bd3846e535d5d6
 // ── خدمة "اسأل كتابك" (Supabase + Groq) ─────────────────────────
 const SUPABASE_URL = "https://omcdeuyumsyrwhtkvono.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tY2RldXl1bXN5cndodGt2b25vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0ODUwOTcsImV4cCI6MjEwMDA2MTA5N30.-HWniBIpRDxvpwugATN8TWsVaaOrxbH-P4KJC77w7Bc";
-const GROQ_KEY = "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";
+const GROQ_KEY = "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";
 
 const COLLECTIONS = {
   TEACHERS: "teachers",
