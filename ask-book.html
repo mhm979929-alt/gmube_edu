@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>اسأل كتابك | GMube Edu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- الإعدادات المشتركة (مفاتيح API) -->
+    <script src="js/config.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Cairo', sans-serif; background: #0a1a0a; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 0; margin: 0; }
+        
+        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: #0d1f0d; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.8); display: flex; flex-direction: column; }
+        
+        /* الشريط العلوي */
+        .app-header { background: linear-gradient(135deg, #0a1a0a, #1a4a1a); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.5); border-bottom: 1px solid rgba(42, 106, 42, 0.3); }
+        .app-header h1 { font-size: 20px; font-weight: 900; margin: 0; display: flex; align-items: center; gap: 8px; color: #e0f0e0; }
+        .app-header h1 span { font-weight: 400; opacity: 0.8; color: #6a9a6a; }
+        
+        .app-content { padding: 16px 20px 20px; flex: 1; display: flex; flex-direction: column; }
+        
+        .selection-screen { display: none; }
+        .chat-screen { display: none; flex-direction: column; flex: 1; }
+        .active-screen { display: flex !important; }
+        
+        /* صفحة اختيار الكتاب */
+        .subtitle { color: #6a8a6a; font-size: 13px; text-align: center; margin-bottom: 16px; font-weight: 400; }
+        .book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .book-card { background: #1a2a1a; border: 2px solid #2a4a2a; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; color: #c0e0c0; }
+        .book-card:hover { border-color: #4a8a4a; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(26, 107, 26, 0.2); }
+        .book-card .icon { font-size: 30px; display: block; margin-bottom: 8px; }
+        .book-card .name { font-weight: 700; font-size: 16px; }
+        
+        /* شاشة المحادثة */
+        .input-group { display: flex; gap: 10px; margin-bottom: 12px; }
+        input { flex: 1; padding: 14px 16px; border: 2px solid #2a4a2a; border-radius: 14px; font-size: 15px; font-family: 'Cairo', sans-serif; outline: none; transition: 0.3s; background: #1a2a1a; color: #c0e0c0; }
+        input:focus { border-color: #4a8a4a; box-shadow: 0 0 0 3px rgba(74, 138, 74, 0.15); background: #1e2e1e; }
+        button.ask-btn { padding: 14px 24px; background: linear-gradient(135deg, #1a6a1a, #2a8a2a); color: white; border: none; border-radius: 14px; font-size: 15px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; box-shadow: 0 4px 15px rgba(26, 106, 26, 0.3); }
+        button.ask-btn:disabled { background: #3a5a3a; transform: none; box-shadow: none; opacity: 0.6; }
+        
+        .loading { display: none; text-align: center; padding: 10px 0; color: #6a9a6a; font-weight: 600; font-size: 14px; }
+        .loading.show { display: block; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid #2a4a2a; border-top: 3px solid #4a8a4a; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 8px; vertical-align: middle; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .answer-box { background: #1a2a1a; padding: 18px 20px; border-radius: 16px; min-height: 60px; margin-top: 6px; border-right: 4px solid #4a8a4a; line-height: 1.8; font-size: 15px; color: #c0e0c0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); overflow-x: auto; }
+        .answer-placeholder { color: #6a8a6a; }
+        .footer { text-align: center; padding: 10px 0 14px; color: #4a6a4a; font-size: 11px; margin-top: auto; }
+
+        /* أزرار التحكم */
+        .header-btn-group { display: flex; gap: 8px; align-items: center; }
+        .btn-icon { background: rgba(255,255,255,0.08); border: none; color: white; font-size: 14px; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: 'Cairo', sans-serif; transition: 0.2s; }
+        .btn-icon:hover { background: rgba(255,255,255,0.15); }
+
+        /* الشريط الجانبي */
+        .drawer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 30; backdrop-filter: blur(4px); }
+        .drawer-overlay.open { display: block; }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 280px;
+            height: 100%;
+            background: #0d1f0d;
+            z-index: 40;
+            transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(42, 106, 42, 0.1);
+        }
+        .drawer.open { left: 0; }
+
+        .drawer-header { background: linear-gradient(135deg, #0a1a0a, #1a4a1a); color: white; padding: 20px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(42, 106, 42, 0.15); }
+        .drawer-header h2 { font-size: 18px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; color: #e0f0e0; }
+        .drawer-close { background: rgba(255,255,255,0.08); border: none; color: white; font-size: 20px; padding: 4px 10px; border-radius: 10px; cursor: pointer; }
+
+        .drawer-body { flex: 1; overflow-y: auto; padding: 12px 14px; }
+        .drawer-body::-webkit-scrollbar { width: 4px; }
+        .drawer-body::-webkit-scrollbar-track { background: #1a2a1a; }
+        .drawer-body::-webkit-scrollbar-thumb { background: #4a8a4a; border-radius: 4px; }
+
+        .drawer-body .history-item { padding: 12px 14px; margin-bottom: 6px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 14px; color: #a0c0a0; background: #1a2a1a; display: flex; flex-direction: column; border-right: 3px solid transparent; }
+        .drawer-body .history-item:hover { background: #222a22; border-right-color: #4a8a4a; }
+        .drawer-body .history-item .q-text { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .drawer-body .history-item .q-time { font-size: 11px; color: #6a8a6a; margin-top: 2px; }
+        .drawer-body .empty-history { color: #6a8a6a; text-align: center; padding: 30px 20px; font-size: 14px; }
+
+        .drawer-footer { padding: 12px 14px; border-top: 1px solid #1a2a1a; }
+        .drawer-footer button { width: 100%; padding: 10px; background: #1a2a1a; border: 1px solid #2a4a2a; border-radius: 12px; color: #a0c0a0; font-family: 'Cairo', sans-serif; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .drawer-footer button:hover { background: #2a4a2a; border-color: #4a8a4a; color: #e0f0e0; }
+
+        .answer-box mjx-container {
+            display: inline-block;
+            margin: 0 2px;
+            color: #4a8a4a;
+        }
+        .answer-box .math-inline {
+            background: #0a1a0a;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* ===== عداد الأسئلة اليومية ===== */
+        .daily-limit-container {
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .daily-limit-text {
+            display: flex;
+            justify-content: space-between;
+            color: #6a8a6a;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .daily-limit-text .remaining {
+            color: #4a8a4a;
+        }
+        .daily-limit-text .used {
+            color: #8aba8a;
+        }
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: #1a2a1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2a8a2a, #4a8a4a);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .progress-fill.full {
+            background: #8a3a3a;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- الشريط العلوي -->
+        <div class="app-header">
+            <div class="header-btn-group">
+                <button class="btn-icon" id="changeBookBtn" style="display:none;" onclick="goHome()">🔀 تغيير</button>
+                <button class="btn-icon" id="menuBtn" style="display:none;" onclick="toggleDrawer()">☰</button>
+            </div>
+            <h1>📖 اسأل <span>كتابك</span></h1>
+            <div></div>
+        </div>
+
+        <!-- شاشة اختيار الكتاب -->
+        <div id="selectionScreen" class="app-content selection-screen active-screen">
+            <div class="subtitle" style="margin-top: 30px;"><strong>📚</strong> اختر الكتاب الذي تريد البحث فيه</div>
+            <div id="bookGrid" class="book-grid">
+                <div style="color: #6a8a6a; text-align: center; grid-column: 1/-1;">جاري تحميل الكتب...</div>
+            </div>
+            <div class="footer"><strong>GMube Edu</strong> — جميع الحقوق محفوظة</div>
+        </div>
+
+        <!-- شاشة المحادثة -->
+        <div id="chatScreen" class="app-content chat-screen">
+            <div class="subtitle" id="selectedBookDisplay">🔍 أنت تتصفح: <strong></strong></div>
+
+            <!-- ===== عداد الأسئلة ===== -->
+            <div class="daily-limit-container">
+                <div class="daily-limit-text">
+                    <span class="used">اليوم: <span id="usedCount">0</span></span>
+                    <span class="remaining">بقي: <span id="remainingCount">25</span></span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="questionInput" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key=='Enter') askQuestion()">
+                <button class="ask-btn" id="askBtn" onclick="askQuestion()">اسأل</button>
+            </div>
+
+            <div id="loadingIndicator" class="loading"><div class="spinner"></div> <span>جاري البحث في كتابك...</span></div>
+            <div id="answerContainer" class="answer-box"><span class="answer-placeholder">📚 ستظهر الإجابة من كتابك هنا</span></div>
+            <div class="footer"><strong>GMube Edu</strong> — جميع الحقوق محفوظة</div>
+        </div>
+
+        <!-- الشريط الجانبي -->
+        <div id="drawerOverlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
+        <div id="drawer" class="drawer">
+            <div class="drawer-header"><h2>📜 سجلي</h2><button class="drawer-close" onclick="toggleDrawer()">✕</button></div>
+            <div class="drawer-body" id="drawerBody"><div class="empty-history">لا توجد أسئلة سابقة</div></div>
+            <div class="drawer-footer"><button onclick="clearHistory()">🗑️ مسح الكل</button></div>
+        </div>
+    </div>
+
+    <script>
+        // المفاتيح (Supabase / Groq) موجودة في js/config.js ولا تُعاد كتابتها هنا.
+
+        // ==========================================
+        // التحقق من تسجيل الدخول
+        // ==========================================
+        const storedSession = (() => {
+            try { return JSON.parse(localStorage.getItem('gmube_edu_session')); }
+            catch (e) { return null; }
+        })();
+
+        const LOGIN_REQUIRED_HTML = `
+            <div style="font-family:'Cairo',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0a1a0a;color:#c0e0c0;text-align:center;padding:20px;">
+                <div style="font-size:40px;margin-bottom:12px;">🔒</div>
+                <h1 style="font-size:20px;margin-bottom:8px;">يرجى تسجيل الدخول</h1>
+                <p style="color:#6a8a6a;margin-bottom:20px;font-size:14px;">للاستفادة من خاصية "اسأل كتابك" سجّل دخولك أولاً</p>
+                <a href="index.html#/login" style="background:#2a8a2a;color:#fff;text-decoration:none;padding:12px 28px;border-radius:14px;font-weight:700;font-size:15px;">تسجيل الدخول</a>
+            </div>`;
+
+        // ==========================================
+        // إدارة حد الأسئلة اليومية (25 سؤال)
+        // ==========================================
+        const DAILY_LIMIT = 25;
+        
+        function checkDailyLimit() {
+            const today = new Date().toLocaleDateString('en-GB');
+            const savedDate = localStorage.getItem('askbook_last_date');
+            let count = parseInt(localStorage.getItem('askbook_daily_count')) || 0;
+
+            if (savedDate !== today) {
+                count = 0;
+                localStorage.setItem('askbook_last_date', today);
+                localStorage.setItem('askbook_daily_count', '0');
+            }
+
+            return count;
+        }
+
+        function incrementDailyCount() {
+            const today = new Date().toLocaleDateString('en-GB');
+            let count = parseInt(localStorage.getItem('askbook_daily_count')) || 0;
+            
+            const savedDate = localStorage.getItem('askbook_last_date');
+            if (savedDate !== today) {
+                count = 0;
+                localStorage.setItem('askbook_last_date', today);
+            }
+
+            count++;
+            localStorage.setItem('askbook_daily_count', count.toString());
+            return count;
+        }
+
+        function updateDailyUI() {
+            const count = checkDailyLimit();
+            const remaining = Math.max(0, DAILY_LIMIT - count);
+            const percentage = Math.min(100, (count / DAILY_LIMIT) * 100);
+
+            document.getElementById('usedCount').textContent = count;
+            document.getElementById('remainingCount').textContent = remaining;
+            
+            const fill = document.getElementById('progressFill');
+            fill.style.width = percentage + '%';
+            if (count >= DAILY_LIMIT) {
+                fill.classList.add('full');
+            } else {
+                fill.classList.remove('full');
+            }
+        }
+        // ==========================================
+
+        let currentBook = localStorage.getItem('askbook_current_book') || null;
+        let conversationHistory = JSON.parse(localStorage.getItem('askbook_history')) || [];
+
+        const selectionScreen = document.getElementById('selectionScreen');
+        const chatScreen = document.getElementById('chatScreen');
+        const bookGrid = document.getElementById('bookGrid');
+        const selectedBookDisplay = document.getElementById('selectedBookDisplay').querySelector('strong');
+        const menuBtn = document.getElementById('menuBtn');
+        const changeBookBtn = document.getElementById('changeBookBtn');
+
+        // تهيئة الصفحة (تتطلب تسجيل الدخول)
+        if (!storedSession) {
+            document.body.innerHTML = LOGIN_REQUIRED_HTML;
+        } else if (currentBook) {
+            showChatScreen(currentBook);
+        } else {
+            loadBooks().catch(() => {
+                document.getElementById('bookGrid').innerHTML = '<div style="grid-column:1/-1; text-align:center;color:#ff6b6b;">فشل تحميل الكتب. تحقق من اتصالك.</div>';
+            });
+        }
+
+        async function loadBooks() {
+            const url = `${SUPABASE_URL}/rest/v1/books?select=id,book_name,book_description&is_active=eq.true`;
+            const res = await fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+            if (!res.ok) throw new Error('فشل تحميل الكتب');
+            const data = await res.json();
+
+            if (data.length === 0) {
+                bookGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center;color:#6a8a6a;">لا توجد كتب متاحة حالياً.</div>`;
+                return;
+            }
+
+            bookGrid.innerHTML = data.map(book => `
+                <div class="book-card" onclick="selectBook('${book.book_name}')">
+                    <span class="icon">📖</span>
+                    <div class="name">${book.book_name}</div>
+                    <div style="font-size:12px;color:#6a8a6a;margin-top:5px;">${book.book_description || ''}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectBook(bookName) {
+            currentBook = bookName;
+            localStorage.setItem('askbook_current_book', bookName);
+            showChatScreen(bookName);
+        }
+
+        function goHome() {
+            localStorage.removeItem('askbook_current_book');
+            currentBook = null;
+            chatScreen.classList.remove('active-screen');
+            selectionScreen.classList.add('active-screen');
+            changeBookBtn.style.display = 'none';
+            menuBtn.style.display = 'none';
+            loadBooks().catch(() => {
+                document.getElementById('bookGrid').innerHTML = '<div style="grid-column:1/-1; text-align:center;color:#ff6b6b;">فشل تحميل الكتب. تحقق من اتصالك.</div>';
+            });
+        }
+
+        function showChatScreen(bookName) {
+            selectionScreen.classList.remove('active-screen');
+            chatScreen.classList.add('active-screen');
+            selectedBookDisplay.textContent = bookName;
+            changeBookBtn.style.display = 'flex';
+            menuBtn.style.display = 'block';
+            renderDrawerHistory();
+
+            // تحديث العداد
+            updateDailyUI();
+
+            const askBtn = document.getElementById('askBtn');
+            const count = checkDailyLimit();
+            if (count >= DAILY_LIMIT) {
+                askBtn.disabled = true;
+                document.getElementById('answerContainer').innerHTML = `<span style="color:#ff6b6b;">⚠️ لقد استخدمت حد الـ ${DAILY_LIMIT} سؤالاً لهذا اليوم. عد غداً.</span>`;
+            } else {
+                askBtn.disabled = false;
+                document.getElementById('answerContainer').innerHTML = '<span class="answer-placeholder">📚 ستظهر الإجابة من كتابك هنا</span>';
+            }
+        }
+
+        async function askQuestion() {
+            const question = document.getElementById('questionInput').value.trim();
+            if (!question) return;
+
+            const currentCount = checkDailyLimit();
+            if (currentCount >= DAILY_LIMIT) {
+                document.getElementById('answerContainer').innerHTML = `<span style="color:#ff6b6b;">⚠️ لقد استخدمت حد الـ ${DAILY_LIMIT} سؤالاً لهذا اليوم. عد غداً.</span>`;
+                return;
+            }
+
+            const btn = document.getElementById('askBtn');
+            const loader = document.getElementById('loadingIndicator');
+            const container = document.getElementById('answerContainer');
+
+            btn.disabled = true;
+            loader.classList.add('show');
+            container.innerHTML = '';
+
+            try {
+                const words = question.split(' ').filter(w => w.length > 2);
+                let allResults = [];
+                
+                for (let word of words) {
+                    const url = `${SUPABASE_URL}/rest/v1/knowledge_base?select=chunk_text&book_name=eq.${encodeURIComponent(currentBook)}&chunk_text=ilike.*${encodeURIComponent(word)}*&limit=3`;
+                    const response = await fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+                    if (!response.ok) continue;
+                    const data = await response.json();
+                    allResults = [...allResults, ...data.map(item => item.chunk_text)];
+                }
+
+                const results = [...new Set(allResults)].slice(0, 5);
+
+                if (results.length === 0) {
+                    container.innerHTML = '📚 عذراً، لم أجد إجابة في هذا الكتاب.';
+                    return;
+                }
+
+                const context = results.join('\n\n');
+                const answer = await askGroq(question, context, currentBook);
+                
+                container.innerHTML = answer.replace(/\n/g, '<br>');
+                
+                if (window.MathJax && MathJax.typesetPromise) {
+                    MathJax.typesetPromise([container]).catch(() => {});
+                }
+                
+                conversationHistory.push({ question, answer, timestamp: new Date().toLocaleString('ar-EG') });
+                if (conversationHistory.length > 50) conversationHistory = conversationHistory.slice(-50);
+                localStorage.setItem('askbook_history', JSON.stringify(conversationHistory));
+                renderDrawerHistory();
+
+                const newCount = incrementDailyCount();
+                updateDailyUI();
+                
+                if (newCount >= DAILY_LIMIT) {
+                    btn.disabled = true;
+                    container.innerHTML += `<br><br><span style="color:#ff6b6b;">⚠️ لقد وصلت إلى حد الـ ${DAILY_LIMIT} سؤالاً. استخدمت جميع أسئلتك لهذا اليوم.</span>`;
+                }
+
+            } catch (error) {
+                container.innerHTML = `<div style="color:#ff6b6b;">⚠️ خطأ: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                loader.classList.remove('show');
+            }
+        }
+
+        async function askGroq(question, context, bookName) {
+            const lastQuestions = conversationHistory.slice(-3);
+            let historyText = lastQuestions.map((item, idx) => `السؤال ${idx+1}: ${item.question}\nالإجابة: ${item.answer.substring(0, 150)}...`).join('\n');
+
+            let basePrompt = `أنت مساعد ذكي. أجب بناءً على النص المرفق فقط. لا تخترع.`;
+            let physicsInstruction = `تعليمات مهمة جداً للعرض: عند كتابة أي معادلة رياضية، اكتبها بصيغة LaTeX بين علامتي $ (مثال: $\\sqrt{2}$). لا تستخدم صيغ برمجية مثل sqrt() أو * للضرب، بل استخدم الرموز الرياضية الصحيحة.`;
+
+            let finalPrompt = '';
+            if (bookName === 'الفيزياء') {
+                finalPrompt = `${basePrompt} ${physicsInstruction}`;
+            } else {
+                finalPrompt = basePrompt;
+            }
+
+            finalPrompt += `${historyText ? '\n\nالمحادثة السابقة:\n'+historyText : ''}\n\nالنص المرفق:\n${context}\n\nسؤال الطالب: ${question}\n\nالإجابة:`;
+
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${GROQ_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: finalPrompt }], temperature: 0.3 })
+            });
+            if (!response.ok) {
+                let msg = response.status;
+                try { msg = (await response.json()).error?.message || response.status; } catch (e) {}
+                if (response.status === 401) {
+                    throw new Error('مفتاح Groq غير صالح أو منتهي الصلاحية. يرجى تحديث GROQ_KEY في js/config.js.');
+                }
+                throw new Error(msg);
+            }
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        function toggleDrawer() {
+            document.getElementById('drawer').classList.toggle('open');
+            document.getElementById('drawerOverlay').classList.toggle('open');
+        }
+
+        function renderDrawerHistory() {
+            const drawerBody = document.getElementById('drawerBody');
+            if (conversationHistory.length === 0) { drawerBody.innerHTML = '<div class="empty-history">لا توجد أسئلة سابقة</div>'; return; }
+            drawerBody.innerHTML = conversationHistory.map((item, index) => `
+                <div class="history-item" onclick="loadQuestion(${index})">
+                    <span class="q-text">${item.question.length > 35 ? item.question.substring(0,35)+'...' : item.question}</span>
+                    <span class="q-time">${item.timestamp}</span>
+                </div>
+            `).join('');
+        }
+        
+        function loadQuestion(index) {
+            const item = conversationHistory[index];
+            document.getElementById('questionInput').value = item.question;
+            document.getElementById('answerContainer').innerHTML = item.answer.replace(/\n/g, '<br>');
+            
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([document.getElementById('answerContainer')]).catch(() => {});
+            }
+            
+            toggleDrawer();
+        }
+
+        function clearHistory() {
+            if(confirm('مسح الكل؟')) {
+                conversationHistory = [];
+                localStorage.setItem('askbook_history', JSON.stringify(conversationHistory));
+                renderDrawerHistory();
+                document.getElementById('answerContainer').innerHTML = '<span class="answer-placeholder">📚 ستظهر الإجابة من كتابك هنا</span>';
+                toggleDrawer();
+            }
+        }
+    </script>
+</body>
+</html>
