@@ -13,8 +13,8 @@ async function renderHome() {
         </div>
         <div class="top-actions">
           ${session
-            ? `<a href="https://live-red-zeta.vercel.app/" class="icon-btn" title="اسأل كتابك" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
-                 <i data-feather="clipboard"></i>
+            ? `<a href="#" class="icon-btn" title="اسأل كتابك" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
+                الدراسة الجماعية <قريبا >
                </a>
                <button class="icon-btn" onclick="navigateTo('/notifications')" title="الإشعارات">
                  <i data-feather="bell"></i>
