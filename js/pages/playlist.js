@@ -146,21 +146,52 @@ async function renderPlaylist(playlistId) {
 }
 
 // ── دوال النوافذ المنبثقة للملخصات والصور والصوتيات ──
+const SUMMARY_FOOTER = "هذا الملخص من المنصة التعليمية السورية";
+
+function summaryShareText(summary) {
+  const meta = [summary.teacher_name || "", formatDate(summary.created_at)].filter(Boolean).join(" · ");
+  return [summary.title, meta, "", summary.content || "", "", SUMMARY_FOOTER].filter(Boolean).join("\n");
+}
+
+async function shareSummaryText(summary) {
+  const text = summaryShareText(summary);
+  if (navigator.share) {
+    try { await navigator.share({ title: summary.title, text }); return; } catch {}
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    try { await navigator.clipboard.writeText(text); toast("تم نسخ نص الملخص", "success"); return; } catch {}
+  }
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); toast("تم نسخ نص الملخص", "success"); } catch {}
+  ta.remove();
+}
+
 function showSummaryModal(summary) {
   const modal = document.createElement("div");
   modal.className = "modal-overlay";
   modal.innerHTML = `<div class="modal-box summary-modal">
     <div class="modal-header">
       <span class="modal-title">${escHtml(summary.title)}</span>
-      <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i data-feather="x"></i></button>
+      <div class="modal-actions">
+        <button class="modal-share-btn" title="مشاركة الملخص"><i data-feather="share-2"></i></button>
+        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i data-feather="x"></i></button>
+      </div>
     </div>
     <div class="modal-body">
       <p class="summary-meta">${escHtml(summary.teacher_name || "")} · ${formatDate(summary.created_at)}</p>
       <div class="summary-content">${escHtml(summary.content)}</div>
+      <div class="summary-footer">${SUMMARY_FOOTER}</div>
     </div>
   </div>`;
   document.body.appendChild(modal);
   featherRefresh();
+  modal.querySelector(".modal-share-btn").addEventListener("click", e => {
+    e.stopPropagation();
+    shareSummaryText(summary);
+  });
   modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
 }
 
