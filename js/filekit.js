@@ -31,6 +31,33 @@ const FileKit = (() => {
     return u;
   }
 
+  // رابط عرض من الخادم (Google Docs viewer) يعمل للملفات الكبيرة وروابط Drive
+  function gviewUrl(url) {
+    const u = normalize(url);
+    const m = u.match(/drive\.google\.com\/(?:uc\?export=download&id=|file\/d\/|open\?id=)([^&/?]+)/);
+    if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
+    return `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(u)}`;
+  }
+
+  // فتح رابط في المتصفح الخارجي - يعمل داخل WebView (AppCreator24)
+  function openExternal(url) {
+    const u = normalize(url);
+    try {
+      const w = window.open(u, "_blank");
+      if (w && !w.closed) return;
+    } catch {}
+    try {
+      const a = document.createElement("a");
+      a.href = u;
+      a.target = "_blank";
+      a.rel = "noopener";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch {}
+    try { window.location.href = u; } catch {}
+  }
+
   function fileLabel(url) {
     const e = ext(url);
     if (!e) return "ملف";
@@ -38,6 +65,8 @@ const FileKit = (() => {
   }
 
   // تحميل مباشر: نحاول blob (يعمل بشكل ممتاز داخل WebView) ثم روابط عادية
+  const MAX_BLOB_SIZE = 15 * 1024 * 1024; // 15MB
+
   async function download(url, title, btn) {
     const u = normalize(url);
     const name = `${(title || "file").replace(/[\\/:*?"<>|]+/g, " ").trim()}.${ext(u) || "pdf"}`;
@@ -48,6 +77,7 @@ const FileKit = (() => {
       const res = await fetch(u, { mode: "cors" });
       if (!res.ok) throw new Error("bad response");
       const total = Number(res.headers.get("content-length")) || 0;
+      if (total > MAX_BLOB_SIZE) throw new Error("file too large for blob");
       let received = 0;
       const chunks = [];
       const reader = res.body && res.body.getReader ? res.body.getReader() : null;
@@ -77,17 +107,10 @@ const FileKit = (() => {
       if (window.toast) toast("تم تحميل الملف بنجاح", "success");
       return true;
     } catch {
-      // بديل: رابط تحميل مباشر يفتحه المتصفح/مدير التحميل في التطبيق
-      setState("فتح التحميل…");
-      const a = document.createElement("a");
-      a.href = u;
-      a.download = name;
-      a.target = "_blank";
-      a.rel = "noopener";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      if (window.toast) toast("بدأ التحميل في المتصفح", "info");
+      // بديل: فتح الرابط مباشرة في المتصفح الخارجي (يعمل داخل WebView)
+      setState("فتح في المتصفح…");
+      openExternal(u);
+      if (window.toast) toast("جارٍ الفتح في المتصفح للتحميل", "info");
       setTimeout(() => setState("تحميل الملف"), 1500);
       return false;
     }
@@ -191,14 +214,14 @@ const FileKit = (() => {
       const act = btn.dataset.act;
       if (act === "view") { closeSheet(); openViewer(u, title); }
       else if (act === "download") { download(u, title, btn.querySelector("span:last-child")); }
-      else if (act === "browser") { window.open(u, "_blank", "noopener"); }
+      else if (act === "browser") { closeSheet(); openExternal(u); }
       else if (act === "share") { share(u, title); }
       else if (act === "copy") { copyLink(u); }
       else if (act === "close") { closeSheet(); }
     });
   }
 
-  return { open, openViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio };
+  return { open, openViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, openExternal, gviewUrl };
 })();
 
 // توافق مع الاستدعاءات القديمة
@@ -250,7 +273,7 @@ const PdfReader = (() => {
   }
 
   async function open(url, title) {
-    if (!isReady()) { window.open(normalize(url), "_blank", "noopener"); return; }
+    if (!isReady()) { FileKit.openExternal(url); return; }
     close();
     const u = normalize(url);
     buildOverlay(title);
@@ -262,7 +285,7 @@ const PdfReader = (() => {
       if (!btn) return;
       const act = btn.dataset.act;
       if (act === "close") close();
-      else if (act === "dl") download(u, title, null);
+      else if (act === "dl") FileKit.download(u, title, null);
       else if (act === "zoom-in") setZoom(scale * 1.2);
       else if (act === "zoom-out") setZoom(scale / 1.2);
       else if (act === "prev") gotoPage(currentPage - 1);
@@ -293,10 +316,19 @@ const PdfReader = (() => {
       updateZoomLabel();
       await renderPage();
     } catch (err) {
-      overlay.querySelector(".pdf-status").style.display = "flex";
-      overlay.querySelector(".pdf-status span:last-child").textContent = "تعذر فتح الملف";
-      console.error("PDF error:", err);
+      // pdf.js فشل (ملف كبير أو CORS) → عرض عبر Google Docs viewer داخل التطبيق
+      showServerViewer(u, title);
     }
+  }
+
+  // عرض من الخادم: يعمل للملفات الكبيرة وروابط Google Drive
+  function showServerViewer(u, title) {
+    const status = overlay.querySelector(".pdf-status");
+    status.style.display = "none";
+    canvasWrap.innerHTML = `<iframe class="pdf-server-frame" src="${escHtml(FileKit.gviewUrl(u))}" allowfullscreen></iframe>`;
+    canvasWrap.querySelector("iframe").onload = () => { canvasWrap.classList.add("server"); };
+    overlay.querySelector(".pdf-page-counter").textContent = "";
+    pageInfoEl.textContent = "معاينة الخادم";
   }
 
   async function renderPage() {
