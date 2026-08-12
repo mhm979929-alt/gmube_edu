@@ -755,10 +755,6 @@ input, textarea { font-family: inherit; }
   flex: 1; overflow: auto; padding: 20px 24px; display: flex; align-items: flex-start;
 }
 .pdf-canvas { box-shadow: 0 4px 24px rgba(0,0,0,0.5); background: #fff; border-radius: 2px; }
-.pdf-canvas-wrap.server { padding: 0; overflow: hidden; }
-.pdf-server-frame {
-  width: 100%; height: 100%; border: none; background: #fff;
-}
 .photo-modal-inner { position: relative; display: flex; align-items: center; justify-content: center; }
 .modal-close-abs {
   position: absolute; top: -40px; right: 0; color: #fff;

@@ -13,7 +13,6 @@ const FileKit = (() => {
   function isPdf(url) { return ext(url) === "pdf"; }
   function isImage(url) { return ["jpg", "jpeg", "png", "webp", "gif"].includes(ext(url)); }
   function isAudio(url) { return ["mp3", "wav", "m4a", "ogg", "aac"].includes(ext(url)); }
-  function isOffice(url) { return ["doc", "docx", "ppt", "pptx", "xls", "xlsx"].includes(ext(url)); }
 
   // روابط Google Drive → رابط تحميل/عرض مباشر
   function normalize(url) {
@@ -24,37 +23,53 @@ const FileKit = (() => {
     return url;
   }
 
-  function viewerUrl(url) {
-    const u = normalize(url);
-    if (isPdf(u)) return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(u)}`;
-    if (isOffice(u)) return `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(u)}`;
-    return u;
+  // كشف نوع الملف من أول بايتات (يعمل مع Drive عبر CORS ورؤوس Range)
+  async function sniffType(url) {
+    try {
+      const res = await fetch(url, { headers: { Range: "bytes=0-15" }, mode: "cors" });
+      if (res.status !== 206 && res.status !== 200) return "";
+      const bytes = new Uint8Array(await res.arrayBuffer());
+      const head = bytes.slice(0, 16);
+      const s = String.fromCharCode(...head);
+      if (s.startsWith("%PDF")) return "pdf";
+      if (head[0] === 0xFF && head[1] === 0xD8) return "jpg";
+      if (s.startsWith("\x89PNG")) return "png";
+      if (s.startsWith("GIF8")) return "gif";
+      if (s.startsWith("OggS")) return "ogg";
+      if (s.startsWith("ID3") || s.startsWith("fLaC")) return "mp3";
+      if (s.startsWith("RIFF")) return "wav";
+      return "";
+    } catch { return ""; }
   }
 
-  // رابط عرض من الخادم (Google Docs viewer) يعمل للملفات الكبيرة وروابط Drive
-  function gviewUrl(url) {
+  // فحص الملف: امتداد من URL أو من أول بايتات، وحجمه عبر HEAD (CORS)
+  async function probe(url) {
     const u = normalize(url);
-    const m = u.match(/drive\.google\.com\/(?:uc\?export=download&id=|file\/d\/|open\?id=)([^&/?]+)/);
-    if (m) return `https://drive.google.com/file/d/${m[1]}/preview`;
-    return `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(u)}`;
+    const urlExt = ext(u);
+    let size = 0;
+    let type = "";
+    try {
+      const res = await fetch(u, { method: "HEAD", mode: "cors" });
+      if (res.ok) {
+        size = Number(res.headers.get("content-length")) || 0;
+        type = (res.headers.get("content-type") || "").toLowerCase();
+      }
+    } catch {}
+    let e = urlExt;
+    if (!e) {
+      if (type.startsWith("image/")) e = type.split("/")[1];
+      else if (type.startsWith("audio/")) e = type.split("/")[1];
+      else if (type.includes("pdf")) e = "pdf";
+    }
+    if (!e) e = await sniffType(u);
+    return { type, size, ext: e };
   }
 
-  // فتح رابط في المتصفح الخارجي - يعمل داخل WebView (AppCreator24)
+  // فتح رابط للتحميل/العرض - يعمل داخل WebView (AppCreator24)
   function openExternal(url) {
     const u = normalize(url);
-    try {
-      const w = window.open(u, "_blank");
-      if (w && !w.closed) return;
-    } catch {}
-    try {
-      const a = document.createElement("a");
-      a.href = u;
-      a.target = "_blank";
-      a.rel = "noopener";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    } catch {}
+    // في WebView، window.open محظور غالباً و <a download> يتجاهل عبر النطاقات؛
+    // location.href يوجّه المتصفح/مدير التحميل إلى الملف (الطريقة الموثوقة في Android WebView)
     try { window.location.href = u; } catch {}
   }
 
@@ -107,7 +122,7 @@ const FileKit = (() => {
       if (window.toast) toast("تم تحميل الملف بنجاح", "success");
       return true;
     } catch {
-      // بديل: فتح الرابط مباشرة في المتصفح الخارجي (يعمل داخل WebView)
+      // بديل: فتح الرابط مباشرة ليعترضه مدير التحميل/المتصفح (يعمل داخل WebView)
       setState("فتح في المتصفح…");
       openExternal(u);
       if (window.toast) toast("جارٍ الفتح في المتصفح للتحميل", "info");
@@ -144,31 +159,53 @@ const FileKit = (() => {
   }
 
   // عارض داخلي بملء الشاشة
-  function openViewer(url, title) {
+  async function openViewer(url, title) {
     const u = normalize(url);
-    if (isPdf(u)) return PdfReader.open(u, title);
-    const wrap = document.createElement("div");
-    wrap.className = "fk-viewer";
-    const body = isImage(u)
-      ? `<div class="fk-viewer-img"><img src="${escHtml(u)}" alt="${escHtml(title || "")}"></div>`
-      : isAudio(u)
-        ? `<div class="fk-viewer-audio"><div class="fk-audio-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div><audio controls autoplay src="${escHtml(u)}"></audio></div>`
-        : `<iframe src="${escHtml(viewerUrl(u))}" allowfullscreen></iframe>`;
+    const info = await probe(u);
+    const realExt = info.ext || ext(u);
+    const isPdfFile = realExt === "pdf";
+    const isImg = ["jpg", "jpeg", "png", "webp", "gif"].includes(realExt) ||
+                  (info.type && info.type.startsWith("image/"));
+    const isAud = ["mp3", "wav", "m4a", "ogg", "aac"].includes(realExt) ||
+                  (info.type && info.type.startsWith("audio/"));
 
-    wrap.innerHTML = `
-      <div class="fk-viewer-bar">
-        <button class="fk-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-        <span class="fk-viewer-title">${escHtml(title || "عرض الملف")}</span>
-        <button class="fk-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-      </div>
-      <div class="fk-viewer-body">${body}</div>`;
-    document.body.appendChild(wrap);
-    requestAnimationFrame(() => wrap.classList.add("open"));
-    wrap.querySelector('[data-act="close"]').onclick = () => {
-      wrap.classList.remove("open");
-      setTimeout(() => wrap.remove(), 220);
-    };
-    wrap.querySelector('[data-act="dl"]').onclick = (e) => download(u, title, e.currentTarget);
+    // ملف كبير لا يمكن عرضه/تحميله كـ blob → فتح مباشر في المتصفح/مدير التحميل
+    if (info.size > MAX_BLOB_SIZE) {
+      closeSheet();
+      if (window.toast) toast("الملف كبير، يُفتح في المتصفح للتحميل", "info");
+      openExternal(u);
+      return;
+    }
+
+    if (isPdfFile) return PdfReader.open(u, title);
+    if (isImg || isAud) {
+      const wrap = document.createElement("div");
+      wrap.className = "fk-viewer";
+      const body = isImg
+        ? `<div class="fk-viewer-img"><img src="${escHtml(u)}" alt="${escHtml(title || "")}"></div>`
+        : `<div class="fk-viewer-audio"><div class="fk-audio-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div><audio controls autoplay src="${escHtml(u)}"></audio></div>`;
+
+      wrap.innerHTML = `
+        <div class="fk-viewer-bar">
+          <button class="fk-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="fk-viewer-title">${escHtml(title || "عرض الملف")}</span>
+          <button class="fk-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+        <div class="fk-viewer-body">${body}</div>`;
+      document.body.appendChild(wrap);
+      requestAnimationFrame(() => wrap.classList.add("open"));
+      wrap.querySelector('[data-act="close"]').onclick = () => {
+        wrap.classList.remove("open");
+        setTimeout(() => wrap.remove(), 220);
+      };
+      wrap.querySelector('[data-act="dl"]').onclick = (e) => download(u, title, e.currentTarget);
+      return;
+    }
+
+    // غير معروف/مكتبي → فتح في المتصفح (بدون معاينة جوجل)
+    closeSheet();
+    if (window.toast) toast("يُفتح الملف في المتصفح", "info");
+    openExternal(u);
   }
 
   // ورقة الخيارات السفلية
@@ -221,7 +258,7 @@ const FileKit = (() => {
     });
   }
 
-  return { open, openViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, openExternal, gviewUrl };
+  return { open, openViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, openExternal };
 })();
 
 // توافق مع الاستدعاءات القديمة
@@ -316,19 +353,11 @@ const PdfReader = (() => {
       updateZoomLabel();
       await renderPage();
     } catch (err) {
-      // pdf.js فشل (ملف كبير أو CORS) → عرض عبر Google Docs viewer داخل التطبيق
-      showServerViewer(u, title);
+      // pdf.js فشل (ملف كبير أو CORS) → لا معاينة خارجية؛ أغلق ونفتح في المتصفح للتحميل
+      close();
+      openExternal(u);
+      if (window.toast) toast("الملف كبير جداً للمعاينة، يُفتح الآن في المتصفح", "info");
     }
-  }
-
-  // عرض من الخادم: يعمل للملفات الكبيرة وروابط Google Drive
-  function showServerViewer(u, title) {
-    const status = overlay.querySelector(".pdf-status");
-    status.style.display = "none";
-    canvasWrap.innerHTML = `<iframe class="pdf-server-frame" src="${escHtml(FileKit.gviewUrl(u))}" allowfullscreen></iframe>`;
-    canvasWrap.querySelector("iframe").onload = () => { canvasWrap.classList.add("server"); };
-    overlay.querySelector(".pdf-page-counter").textContent = "";
-    pageInfoEl.textContent = "معاينة الخادم";
   }
 
   async function renderPage() {
