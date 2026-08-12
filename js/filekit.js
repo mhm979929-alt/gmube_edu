@@ -123,6 +123,7 @@ const FileKit = (() => {
   // عارض داخلي بملء الشاشة
   function openViewer(url, title) {
     const u = normalize(url);
+    if (isPdf(u)) return PdfReader.open(u, title);
     const wrap = document.createElement("div");
     wrap.className = "fk-viewer";
     const body = isImage(u)
@@ -203,3 +204,144 @@ const FileKit = (() => {
 // توافق مع الاستدعاءات القديمة
 function copyAndOpenExternal(url, title) { FileKit.open(url, title, "كتاب"); }
 async function shareFile(url, title, type = "ملف") { return FileKit.share(url, title); }
+
+// ── PdfReader: قارئ PDF كامل داخل الموقع ───────────────────────
+const PdfReader = (() => {
+  let pdfDoc = null;
+  let currentPage = 1;
+  let scale = 1.4;
+  let overlay = null;
+  let canvasWrap = null;
+  let canvas = null;
+  let pageInfoEl = null;
+
+  function isReady() { return typeof window.pdfjsLib !== "undefined"; }
+
+  function buildOverlay(title) {
+    overlay = document.createElement("div");
+    overlay.className = "pdf-overlay";
+    overlay.innerHTML = `
+      <div class="pdf-bar">
+        <button class="pdf-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <span class="pdf-title">${escHtml(title || "قراءة PDF")}</span>
+        <span class="pdf-spacer"></span>
+        <span class="pdf-page-info">—</span>
+        <button class="pdf-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      </div>
+      <div class="pdf-toolbar">
+        <button class="pdf-icon-btn" data-act="zoom-out" aria-label="تصغير"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <span class="pdf-zoom-label">100%</span>
+        <button class="pdf-icon-btn" data-act="zoom-in" aria-label="تكبير"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <span class="pdf-tool-sep"></span>
+        <button class="pdf-icon-btn" data-act="prev" aria-label="السابق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <span class="pdf-page-counter">1 / —</span>
+        <button class="pdf-icon-btn" data-act="next" aria-label="التالي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+      <div class="pdf-status"><span class="pdf-spinner"></span><span>جارٍ تحميل الملف…</span></div>
+      <div class="pdf-canvas-wrap">
+        <canvas class="pdf-canvas"></canvas>
+      </div>`;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add("open"));
+    canvasWrap = overlay.querySelector(".pdf-canvas-wrap");
+    canvas = overlay.querySelector(".pdf-canvas");
+    pageInfoEl = overlay.querySelector(".pdf-page-info");
+    return overlay;
+  }
+
+  async function open(url, title) {
+    if (!isReady()) { window.open(normalize(url), "_blank", "noopener"); return; }
+    close();
+    const u = normalize(url);
+    buildOverlay(title);
+    overlay.querySelector(".pdf-title").textContent = title || "قراءة PDF";
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) return;
+      const btn = e.target.closest("[data-act]");
+      if (!btn) return;
+      const act = btn.dataset.act;
+      if (act === "close") close();
+      else if (act === "dl") download(u, title, null);
+      else if (act === "zoom-in") setZoom(scale * 1.2);
+      else if (act === "zoom-out") setZoom(scale / 1.2);
+      else if (act === "prev") gotoPage(currentPage - 1);
+      else if (act === "next") gotoPage(currentPage + 1);
+    });
+
+    canvasWrap.addEventListener("click", (e) => {
+      if (e.target !== canvas && !canvas.contains(e.target)) return;
+      const r = canvasWrap.getBoundingClientRect();
+      if (e.clientX < r.left + r.width * 0.3) gotoPage(currentPage - 1);
+      else if (e.clientX > r.left + r.width * 0.7) gotoPage(currentPage + 1);
+    });
+
+    try {
+      const task = pdfjsLib.getDocument(u);
+      task.onProgress = (p) => {
+        if (p.total) {
+          const pct = Math.round((p.loaded / p.total) * 100);
+          overlay.querySelector(".pdf-status span:last-child").textContent = `جارٍ تحميل الملف… ${pct}%`;
+        }
+      };
+      pdfDoc = await task.promise;
+      currentPage = 1;
+      scale = 1.4;
+      overlay.querySelector(".pdf-status").style.display = "none";
+      overlay.querySelector(".pdf-page-counter").textContent = `1 / ${pdfDoc.numPages}`;
+      pageInfoEl.textContent = `${pdfDoc.numPages} صفحة`;
+      updateZoomLabel();
+      await renderPage();
+    } catch (err) {
+      overlay.querySelector(".pdf-status").style.display = "flex";
+      overlay.querySelector(".pdf-status span:last-child").textContent = "تعذر فتح الملف";
+      console.error("PDF error:", err);
+    }
+  }
+
+  async function renderPage() {
+    if (!pdfDoc) return;
+    const page = await pdfDoc.getPage(currentPage);
+    const baseViewport = page.getViewport({ scale: 1 });
+    const wrapW = canvasWrap.clientWidth - 48;
+    const fitScale = Math.max(0.25, Math.min(1, wrapW / baseViewport.width));
+    const viewport = page.getViewport({ scale: fitScale * scale });
+
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    canvas.style.maxWidth = "100%";
+    canvas.style.height = "auto";
+    canvas.style.margin = "0 auto";
+    canvas.style.display = "block";
+
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    await page.render({ canvasContext: ctx, viewport }).promise;
+  }
+
+  function setZoom(s) {
+    scale = Math.max(0.5, Math.min(4, s));
+    updateZoomLabel();
+    renderPage();
+  }
+  function updateZoomLabel() {
+    const el = overlay.querySelector(".pdf-zoom-label");
+    if (el) el.textContent = Math.round(scale * 100) + "%";
+  }
+  function gotoPage(n) {
+    if (!pdfDoc || n < 1 || n > pdfDoc.numPages || n === currentPage) return;
+    currentPage = n;
+    overlay.querySelector(".pdf-page-counter").textContent = `${n} / ${pdfDoc.numPages}`;
+    renderPage();
+    canvasWrap.scrollTop = 0;
+  }
+  function close() {
+    if (!overlay) return;
+    overlay.classList.remove("open");
+    setTimeout(() => { if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 220);
+    overlay = null; pdfDoc = null; canvas = null; canvasWrap = null;
+  }
+
+  return { open, close };
+})();
