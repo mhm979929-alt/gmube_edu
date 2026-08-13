@@ -124,7 +124,7 @@ async function renderPlaylist(playlistId) {
       });
     } else if (playlist.type === 'photo') {
       body.innerHTML = `<div class="photos-grid">${items.map(p => `
-        <div class="photo-card" data-url="${escHtml(p.url)}" style="margin:0 14px 8px">
+        <div class="photo-card" data-url="${escHtml(p.url)}" data-title="${escHtml(p.title)}" style="margin:0 14px 8px">
           <div class="photo-preview">
             <img src="${escHtml(p.url)}" alt="${escHtml(p.title)}" loading="lazy"
               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -135,7 +135,7 @@ async function renderPlaylist(playlistId) {
       `).join("")}</div>`;
       featherRefresh();
       body.querySelectorAll(".photo-card").forEach(card => {
-        card.addEventListener("click", () => showPhotoModal(card.dataset.url));
+        card.addEventListener("click", () => showPhotoModal(card.dataset.url, card.dataset.title));
       });
     }
 
@@ -216,15 +216,39 @@ function showAudioModal(url, title) {
   modal.addEventListener("click", e => { if (e.target === modal) { modal.querySelector("audio").pause(); modal.remove(); } });
 }
 
-function showPhotoModal(url) {
+function showPhotoModal(url, title) {
   const modal = document.createElement("div");
   modal.className = "modal-overlay";
   modal.innerHTML = `<div class="photo-modal-inner">
     <button class="modal-close-abs" onclick="this.closest('.modal-overlay').remove()"><i data-feather="x"></i></button>
+    <button class="modal-share-abs" title="مشاركة الصورة"><i data-feather="share-2"></i></button>
     <img src="${escHtml(url)}" alt="صورة" style="max-width:94vw;max-height:90vh;border-radius:12px;object-fit:contain">
   </div>`;
   document.body.appendChild(modal);
   featherRefresh();
+  modal.querySelector(".modal-share-abs").addEventListener("click", e => {
+    e.stopPropagation();
+    sharePhoto(url, title);
+  });
   modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); }
   );
+}
+
+async function sharePhoto(url, title) {
+  const u = FileKit.normalize(url);
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: title || "صورة", url: u });
+      return;
+    } catch {}
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    try { await navigator.clipboard.writeText(u); toast("تم نسخ رابط الصورة", "success"); return; } catch {}
+  }
+  const ta = document.createElement("textarea");
+  ta.value = u;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); toast("تم نسخ رابط الصورة", "success"); } catch {}
+  ta.remove();
 }
