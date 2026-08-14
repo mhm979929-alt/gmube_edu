@@ -1,4 +1,15 @@
 // ── Take Test Page ──────────────────────────────────────────────
+function renderMathText(value) {
+  // نهرب HTML أولاً، ثم نترك رموز LaTeX مثل $ و\\ كما هي لـ MathJax.
+  return escHtml(String(value ?? ''));
+}
+
+function typesetTestMath(container) {
+  if (!container || !window.MathJax?.typesetPromise) return;
+  try { window.MathJax.typesetClear?.([container]); } catch (_) {}
+  window.MathJax.typesetPromise([container]).catch(() => {});
+}
+
 async function renderTakeTest(testId) {
   setPageTitle("الاختبار");
   const session = Auth.get();
@@ -58,12 +69,12 @@ async function renderTakeTest(testId) {
         ${questions.map((q, qi) => `
           <div class="question-card" id="q-${qi}">
             <span class="q-number">سؤال ${qi + 1} من ${questions.length}</span>
-            <p class="q-text">${escHtml(q.question)}</p>
+            <p class="q-text math-content">${renderMathText(q.question)}</p>
             <div class="options-list" data-qi="${qi}">
               ${(q.options || []).map((opt, oi) => `
                 <button class="option-btn" data-qi="${qi}" data-oi="${oi}">
                   <div class="radio-circle" id="radio-${qi}-${oi}"></div>
-                  <span class="option-text">${escHtml(opt)}</span>
+                  <span class="option-text math-content">${renderMathText(opt)}</span>
                 </button>
               `).join("")}
             </div>
@@ -75,6 +86,8 @@ async function renderTakeTest(testId) {
         <button class="btn-primary" id="submit-test-btn" style="min-width:120px">إرسال الإجابات</button>
       </div>
     `;
+
+    typesetTestMath(body);
 
     body.querySelectorAll(".option-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -142,10 +155,10 @@ async function renderTakeTest(testId) {
             return `<div class="review-card ${isCorrect ? "correct" : "wrong"}">
               <div class="review-header">
                 <i data-feather="${isCorrect ? "check-circle" : "x-circle"}" style="color:${isCorrect ? "#4CAF50" : "#ef4444"};flex-shrink:0"></i>
-                <p class="review-q">${escHtml(q.question)}</p>
+                <p class="review-q math-content">${renderMathText(q.question)}</p>
               </div>
-              <p class="review-answer">إجابتك: ${escHtml((q.options || [])[answerArray[i]] || "لم تُجب")}</p>
-              ${!isCorrect ? `<p class="review-correct">الصحيحة: ${escHtml((q.options || [])[q.correct] || "")}</p>` : ""}
+              <p class="review-answer math-content">إجابتك: ${renderMathText((q.options || [])[answerArray[i]] || "لم تُجب")}</p>
+              ${!isCorrect ? `<p class="review-correct math-content">الصحيحة: ${renderMathText((q.options || [])[q.correct] || "")}</p>` : ""}
             </div>`;
           }).join("")}
         </div>
@@ -154,6 +167,7 @@ async function renderTakeTest(testId) {
         </button>
       </div>
     `;
+    typesetTestMath(body);
     featherRefresh();
   }
 

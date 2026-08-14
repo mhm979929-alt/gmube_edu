@@ -636,6 +636,30 @@ input, textarea { font-family: inherit; }
 .review-answer { font-size: 12px; color: #ccc; text-align: right; margin-bottom: 4px; }
 .review-correct { font-size: 12px; color: #4CAF50; text-align: right; }
 
+/* ── Math equations in tests ───────────────── */
+.math-content {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.question-card .q-text.math-content,
+.review-q.math-content { line-height: 2.15; }
+.option-text.math-content,
+.review-answer.math-content,
+.review-correct.math-content { line-height: 2; }
+.math-content mjx-container {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+}
+.question-card .q-text mjx-container[display="true"],
+.review-q mjx-container[display="true"] {
+  margin: 0.65em 0;
+  text-align: center !important;
+}
+.option-btn .option-text mjx-container { margin: 0.15em 0; }
+
 /* ── Empty / Error ─────────────────────────────────────────── */
 .empty-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 10px; }
 .empty-icon {
