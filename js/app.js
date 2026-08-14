@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   Router.add("/channel/([^/]+)", renderChannel);
   Router.add("/playlist/([^/]+)", renderPlaylist);
   Router.add("/take-test/([^/]+)", renderTakeTest);
+  Router.add("/university-admissions", renderUniversityAdmissions);
 
   // 3. Bottom nav click handlers
   document.querySelectorAll(".nav-item").forEach(function(item) {

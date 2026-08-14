@@ -1,0 +1,4023 @@
+{
+  "schemaVersion": 1,
+  "academicYear": "2025–2026",
+  "country": "سوريا",
+  "lastUpdated": "2026-08-14",
+  "disclaimer": "النتائج ترشيحية وفق الحد الأدنى للمفاضلة العامة في الدليل المرفق، ولا تمثل قبولاً نهائياً. تحقق من الشروط الخاصة والاختبارات والوثائق من المصدر الرسمي قبل التقدم.",
+  "sources": {
+    "scientific": {
+      "label": "الفرع العلمي",
+      "announcement": "إعلان رقم /2/",
+      "file": "unisy-ad2_260814_170116.pdf"
+    },
+    "literary": {
+      "label": "الفرع الأدبي",
+      "announcement": "إعلان رقم /4/",
+      "file": "unisy-ad4_260814_170541.pdf"
+    }
+  },
+  "branches": {
+    "scientific": {
+      "label": "العلمي",
+      "records": [
+        {
+          "id": "scientific-001",
+          "program": "السنة التحضيرية",
+          "city": "اختيار الطالب",
+          "minScore": 2080,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-002",
+          "program": "السنة التحضيرية للمحافظات الشرقية",
+          "city": "اختيار الطالب",
+          "minScore": 2070,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-003",
+          "program": "الهندسة المعلوماتية",
+          "city": "دمشق",
+          "minScore": 1950,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-004",
+          "program": "الهندسة المعلوماتية",
+          "city": "إدلب",
+          "minScore": 1850,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-005",
+          "program": "الهندسة المعلوماتية",
+          "city": "اللاذقية",
+          "minScore": 1850,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-006",
+          "program": "الهندسة المعلوماتية",
+          "city": "حلب",
+          "minScore": 1850,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-007",
+          "program": "الهندسة المعلوماتية",
+          "city": "حمص",
+          "minScore": 1850,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-008",
+          "program": "العلوم الصحية",
+          "city": "حلب",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-009",
+          "program": "العلوم الصحية ( الأطراف الاصطناعية",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-010",
+          "program": "العلوم الصحية ( ادارة معلومات صحية )",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-011",
+          "program": "العلوم الصحية ( التحليل ر المخي ي )",
+          "city": "إدلب",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-012",
+          "program": "العلوم الصحية ( التخدير )",
+          "city": "إدلب",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-013",
+          "program": "العلوم الصحية ( التشخيص والعالج",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-014",
+          "program": "العلوم الصحية ( التمريض )",
+          "city": "إدلب",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-015",
+          "program": "العلوم الصحية ( السمعيات )",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-016",
+          "program": "العلوم الصحية ( الطوارئ )",
+          "city": "إدلب",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-017",
+          "program": "العلوم الصحية ( تغذية )",
+          "city": "حمص",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-018",
+          "program": "العلوم الصحية ( علاج وظيفي )",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-019",
+          "program": "العلوم الصحية ( علم النفس السريري )",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-020",
+          "program": "العلوم الصحية ( مخابر )",
+          "city": "حمص",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-021",
+          "program": "العلوم الصحية ( معالجة فيزيائية )",
+          "city": "حمص",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-022",
+          "program": "الهندسة المدنية",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-023",
+          "program": "هندسة الإلكترونيات والاتصالات",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-024",
+          "program": "هندسة الحواسيب والأتمتة",
+          "city": "دمشق",
+          "minScore": 1800,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-025",
+          "program": "الهندسة المدنية",
+          "city": "إدلب",
+          "minScore": 1750,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-026",
+          "program": "الهندسة المدنية",
+          "city": "اللاذقية",
+          "minScore": 1750,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-027",
+          "program": "الهندسة المدنية",
+          "city": "حلب",
+          "minScore": 1750,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-028",
+          "program": "الهندسة المدنية",
+          "city": "حماه",
+          "minScore": 1750,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-029",
+          "program": "الهندسة المدنية",
+          "city": "حمص",
+          "minScore": 1750,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-030",
+          "program": "الهندسة البي ولية",
+          "city": "حمص",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-031",
+          "program": "الهندسة الطبية",
+          "city": "اللاذقية",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-032",
+          "program": "الهندسة الغذائية",
+          "city": "حمص",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-033",
+          "program": "الهندسة الكيميائية",
+          "city": "حمص",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-034",
+          "program": "هندسة الإلكترونيات والاتصالات",
+          "city": "حمص",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-035",
+          "program": "هندسة الاتصالات",
+          "city": "حلب",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-036",
+          "program": "هندسة الاتصالات والإلكترونيات",
+          "city": "اللاذقية",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-037",
+          "program": "هندسة التحكم ي اآلل والحواسيب",
+          "city": "حمص",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-038",
+          "program": "هندسة الحاسبات والتحكم ي اآلل",
+          "city": "اللاذقية",
+          "minScore": 1700,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-039",
+          "program": "المعهد ى ي التقان ر ي الطت / اشعة",
+          "city": "دمشق",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-040",
+          "program": "المعهد ى ي التقان ر ي الطت / تخدير",
+          "city": "دمشق",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-041",
+          "program": "المعهد ى ي التقان ر ي الطت / مخابر",
+          "city": "دمشق",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-042",
+          "program": "الهندسة الكهربائية / الاتصالات وااللكي ون",
+          "city": "إدلب",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-043",
+          "program": "الهندسة المدنية ألبناء المحافظات الشرقية",
+          "city": "الحسكة",
+          "minScore": 1650,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-044",
+          "program": "الهندسة المدنية ألبناء المحافظات الشرقية",
+          "city": "الرقة",
+          "minScore": 1650,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-045",
+          "program": "الهندسة المعمارية",
+          "city": "إدلب",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-046",
+          "program": "الهندسة المعمارية",
+          "city": "اللاذقية",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-047",
+          "program": "الهندسة المعمارية",
+          "city": "حلب",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-048",
+          "program": "الهندسة المعمارية",
+          "city": "حمص",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-049",
+          "program": "الهندسة المعمارية",
+          "city": "دمشق",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-050",
+          "program": "الهندسة المعمارية",
+          "city": "طرطوس",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-051",
+          "program": "الهندسة المعمارية / السلمية",
+          "city": "حماه",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-052",
+          "program": "هندسة إلكترونية",
+          "city": "حلب",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-053",
+          "program": "هندسة الحواسيب",
+          "city": "حلب",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-054",
+          "program": "هندسة الطاقة الكهربائية",
+          "city": "دمشق",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-055",
+          "program": "هندسة تكنولوجيا المعلومات والاتصالات",
+          "city": "طرطوس",
+          "minScore": 1650,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-056",
+          "program": "المعهد ى ي التقان الصحي / اشعة",
+          "city": "حمص",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-057",
+          "program": "المعهد ى ي التقان الصحي / تخدير",
+          "city": "حمص",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-058",
+          "program": "المعهد ى ي التقان الصحي / مخابر",
+          "city": "حمص",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-059",
+          "program": "المعهد ى ي التقان ر ي الطت / اشعة",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-060",
+          "program": "المعهد ى ي التقان ر ي الطت / اشعة",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-061",
+          "program": "المعهد ى ي التقان ر ي الطت / اشعة",
+          "city": "ريف دمشق",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-062",
+          "program": "المعهد ى ي التقان ر ي الطت / تخدير",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-063",
+          "program": "المعهد ى ي التقان ر ي الطت / تخدير",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-064",
+          "program": "المعهد ى ي التقان ر ي الطت / تخدير",
+          "city": "ريف دمشق",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-065",
+          "program": "المعهد ى ي التقان ر ي الطت / مخابر",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-066",
+          "program": "المعهد ى ي التقان ر ي الطت / مخابر",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-067",
+          "program": "الهندسة البحرية",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-068",
+          "program": "الهندسة التقنية ( أتمتة صناعية )",
+          "city": "طرطوس",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-069",
+          "program": "الهندسة التقنية ( المكننة الزراعية )",
+          "city": "طرطوس",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-070",
+          "program": "الهندسة التقنية ( تقانات الهندسة البيئية )",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-071",
+          "program": "الهندسة التقنية ( تقانات الهندسة الحيوية )",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-072",
+          "program": "الهندسة التقنية ( تقانة األغذية )",
+          "city": "طرطوس",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-073",
+          "program": "الهندسة التقنية ( تكنولوجيا األغذية )",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-074",
+          "program": "الهندسة التقنية ( طاقات متجددة )",
+          "city": "طرطوس",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-075",
+          "program": "الهندسة التقنية ( معدات وآليات )",
+          "city": "طرطوس",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-076",
+          "program": "الهندسة الكهربائية / القدرة الكهربائية",
+          "city": "إدلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-077",
+          "program": "الهندسة المساحية والجيوماتية",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-078",
+          "program": "الهندسة النووية",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-079",
+          "program": "هندسة التحكم ي اآلل والأتمتة الصناعية",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-080",
+          "program": "هندسة التصميم واإلنتاج",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-081",
+          "program": "هندسة التصميم واإلنتاج",
+          "city": "حماه",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-082",
+          "program": "هندسة التصميم واإلنتاج",
+          "city": "حمص",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-083",
+          "program": "هندسة التصميم ي الميكانيك",
+          "city": "دمشق",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 1
+        },
+        {
+          "id": "scientific-084",
+          "program": "هندسة التصميم ي الميكانيك واإلنتاج - محافظات",
+          "city": "دير الزور",
+          "minScore": 1600,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-085",
+          "program": "هندسة الطاقة ( الميكانيكية )",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-086",
+          "program": "هندسة الطاقة الكهربائية",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-087",
+          "program": "هندسة الطاقة الكهربائية",
+          "city": "حماه",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-088",
+          "program": "هندسة الطاقة الكهربائية",
+          "city": "حمص",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-089",
+          "program": "هندسة الطاقة الكهربائية - محافظات",
+          "city": "السويداء",
+          "minScore": 1600,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-090",
+          "program": "هندسة القوى الميكانيكية",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-091",
+          "program": "هندسة القوى الميكانيكية",
+          "city": "السويداء",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-092",
+          "program": "هندسة القوى الميكانيكية",
+          "city": "حمص",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-093",
+          "program": "هندسة القيادة الكهربائية",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-094",
+          "program": "هندسة المعادن",
+          "city": "حمص",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-095",
+          "program": "هندسة الميكاترونيك",
+          "city": "اللاذقية",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-096",
+          "program": "هندسة الميكاترونيك",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-097",
+          "program": "هندسة الميكاترونيك",
+          "city": "حمص",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-098",
+          "program": "هندسة الميكانيك العام",
+          "city": "دمشق",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-099",
+          "program": "هندسة ر الطي ان",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-100",
+          "program": "هندسة نظم القدرة الكهربائية",
+          "city": "حلب",
+          "minScore": 1600,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-101",
+          "program": "االقتصاد",
+          "city": "دمشق",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-102",
+          "program": "المعهد ى ي التقان الصحي / اشعة",
+          "city": "طرطوس",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-103",
+          "program": "المعهد ى ي التقان الصحي / تخدير",
+          "city": "طرطوس",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-104",
+          "program": "المعهد ى ي التقان الصحي / مخابر",
+          "city": "دمشق",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-105",
+          "program": "المعهد ى ي التقان الصحي / مخابر",
+          "city": "طرطوس",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-106",
+          "program": "المعهد ى ي التقان ر ي الطت / تخدير",
+          "city": "حماه",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-107",
+          "program": "الهندسة البي ولية - محافظات",
+          "city": "دير الزور",
+          "minScore": 1550,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-108",
+          "program": "الهندسة الزراعية",
+          "city": "دمشق",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-109",
+          "program": "هندسة السيارات واآلليات الثقيلة",
+          "city": "دمشق",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-110",
+          "program": "هندسة الصناعات البي وكيميائية - محافظات",
+          "city": "دير الزور",
+          "minScore": 1550,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-111",
+          "program": "هندسة ميكانيك الصناعات النسيجية",
+          "city": "دمشق",
+          "minScore": 1550,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-112",
+          "program": "اإلعالم",
+          "city": "دمشق",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-113",
+          "program": "االقتصاد",
+          "city": "اللاذقية",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-114",
+          "program": "االقتصاد",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-115",
+          "program": "االقتصاد",
+          "city": "حمص",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-116",
+          "program": "االقتصاد",
+          "city": "طرطوس",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-117",
+          "program": "االقتصاد ( تمويل ومصارف )",
+          "city": "حماه",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-118",
+          "program": "االقتصاد - محافظات",
+          "city": "السويداء",
+          "minScore": 1500,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-119",
+          "program": "االقتصاد - محافظات",
+          "city": "القنيطرة",
+          "minScore": 1500,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-120",
+          "program": "االقتصاد - محافظات",
+          "city": "درعا",
+          "minScore": 1500,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-121",
+          "program": "التمريض",
+          "city": "اللاذقية",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-122",
+          "program": "التمريض",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-123",
+          "program": "التمريض",
+          "city": "حماه",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-124",
+          "program": "الحقوق",
+          "city": "اللاذقية",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-125",
+          "program": "الحقوق",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-126",
+          "program": "الحقوق",
+          "city": "حمص",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-127",
+          "program": "الحقوق",
+          "city": "دمشق",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-128",
+          "program": "العلوم البيئية",
+          "city": "دمشق",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-129",
+          "program": "المعهد ى ي التقان الصحي / اشعة",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-130",
+          "program": "المعهد ى ي التقان الصحي / اشعة",
+          "city": "دمشق",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-131",
+          "program": "المعهد ى ي التقان الصحي / تخدير",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-132",
+          "program": "المعهد ى ي التقان الصحي / تخدير",
+          "city": "دمشق",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-133",
+          "program": "المعهد ى ي التقان الصحي / مخابر",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-134",
+          "program": "الهندسة البي ولية ألبناء المحافظات ر الشرقية",
+          "city": "دير الزور",
+          "minScore": 1500,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-135",
+          "program": "الهندسة الزراعية",
+          "city": "إدلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-136",
+          "program": "الهندسة الزراعية",
+          "city": "اللاذقية",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-137",
+          "program": "الهندسة الزراعية",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-138",
+          "program": "الهندسة الزراعية",
+          "city": "حماه / السلمية",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-139",
+          "program": "الهندسة الزراعية",
+          "city": "حمص",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-140",
+          "program": "الهندسة الزراعية",
+          "city": "طرطوس",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-141",
+          "program": "الهندسة الزراعية - محافظات",
+          "city": "السويداء",
+          "minScore": 1500,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-142",
+          "program": "الهندسة الزراعية - محافظات",
+          "city": "القنيطرة",
+          "minScore": 1500,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-143",
+          "program": "الهندسة الميكانيكية / الميكاترونيكس",
+          "city": "إدلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-144",
+          "program": "الهندسة الميكانيكية / الميكانيك العام",
+          "city": "إدلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-145",
+          "program": "ر هندسة التصميم ي الميكانيك واإلنتاج ألبناء المحافظات",
+          "city": "دير الزور",
+          "minScore": 1500,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-146",
+          "program": "هندسة الآلات الزراعية",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-147",
+          "program": "هندسة اإلنتاج",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-148",
+          "program": "هندسة الطاقة الكهربائية ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-149",
+          "program": "هندسة الغزل والنسيج",
+          "city": "حمص",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-150",
+          "program": "هندسة ر الصناعات البي وكيميائية ألبناء",
+          "city": "دير الزور",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-151",
+          "program": "هندسة صناعية",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-152",
+          "program": "هندسة علم المواد الهندسية",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-153",
+          "program": "هندسة ميكانيك الغزل والنسيج",
+          "city": "حلب",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "scientific-154",
+          "program": "الطب البيطري",
+          "city": "إدلب",
+          "minScore": 1450,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-155",
+          "program": "الطب البيطري",
+          "city": "حماه",
+          "minScore": 1450,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-156",
+          "program": "الطب البيطري - محافظات",
+          "city": "درعا",
+          "minScore": 1450,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-157",
+          "program": "االقتصاد - محافظات",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-158",
+          "program": "االقتصاد واالدارة",
+          "city": "إدلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-159",
+          "program": "التمريض - محافظات",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-160",
+          "program": "الطب البيطري - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "scientific-161",
+          "program": "العلوم ( اإلحصاء ى ي الرياض ) - مجموع",
+          "city": "اللاذقية",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 11
+        },
+        {
+          "id": "scientific-162",
+          "program": "العلوم ( اإلحصاء ى ي الرياض ) - مجموع",
+          "city": "حلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 11
+        },
+        {
+          "id": "scientific-163",
+          "program": "العلوم ( اإلحصاء ى ي الرياض ) - مجموع",
+          "city": "حمص",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 11
+        },
+        {
+          "id": "scientific-164",
+          "program": "العلوم ( اإلحصاء ى ي الرياض ) - مجموع",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 11
+        },
+        {
+          "id": "scientific-165",
+          "program": "العلوم ( الرياضيات ) مجموع",
+          "city": "اللاذقية",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 7
+        },
+        {
+          "id": "scientific-166",
+          "program": "العلوم ( الرياضيات ) مجموع",
+          "city": "حلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 7
+        },
+        {
+          "id": "scientific-167",
+          "program": "العلوم ( الرياضيات ) مجموع",
+          "city": "حمص",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 7
+        },
+        {
+          "id": "scientific-168",
+          "program": "العلوم ( الرياضيات ) مجموع",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 6
+        },
+        {
+          "id": "scientific-169",
+          "program": "العلوم ( الكيمياء ) - مجموع",
+          "city": "إدلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 10
+        },
+        {
+          "id": "scientific-170",
+          "program": "العلوم ( الكيمياء ) - مجموع",
+          "city": "اللاذقية",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 10
+        },
+        {
+          "id": "scientific-171",
+          "program": "العلوم ( الكيمياء ) - مجموع",
+          "city": "حلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 10
+        },
+        {
+          "id": "scientific-172",
+          "program": "العلوم ( الكيمياء ) - مجموع",
+          "city": "حمص",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 10
+        },
+        {
+          "id": "scientific-173",
+          "program": "العلوم ( الكيمياء ) - مجموع",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 10
+        },
+        {
+          "id": "scientific-174",
+          "program": "العلوم ( الكيمياء ) - مجموع",
+          "city": "طرطوس",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 10
+        },
+        {
+          "id": "scientific-175",
+          "program": "العلوم ( الكيمياء ) محافظات - مجموع",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 11
+        },
+        {
+          "id": "scientific-176",
+          "program": "العلوم ( ر ى الفي ياء ) - مجموع",
+          "city": "إدلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 8
+        },
+        {
+          "id": "scientific-177",
+          "program": "العلوم ( ر ى الفي ياء ) - مجموع",
+          "city": "اللاذقية",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 9
+        },
+        {
+          "id": "scientific-178",
+          "program": "العلوم ( ر ى الفي ياء ) - مجموع",
+          "city": "حلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 8
+        },
+        {
+          "id": "scientific-179",
+          "program": "العلوم ( ر ى الفي ياء ) - مجموع",
+          "city": "حمص",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 9
+        },
+        {
+          "id": "scientific-180",
+          "program": "العلوم ( ر ى الفي ياء ) - مجموع",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 8
+        },
+        {
+          "id": "scientific-181",
+          "program": "العلوم ( ر ى الفي ياء ) - مجموع",
+          "city": "طرطوس",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 9
+        },
+        {
+          "id": "scientific-182",
+          "program": "العلوم ( ر ى الفي ياء ) - مجموع",
+          "city": "مصياف",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 9
+        },
+        {
+          "id": "scientific-183",
+          "program": "العلوم ( ر ى الفي ياء ) محافظات - مجموع",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 9
+        },
+        {
+          "id": "scientific-184",
+          "program": "العلوم ( علم الحياة ) - مجموع",
+          "city": "إدلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-185",
+          "program": "العلوم ( علم الحياة ) - مجموع",
+          "city": "اللاذقية",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-186",
+          "program": "العلوم ( علم الحياة ) - مجموع",
+          "city": "حلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-187",
+          "program": "العلوم ( علم الحياة ) - مجموع",
+          "city": "حمص",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-188",
+          "program": "العلوم ( علم الحياة ) - مجموع",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-189",
+          "program": "العلوم ( علم الحياة ) - مجموع",
+          "city": "طرطوس",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-190",
+          "program": "المعهد ى ي التقان الصحي / اشعة",
+          "city": "الحسكة",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-191",
+          "program": "المعهد ى ي التقان الصحي / تخدير",
+          "city": "الحسكة",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-192",
+          "program": "المعهد ى ي التقان الصحي / تخدير",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-193",
+          "program": "المعهد ى ي التقان الصحي / صيدلة",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-194",
+          "program": "المعهد ى ي التقان الصحي / مخابر",
+          "city": "الحسكة",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-195",
+          "program": "المعهد ى ي التقان الصحي / مخابر",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-196",
+          "program": "المعهد ى ي التقان ر ي الطت / برصيات",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-197",
+          "program": "المعهد ى ي التقان ر ي الطت / صيدلة",
+          "city": "اللاذقية",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-198",
+          "program": "المعهد ى ي التقان ر ي الطت / طب الطوارئ",
+          "city": "اللاذقية",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-199",
+          "program": "المعهد ى ي التقان ر ي الطت / طب الطوارئ",
+          "city": "حلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-200",
+          "program": "المعهد ى ي التقان ر ي الطت / طب الطوارئ",
+          "city": "حماه",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-201",
+          "program": "المعهد ى ي التقان ر ي الطت / طب الطوارئ",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-202",
+          "program": "المعهد ى ي التقان ر ي الطت / طب الطوارئ",
+          "city": "ريف دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-203",
+          "program": "المعهد ى ي التقان ري الطت / معالجة فيزيائية",
+          "city": "اللاذقية",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-204",
+          "program": "المعهد ى ي التقان ري الطت / معالجة فيزيائية",
+          "city": "حلب",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-205",
+          "program": "المعهد ى ي التقان ري الطت / معالجة فيزيائية",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-206",
+          "program": "المعهد ى ي التقان ري الطت / معالجة فيزيائية",
+          "city": "ريف دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 18
+        },
+        {
+          "id": "scientific-207",
+          "program": "المعهد ى ي التقان للحاسوب",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-208",
+          "program": "المعهد ي التقان للنفط والغاز إناث فقط ( ى ملي م )",
+          "city": "حمص",
+          "minScore": 1400,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 21
+        },
+        {
+          "id": "scientific-209",
+          "program": "المعهد ي التقان للنفط والغاز ى اختصاص",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 21
+        },
+        {
+          "id": "scientific-210",
+          "program": "المعهد ي التقان للنفط والغاز ى اختصاص",
+          "city": "طرطوس / بانياس",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 21
+        },
+        {
+          "id": "scientific-211",
+          "program": "المعهد ي التقان للنفط ى والغاز ذكور فقط",
+          "city": "حمص",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 21
+        },
+        {
+          "id": "scientific-212",
+          "program": "المعهد ي التقان للنفط ى والغاز ذكور فقط",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 21
+        },
+        {
+          "id": "scientific-213",
+          "program": "المعهد ي التقان للنفط ى والغاز ذكور فقط",
+          "city": "طرطوس / بانياس",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 21
+        },
+        {
+          "id": "scientific-214",
+          "program": "الهندسة الزراعية - محافظات",
+          "city": "دير الزور",
+          "minScore": 1400,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-215",
+          "program": "الهندسة الزراعية البناء السويداء",
+          "city": "السويداء",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-216",
+          "program": "الهندسة الزراعية البناء القنيطرة",
+          "city": "القنيطرة",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-217",
+          "program": "ى المعهد ي التقان للنفط والغاز ذكور فقط",
+          "city": "الرميالن / الحسكة",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 21
+        },
+        {
+          "id": "scientific-218",
+          "program": "العلوم ( الجيولوجيا )",
+          "city": "دمشق",
+          "minScore": 1350,
+          "specialConditions": [],
+          "sourcePage": 6
+        },
+        {
+          "id": "scientific-219",
+          "program": "التمريض ألبناء المحافظات الشرقية",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 12
+        },
+        {
+          "id": "scientific-220",
+          "program": "الحقوق",
+          "city": "إدلب",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-221",
+          "program": "الحقوق - محافظات",
+          "city": "القنيطرة",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-222",
+          "program": "الحقوق - محافظات",
+          "city": "درعا",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-223",
+          "program": "الحقوق - محافظات",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-224",
+          "program": "الحقوق الثانية",
+          "city": "حلب / اعزاز",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-225",
+          "program": "السياحة",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-226",
+          "program": "السياحة",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-227",
+          "program": "السياحة",
+          "city": "طرطوس",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-228",
+          "program": "الطب البيطري - محافظات",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-229",
+          "program": "العلوم ( الجيولوجيا )",
+          "city": "اللاذقية",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 6
+        },
+        {
+          "id": "scientific-230",
+          "program": "العلوم ( الجيولوجيا )",
+          "city": "حلب",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 6
+        },
+        {
+          "id": "scientific-231",
+          "program": "العلوم ( الجيولوجيا )",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 6
+        },
+        {
+          "id": "scientific-232",
+          "program": "العلوم ( الجيولوجيا ) محافظات",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 6
+        },
+        {
+          "id": "scientific-233",
+          "program": "العلوم ( الرياضيات ) مجموع",
+          "city": "إدلب",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 7
+        },
+        {
+          "id": "scientific-234",
+          "program": "العلوم ( الرياضيات ) مجموع",
+          "city": "طرطوس",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 7
+        },
+        {
+          "id": "scientific-235",
+          "program": "العلوم ( الرياضيات ) مجموع",
+          "city": "مصياف",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 7
+        },
+        {
+          "id": "scientific-236",
+          "program": "العلوم ( علم الحياة ) محافظات - مجموع",
+          "city": "السويداء",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-237",
+          "program": "العلوم ( علم الحياة ) محافظات - مجموع",
+          "city": "درعا",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-238",
+          "program": "المعهد ى ي التقان الصحي / اشعة",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-239",
+          "program": "المعهد ى ي التقان الصحي / برصيات",
+          "city": "الحسكة",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-240",
+          "program": "المعهد ى ي التقان الصحي / برصيات",
+          "city": "حلب",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-241",
+          "program": "المعهد ى ي التقان الصحي / صحة عامة",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-242",
+          "program": "المعهد ى ي التقان الصحي / صحة عامة",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-243",
+          "program": "المعهد ى ي التقان الصحي / صيدلة",
+          "city": "الحسكة",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-244",
+          "program": "المعهد ى ي التقان الصحي / صيدلة",
+          "city": "حلب",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-245",
+          "program": "المعهد ى ي التقان الصحي / صيدلة",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-246",
+          "program": "المعهد ى ي التقان الصحي / صيدلة",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-247",
+          "program": "المعهد ى ي التقان الصحي / صيدلة",
+          "city": "طرطوس",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-248",
+          "program": "المعهد ى ي التقان الصحي / طب الطوارئ",
+          "city": "الحسكة",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-249",
+          "program": "المعهد ى ي التقان الصحي / طب الطوارئ",
+          "city": "حلب",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-250",
+          "program": "المعهد ى ي التقان الصحي / طب طوارئ",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-251",
+          "program": "المعهد ى ي التقان الصحي / طب طوارئ",
+          "city": "طرطوس",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-252",
+          "program": "المعهد ى ي التقان الصحي / معالجة فيزيائية",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-253",
+          "program": "المعهد ى ي التقان الصحي / اطراف صناعية",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-254",
+          "program": "المعهد ى ي التقان الصحي / اطراف صناعية",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 19
+        },
+        {
+          "id": "scientific-255",
+          "program": "المعهد ى ي التقان الصحي / اطراف صناعية",
+          "city": "طرطوس",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-256",
+          "program": "المعهد ى ي التقان الصحي / معالجة فيزيائية",
+          "city": "الحسكة",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-257",
+          "program": "المعهد ى ي التقان الصحي / معالجة فيزيائية",
+          "city": "حلب",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-258",
+          "program": "المعهد ى ي التقان الصحي / معالجة فيزيائية",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-259",
+          "program": "المعهد ى ي التقان الصحي / معالجة فيزيائية",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-260",
+          "program": "المعهد ى ي التقان الصحي / معالجة فيزيائية",
+          "city": "طرطوس",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 20
+        },
+        {
+          "id": "scientific-261",
+          "program": "الهندسة الزراعية ألبناء دير الزور",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-262",
+          "program": "االقتصاد - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-263",
+          "program": "االقتصاد - ألبناء القنيطرة",
+          "city": "القنيطرة",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-264",
+          "program": "االقتصاد - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-265",
+          "program": "االقتصاد ألبناء المحافظات الشرقية",
+          "city": "الحسكة",
+          "minScore": 1250,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-266",
+          "program": "االقتصاد ألبناء المحافظات الشرقية",
+          "city": "دير الزور",
+          "minScore": 1250,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-267",
+          "program": "االقتصاد الثانية",
+          "city": "حلب / اعزاز",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-268",
+          "program": "االقتصاد واالدارة الثانية",
+          "city": "إدلب / الدانا",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-269",
+          "program": "العلوم ( علم الحياة ) محافظات - مجموع",
+          "city": "دير الزور",
+          "minScore": 1250,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-270",
+          "program": "اآلثار",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-271",
+          "program": "اآلثار",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-272",
+          "program": "اآلثار - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-273",
+          "program": "اآلثار - ألبناء المحافظات الشرقية",
+          "city": "الحسكة",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-274",
+          "program": "اآلثار - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-275",
+          "program": "التربية الخاصة",
+          "city": "حماه",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-276",
+          "program": "التربية الخاصة",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-277",
+          "program": "التربية الثانية ( الي بية الخاصة )",
+          "city": "حلب / اعزاز",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-278",
+          "program": "التربية المناهج وطرائق التدريس",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-279",
+          "program": "الجغرافية",
+          "city": "إدلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-280",
+          "program": "الجغرافية",
+          "city": "اللاذقية",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-281",
+          "program": "الجغرافية",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-282",
+          "program": "الجغرافية",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-283",
+          "program": "الجغرافية",
+          "city": "طرطوس",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-284",
+          "program": "الجغرافية - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-285",
+          "program": "الجغرافية - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-286",
+          "program": "الجغرافية الثانية",
+          "city": "حلب / اعزاز",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-287",
+          "program": "الحقوق - ألبناء القنيطرة",
+          "city": "القنيطرة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-288",
+          "program": "الحقوق - ألبناء المحافظات الشرقية",
+          "city": "الحسكة",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-289",
+          "program": "الحقوق - ألبناء المحافظات الشرقية",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-290",
+          "program": "الحقوق - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-291",
+          "program": "الشريعة",
+          "city": "إدلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-292",
+          "program": "الشريعة",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-293",
+          "program": "الشريعة",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-294",
+          "program": "الطب البيطري ألبناء المحافظات الشرقية",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-295",
+          "program": "العلوم ( الجيولوجيا ) ألبناء المحافظات ر الشرقية",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 6
+        },
+        {
+          "id": "scientific-296",
+          "program": "العلوم ( الرياضيات ) ألبناء الحسكة - مجموع",
+          "city": "الحسكة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 8
+        },
+        {
+          "id": "scientific-297",
+          "program": "العلوم ( الرياضيات ) ألبناء الرقة - مجموع",
+          "city": "الرقة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 8
+        },
+        {
+          "id": "scientific-298",
+          "program": "العلوم ( الرياضيات ) ألبناء دير الزور - مجموع",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 8
+        },
+        {
+          "id": "scientific-299",
+          "program": "العلوم ( الرياضيات ) محافظات - مجموع",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 8
+        },
+        {
+          "id": "scientific-300",
+          "program": "العلوم ( علم الحياة ) ألبناء الرقة - مجموع",
+          "city": "الرقة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 6
+        },
+        {
+          "id": "scientific-301",
+          "program": "العلوم ( علم الحياة ) ألبناء السويداء - مجموع",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-302",
+          "program": "العلوم ( علم الحياة ) ألبناء دير الزور - مجموع",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 5
+        },
+        {
+          "id": "scientific-303",
+          "program": "العلوم السياسية",
+          "city": "إدلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-304",
+          "program": "العلوم السياسية",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-305",
+          "program": "الفلسفة",
+          "city": "اللاذقية",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-306",
+          "program": "الفلسفة",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-307",
+          "program": "الفلسفة",
+          "city": "حمص",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-308",
+          "program": "الفلسفة",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-309",
+          "program": "الفلسفة - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-310",
+          "program": "الفلسفة - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-311",
+          "program": "اللغة الفارسية",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-312",
+          "program": "اللغة الفارسية",
+          "city": "حمص",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-313",
+          "program": "اللغة الفارسية",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-314",
+          "program": "اللغة الي كية",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-315",
+          "program": "المكتبات والمعلومات",
+          "city": "اللاذقية",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-316",
+          "program": "المكتبات والمعلومات",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-317",
+          "program": "الهندسة الزراعية ألبناء الحسكة",
+          "city": "الحسكة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-318",
+          "program": "الهندسة الزراعية ألبناء الرقة",
+          "city": "الرقة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "scientific-319",
+          "program": "الي بية ( اإلرشاد ي النفس )",
+          "city": "إدلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-320",
+          "program": "الي بية ( اإلرشاد ي النفس )",
+          "city": "اللاذقية",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-321",
+          "program": "الي بية ( اإلرشاد ي النفس )",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-322",
+          "program": "الي بية ( اإلرشاد ي النفس )",
+          "city": "حمص",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-323",
+          "program": "الي بية ( اإلرشاد ي النفس )",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-324",
+          "program": "الي بية ( اإلرشاد ي النفس )",
+          "city": "طرطوس",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-325",
+          "program": "الي بية ( اإلرشاد ي النفس ) - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-326",
+          "program": "الي بية ( اإلرشاد ي النفس ) - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-327",
+          "program": "الي بية ( اإلرشاد ي النفس ) - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-328",
+          "program": "الي بية ( اإلرشاد ي النفس ) - محافظات",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-329",
+          "program": "الي بية ( رياض األطفال ) إناث فقط",
+          "city": "حمص",
+          "minScore": 1200,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-330",
+          "program": "الي بية ( رياض األطفال ) إناث فقط",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-331",
+          "program": "الي بية ( رياض األطفال ) إناث فقط - محافظات",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "متاح للإناث فقط",
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-332",
+          "program": "الي بية ( رياض األطفال ) إناث فقط ألبناء الحسكة",
+          "city": "الحسكة",
+          "minScore": 1200,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-333",
+          "program": "الي بية ( رياض األطفال ) إناث فقط ألبناء الرقة",
+          "city": "الرقة",
+          "minScore": 1200,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-334",
+          "program": "الي بية ( رياض األطفال ) إناث فقط ألبناء دير الزور",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-335",
+          "program": "الي بية ( علم النفس )",
+          "city": "حمص",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-336",
+          "program": "الي بية ( علم النفس )",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-337",
+          "program": "الي بية ( علم النفس ) ألبناء القنيطرة",
+          "city": "القنيطرة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-338",
+          "program": "الي بية ( علم النفس ) محافظات",
+          "city": "القنيطرة",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-339",
+          "program": "الي بية ( معلم صف )",
+          "city": "إدلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-340",
+          "program": "الي بية ( معلم صف )",
+          "city": "اللاذقية",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-341",
+          "program": "الي بية ( معلم صف )",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-342",
+          "program": "الي بية ( معلم صف )",
+          "city": "حماه",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-343",
+          "program": "الي بية ( معلم صف )",
+          "city": "حمص",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-344",
+          "program": "الي بية ( معلم صف )",
+          "city": "طرطوس",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-345",
+          "program": "الي بية ( معلم صف ) - ألبناء الحسكة",
+          "city": "الحسكة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-346",
+          "program": "الي بية ( معلم صف ) - ألبناء الرقة",
+          "city": "الرقة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-347",
+          "program": "الي بية ( معلم صف ) - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-348",
+          "program": "الي بية ( معلم صف ) - ألبناء القنيطرة",
+          "city": "القنيطرة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-349",
+          "program": "الي بية ( معلم صف ) - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-350",
+          "program": "الي بية ( معلم صف ) - ألبناء دير الزور",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-351",
+          "program": "الي بية ( معلم صف ) - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-352",
+          "program": "الي بية ( معلم صف ) - محافظات",
+          "city": "القنيطرة",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-353",
+          "program": "الي بية ( معلم صف ) - محافظات",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-354",
+          "program": "الي بية ( معلم صف ) - محافظات",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-355",
+          "program": "الي بية الثانية ( اإلرشاد ي النفس )",
+          "city": "حلب / اعزاز",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-356",
+          "program": "الي بية الثانية ( معلم صف )",
+          "city": "إدلب / الدانا",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-357",
+          "program": "الي بية الثانية ( معلم صف )",
+          "city": "حلب / اعزاز",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-358",
+          "program": "الي بية المناهج وتقنيات التعليم",
+          "city": "اللاذقية",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-359",
+          "program": "الي بية المناهج وطرائق التدريس",
+          "city": "حمص",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-360",
+          "program": "الي بية المناهج وطرائق التدريس",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 15
+        },
+        {
+          "id": "scientific-361",
+          "program": "ر الشرقية - مجموع",
+          "city": "الرقة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 11
+        },
+        {
+          "id": "scientific-362",
+          "program": "ر الشرقية - مجموع",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 9
+        },
+        {
+          "id": "scientific-363",
+          "program": "علم اجتماع",
+          "city": "اللاذقية",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-364",
+          "program": "علم اجتماع",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-365",
+          "program": "علم اجتماع",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-366",
+          "program": "علم اجتماع - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-367",
+          "program": "علم اجتماع - ألبناء المحافظات الشرقية",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-368",
+          "program": "علم اجتماع - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-369",
+          "program": "علم اجتماع - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-370",
+          "program": "علم اجتماع - محافظات",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-371",
+          "program": "علم اجتماع - محافظات",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-372",
+          "program": "علم اجتماع الثانية",
+          "city": "حلب / اعزاز",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 14
+        },
+        {
+          "id": "scientific-373",
+          "program": "الفنون الجميلة",
+          "city": "اللاذقية",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-374",
+          "program": "الفنون الجميلة",
+          "city": "السويداء",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-375",
+          "program": "الفنون الجميلة",
+          "city": "دمشق",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-376",
+          "program": "الفنون الجميلة التطبيقية",
+          "city": "حلب",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 16
+        },
+        {
+          "id": "scientific-377",
+          "program": "التربية الرياضية",
+          "city": "حماه",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 17
+        },
+        {
+          "id": "scientific-378",
+          "program": "الي بية الموسيقية",
+          "city": "حمص",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 17
+        }
+      ]
+    },
+    "literary": {
+      "label": "الأدبي",
+      "records": [
+        {
+          "id": "literary-001",
+          "program": "الشريعة / ثانوية ر ش عية",
+          "city": "حلب",
+          "minScore": 1900,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-002",
+          "program": "الإعلام",
+          "city": "دمشق",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-003",
+          "program": "الحقوق",
+          "city": "دمشق",
+          "minScore": 1500,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-004",
+          "program": "السياحة",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-005",
+          "program": "الفلسفة",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-006",
+          "program": "التربية ( رياض األطفال ) إناث فقط",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-007",
+          "program": "التربية ( علم النفس )",
+          "city": "دمشق",
+          "minScore": 1400,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-008",
+          "program": "السياحة",
+          "city": "حمص",
+          "minScore": 1350,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-009",
+          "program": "السياحة",
+          "city": "طرطوس",
+          "minScore": 1350,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-010",
+          "program": "التربية ( اإلرشاد ي النفس )",
+          "city": "دمشق",
+          "minScore": 1350,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-011",
+          "program": "التربية ( رياض األطفال ) إناث فقط",
+          "city": "حمص",
+          "minScore": 1350,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-012",
+          "program": "التربية ( علم النفس )",
+          "city": "حمص",
+          "minScore": 1350,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-013",
+          "program": "الآثار",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-014",
+          "program": "التاريخ",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-015",
+          "program": "التربية الخاصة",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-016",
+          "program": "الجغرافية",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-017",
+          "program": "الحقوق",
+          "city": "اللاذقية",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-018",
+          "program": "الحقوق",
+          "city": "حلب",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-019",
+          "program": "الحقوق",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-020",
+          "program": "الحقوق - محافظات",
+          "city": "القنيطرة",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-021",
+          "program": "الحقوق - محافظات",
+          "city": "درعا",
+          "minScore": 1300,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-022",
+          "program": "الفلسفة",
+          "city": "اللاذقية",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-023",
+          "program": "الفلسفة",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-024",
+          "program": "المكتبات والمعلومات",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-025",
+          "program": "التربية ( اإلرشاد ي النفس )",
+          "city": "اللاذقية",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-026",
+          "program": "التربية ( اإلرشاد ي النفس )",
+          "city": "حمص",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-027",
+          "program": "التربية ( رياض األطفال ) إناث فقط - محافظات",
+          "city": "دير الزور",
+          "minScore": 1300,
+          "specialConditions": [
+            "متاح للإناث فقط",
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-028",
+          "program": "علم اجتماع",
+          "city": "اللاذقية",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-029",
+          "program": "علم اجتماع",
+          "city": "دمشق",
+          "minScore": 1300,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-030",
+          "program": "التربية المناهج وطرائق التدريس",
+          "city": "حلب",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-031",
+          "program": "العلوم السياسية",
+          "city": "دمشق",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-032",
+          "program": "المكتبات والمعلومات",
+          "city": "اللاذقية",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-033",
+          "program": "التربية ( اإلرشاد ي النفس )",
+          "city": "حلب",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-034",
+          "program": "التربية ( اإلرشاد ي النفس )",
+          "city": "طرطوس",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-035",
+          "program": "التربية ( رياض األطفال ) إناث فقط - ألبناء دير الزور",
+          "city": "دير الزور",
+          "minScore": 1250,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-036",
+          "program": "التربية المناهج وتقنيات التعليم",
+          "city": "اللاذقية",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-037",
+          "program": "التربية المناهج وطرائق التدريس",
+          "city": "حمص",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-038",
+          "program": "التربية المناهج وطرائق التدريس",
+          "city": "دمشق",
+          "minScore": 1250,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-039",
+          "program": "( التاريخ - الحسكة - ألبناء الرقة - دير المحافظات الزور ) الشرقية",
+          "city": "الرقة",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-040",
+          "program": "الآثار",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-041",
+          "program": "اآلثار - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-042",
+          "program": "التاريخ",
+          "city": "اللاذقية",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-043",
+          "program": "التاريخ",
+          "city": "حمص",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-044",
+          "program": "التاريخ - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-045",
+          "program": "التاريخ - محافظات",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-046",
+          "program": "التربية الخاصة",
+          "city": "حماه",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-047",
+          "program": "الجغرافية",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-048",
+          "program": "الجغرافية - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-049",
+          "program": "الحقوق",
+          "city": "إدلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-050",
+          "program": "الحقوق - ألبناء القنيطرة",
+          "city": "القنيطرة",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-051",
+          "program": "الحقوق - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-052",
+          "program": "الحقوق - محافظات",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-053",
+          "program": "الحقوق الثانية",
+          "city": "حلب - اعزاز",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-054",
+          "program": "الشريعة",
+          "city": "إدلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-055",
+          "program": "الشريعة",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-056",
+          "program": "الشريعة",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-057",
+          "program": "العلوم السياسية",
+          "city": "إدلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-058",
+          "program": "الفلسفة",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-059",
+          "program": "الفلسفة - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-060",
+          "program": "اللغة التركية",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-061",
+          "program": "اللغة التركية",
+          "city": "دمشق",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-062",
+          "program": "التربية ( اإلرشاد ي النفس ) - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-063",
+          "program": "التربية ( اإلرشاد ي النفس ) - محافظات",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-064",
+          "program": "علم اجتماع",
+          "city": "حلب",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-065",
+          "program": "علم اجتماع - محافظات",
+          "city": "السويداء",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-066",
+          "program": "علم اجتماع - محافظات",
+          "city": "درعا",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-067",
+          "program": "علم اجتماع - محافظات",
+          "city": "دير الزور",
+          "minScore": 1200,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-068",
+          "program": "علم اجتماع الثانية",
+          "city": "حلب / اعزاز",
+          "minScore": 1200,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-069",
+          "program": "( التاريخ - الحسكة - ألبناء الرقة - دير المحافظات الزور ) الشرقية",
+          "city": "دير الزور",
+          "minScore": 1100,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-070",
+          "program": "( الحقوق - الحسكة - ألبناء الرقة - دير المحافظات الزور ) الشرقية",
+          "city": "الحسكة",
+          "minScore": 1100,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-071",
+          "program": "( علم حسكة - اجتماع - الرقة - ألبناء دير الزور ) المحافظات ر الشرقية",
+          "city": "دير الزور",
+          "minScore": 1100,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-072",
+          "program": "اآلثار - ألبناء المحافظات الشرقية",
+          "city": "الحسكة",
+          "minScore": 1100,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-073",
+          "program": "اآلثار - محافظات",
+          "city": "السويداء",
+          "minScore": 1100,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-074",
+          "program": "التاريخ",
+          "city": "إدلب",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-075",
+          "program": "التاريخ",
+          "city": "حلب",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-076",
+          "program": "التاريخ - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-077",
+          "program": "التاريخ الثانية",
+          "city": "حلب - اعزاز",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-078",
+          "program": "التربية الخاصة الثانية",
+          "city": "حلب - اعزاز",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-079",
+          "program": "الجغرافية",
+          "city": "إدلب",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-080",
+          "program": "الجغرافية - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-081",
+          "program": "الجغرافية الثانية",
+          "city": "حلب / اعزاز",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-082",
+          "program": "الحقوق - ألبناء المحافظات الشرقية",
+          "city": "دير الزور",
+          "minScore": 1100,
+          "specialConditions": [
+            "يتطلب تحقق شرط المحافظة أو المنشأ المذكور"
+          ],
+          "sourcePage": 3
+        },
+        {
+          "id": "literary-083",
+          "program": "الفلسفة - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-084",
+          "program": "اللغة الفارسية",
+          "city": "حلب",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-085",
+          "program": "اللغة الفارسية",
+          "city": "حمص",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-086",
+          "program": "اللغة الفارسية",
+          "city": "دمشق",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-087",
+          "program": "التربية ( اإلرشاد ي النفس )",
+          "city": "إدلب",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-088",
+          "program": "التربية ( اإلرشاد ي النفس ) - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-089",
+          "program": "التربية ( اإلرشاد ي النفس ) - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-090",
+          "program": "التربية ( اإلرشاد ي النفس ) الثانية",
+          "city": "حلب - اعزاز",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-091",
+          "program": "التربية ( رياض األطفال ) إناث فقط - ألبناء الحسكة",
+          "city": "الحسكة",
+          "minScore": 1100,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-092",
+          "program": "التربية ( رياض األطفال ) إناث فقط - ألبناء الرقة",
+          "city": "الرقة",
+          "minScore": 1100,
+          "specialConditions": [
+            "متاح للإناث فقط"
+          ],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-093",
+          "program": "علم اجتماع - ألبناء السويداء",
+          "city": "السويداء",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-094",
+          "program": "علم اجتماع - ألبناء درعا",
+          "city": "درعا",
+          "minScore": 1100,
+          "specialConditions": [],
+          "sourcePage": 2
+        },
+        {
+          "id": "literary-095",
+          "program": "الفنون الجميلة",
+          "city": "اللاذقية",
+          "minScore": 1000,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-096",
+          "program": "الفنون الجميلة",
+          "city": "السويداء",
+          "minScore": 1000,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-097",
+          "program": "الفنون الجميلة",
+          "city": "دمشق",
+          "minScore": 1000,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-098",
+          "program": "الفنون الجميلة التطبيقية",
+          "city": "حلب",
+          "minScore": 1000,
+          "specialConditions": [],
+          "sourcePage": 4
+        },
+        {
+          "id": "literary-099",
+          "program": "التربية الرياضية",
+          "city": "حماه",
+          "minScore": 1000,
+          "specialConditions": [],
+          "sourcePage": 5
+        },
+        {
+          "id": "literary-100",
+          "program": "التربية الموسيقية",
+          "city": "حمص",
+          "minScore": 1000,
+          "specialConditions": [],
+          "sourcePage": 2
+        }
+      ]
+    }
+  }
+}

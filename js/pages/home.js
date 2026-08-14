@@ -33,6 +33,12 @@ async function renderHome() {
 
       <div id="cat-bar-wrap"></div>
 
+      <button class="admissions-home-card" onclick="navigateTo('/university-admissions')" aria-label="افتح دليل القبول الجامعي">
+        <span class="admissions-home-card-icon"><i data-feather="award"></i></span>
+        <span class="admissions-home-card-copy"><strong>دليل القبول الجامعي</strong><small>اكتشف التخصصات المطابقة لمجموعك</small></span>
+        <i class="admissions-home-card-arrow" data-feather="chevron-left"></i>
+      </button>
+
       <div class="section">
         <div class="section-header">
           <span class="section-title">الأساتذة</span>
