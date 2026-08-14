@@ -63,10 +63,9 @@ async function renderProfile() {
         </div>
 
         <div class="menu-section">
-          ${session.type !== "teacher" ? `
           <button class="menu-item admissions-profile-link" onclick="navigateTo('/university-admissions')">
             <i data-feather="award"></i><span><strong>دليل القبول الجامعي</strong><small>اكتشف التخصصات المطابقة لمجموعك</small></span><i data-feather="chevron-left"></i>
-          </button>` : ""}
+          </button>
           <button class="menu-item" onclick="navigateTo('/notifications')">
             <i data-feather="bell"></i><span>الإشعارات</span><i data-feather="chevron-left"></i>
           </button>
