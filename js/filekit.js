@@ -163,10 +163,36 @@ const FileKit = (() => {
     setTimeout(() => a.remove(), 1000);
   }
 
+  // في تطبيق React Native الأصلي نُسلّم رابط الملف إلى طبقة التنزيل المحلية.
+  // يبقى تنزيل المتصفح المعتاد هو البديل عند عدم وجود الجسر.
+  function requestNativeDownload(url, title) {
+    try {
+      const bridge = window.ReactNativeWebView;
+      if (!bridge || typeof bridge.postMessage !== "function") return false;
+      const u = normalize(url);
+      const name = `${(title || "file").replace(/[\\/:*?"<>|]+/g, " ").trim()}.${ext(u) || "pdf"}`;
+      bridge.postMessage(JSON.stringify({
+        type: "download",
+        url: u,
+        title: title || "كتاب دراسي",
+        fileName: name
+      }));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async function download(url, title, btn) {
     const u = normalize(url);
     const name = `${(title || "file").replace(/[\\/:*?"<>|]+/g, " ").trim()}.${ext(u) || "pdf"}`;
     const setState = (t) => { if (btn) btn.innerHTML = t; };
+
+    if (requestNativeDownload(u, title)) {
+      setState("جارٍ التنزيل في التطبيق…");
+      if (window.toast) toast("بدأ حفظ الملف في مكتبة الهاتف", "info");
+      return true;
+    }
 
     try {
       setState("جارٍ التحميل…");
