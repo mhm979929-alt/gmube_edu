@@ -54,7 +54,7 @@ async function renderPlaylist(playlistId) {
       });
     } else if (playlist.type === 'book') {
       body.innerHTML = `<div class="books-grid">${items.map(b => `
-        <div class="book-card" data-url="${escHtml(b.url)}" data-title="${escHtml(b.title)}" style="cursor:pointer">
+        <div class="book-card" data-url="${escHtml(b.url)}" data-title="${escHtml(b.title)}" role="button" tabindex="0" aria-label="مشاهدة ${escHtml(b.title)}" style="cursor:pointer">
           <div class="book-icon"><i data-feather="book-open"></i></div>
           <div class="book-info">
             <span class="book-title">${escHtml(b.title)}</span>
@@ -65,7 +65,14 @@ async function renderPlaylist(playlistId) {
       `).join("")}</div>`;
       featherRefresh();
       body.querySelectorAll(".book-card").forEach(card => {
-        card.addEventListener("click", () => FileKit.open(card.dataset.url, card.dataset.title || "ملف", "كتاب"));
+        const openBook = () => FileKit.openBook(card.dataset.url, card.dataset.title || "ملف");
+        card.addEventListener("click", openBook);
+        card.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openBook();
+          }
+        });
       });
     } else if (playlist.type === 'test') {
       body.innerHTML = `<div class="tests-list">${items.map(t => `

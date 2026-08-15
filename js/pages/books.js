@@ -74,7 +74,7 @@ async function renderBooks() {
         return;
       }
       grid.innerHTML = books.map(b => `
-        <div class="book-card" data-title="${escHtml(b.title)}" data-url="${escHtml(b.url)}" style="cursor:pointer;display:flex;align-items:center;gap:12px;background:#141414;border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.04);margin-bottom:8px">
+        <div class="book-card" data-title="${escHtml(b.title)}" data-url="${escHtml(b.url)}" role="button" tabindex="0" aria-label="مشاهدة ${escHtml(b.title)}" style="cursor:pointer;display:flex;align-items:center;gap:12px;background:#141414;border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.04);margin-bottom:8px">
           <div class="book-icon" style="width:48px;height:48px;border-radius:12px;background:rgba(33,150,243,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
             <i data-feather="book-open" style="color:#2196F3;width:22px;height:22px"></i>
           </div>
@@ -83,29 +83,21 @@ async function renderBooks() {
             <span class="book-meta">${escHtml(b.subject)} · ${escHtml(b.grade)}</span>
             ${b.description ? `<span class="book-desc">${escHtml(b.description)}</span>` : ""}
           </div>
-          <button class="share-btn" style="background:rgba(255,255,255,0.05);border:none;color:#aaa;padding:8px;border-radius:8px;cursor:pointer;display:flex;align-items:center" title="مشاركة">
-            <i data-feather="share-2" style="width:18px;height:18px"></i>
-          </button>
         </div>
       `).join("");
       featherRefresh();
 
-      // إضافة حدث المشاركة والتحميل
+      // فتح الكتاب مباشرة داخل عارض التطبيق؛ لا نعرض نسخ الرابط أو مشاركته.
       grid.querySelectorAll('.book-card').forEach(card => {
-        const shareBtn = card.querySelector('.share-btn');
         const url = card.dataset.url;
         const title = card.dataset.title;
-
-        if (shareBtn) {
-          shareBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            FileKit.share(url, title);
-          });
-        }
-
-        // عند الضغط على البطاقة: نسخ الرابط وطلب الفتح يدوياً
-        card.addEventListener('click', () => {
-          FileKit.open(url, title, 'كتاب');
+        const openBook = () => FileKit.openBook(url, title);
+        card.addEventListener('click', openBook);
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openBook();
+          }
         });
       });
     } catch {

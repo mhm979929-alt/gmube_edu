@@ -57,8 +57,9 @@ const FileKit = (() => {
 
   // عارض مضمّن احتياطي للمصادر التي تمنع PDF.js داخل WebView (خصوصًا Drive).
   // بالنسبة للمصادر المباشرة، نستخدم الرابط المطبع نفسه ولا نمرره إلى gview.
-  function openEmbeddedViewer(url, title) {
+  function openEmbeddedViewer(url, title, options = {}) {
     const u = normalize(url);
+    const downloadButton = options.allowInternalDownload === false ? "" : `<button class="pdf-icon-btn" data-act="download" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0-0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`;
     const wrap = document.createElement("div");
     wrap.className = "pdf-embed-overlay";
     wrap.innerHTML = `
@@ -66,12 +67,13 @@ const FileKit = (() => {
         <button class="pdf-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         <span class="pdf-title">${escHtml(title || "عرض PDF")}</span>
         <span class="pdf-spacer"></span>
-        <button class="pdf-icon-btn" data-act="download" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-        <button class="pdf-icon-btn" data-act="browser" aria-label="فتح خارجيًا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>
+        ${downloadButton}
+        <button class="pdf-icon-btn" data-act="browser" aria-label="تحميل عبر المتصفح"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>
       </div>
       <div class="pdf-embed-status"><span class="pdf-spinner"></span><span>جارٍ تجهيز المعاينة…</span></div>
-      <iframe class="pdf-embed-frame" title="${escHtml(title || "عرض PDF")}" allow="fullscreen" referrerpolicy="no-referrer"></iframe>`;
+      <iframe class="pdf-embed-frame" title="${escHtml(title || "عرض PDF")}" sandbox="allow-scripts allow-same-origin allow-forms" allow="fullscreen" referrerpolicy="no-referrer"></iframe>`;
     document.body.appendChild(wrap);
+    if (options.protectViewer) protectViewer(wrap);
     requestAnimationFrame(() => wrap.classList.add("open"));
 
     const frame = wrap.querySelector(".pdf-embed-frame");
@@ -81,7 +83,6 @@ const FileKit = (() => {
       setTimeout(() => wrap.remove(), 220);
     };
     wrap.querySelector('[data-act="close"]').onclick = close;
-    wrap.querySelector('[data-act="download"]').onclick = () => download(u, title, null);
     wrap.querySelector('[data-act="browser"]').onclick = () => { close(); openExternal(u); };
     frame.addEventListener("load", () => { if (status) status.style.display = "none"; }, { once: true });
     frame.src = googleViewerUrl(u);
@@ -138,9 +139,35 @@ const FileKit = (() => {
   // فتح رابط للتحميل/العرض - يعمل داخل WebView (AppCreator24)
   function openExternal(url) {
     const u = normalize(url);
-    // في WebView، window.open محظور غالباً و <a download> يتجاهل عبر النطاقات؛
-    // location.href يوجّه المتصفح/مدير التحميل إلى الملف (الطريقة الموثوقة في Android WebView)
-    try { window.location.href = u; } catch {}
+    // افتح رابط الكتاب خارج WebView؛ لا نستخدم location.href حتى لا يعود الملف إلى عارض التطبيق.
+    let opened = false;
+    try {
+      const popup = window.open(u, "_blank", "noopener,noreferrer");
+      opened = !!popup;
+    } catch {}
+    if (!opened) {
+      const a = document.createElement("a");
+      a.href = u;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => a.remove(), 1000);
+    }
+  }
+
+  // حماية واجهة العرض فقط؛ لا تدّعي منع لقطات الشاشة أو أدوات المطوّر.
+  function protectViewer(root) {
+    if (!root) return;
+    root.style.userSelect = "none";
+    ["contextmenu", "copy", "cut", "dragstart"].forEach(type => {
+      root.addEventListener(type, e => e.preventDefault());
+    });
+    root.addEventListener("keydown", e => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      if (["c", "s", "u", "p"].includes(String(e.key).toLowerCase())) e.preventDefault();
+    });
   }
 
   function fileLabel(url) {
@@ -267,14 +294,14 @@ const FileKit = (() => {
   }
 
   // عارض داخلي بملء الشاشة
-  async function openViewer(url, title) {
+  async function openViewer(url, title, options = {}) {
     const u = normalize(url);
 
     // بعد تطبيع Google Drive، نجرّب PDF.js مباشرة أولًا. هذا مهم داخل WebView
     // لأن Google Viewer نفسه قد لا يعمل أو قد يُمنع من العرض داخل التطبيق.
     const isDriveFile = isGoogleDrive(u);
     // روابط Drive لا تسمح عادةً بـ CORS داخل WebView؛ استخدم Preview الرسمي مباشرة.
-    if (isDriveFile) return openEmbeddedViewer(u, title);
+    if (isDriveFile) return openEmbeddedViewer(u, title, options);
     const directPdf = isPdf(u);
     const info = directPdf ? { type: "application/pdf", size: 0, ext: "pdf" } : await probe(u);
     const realExt = info.ext || ext(u);
@@ -285,7 +312,7 @@ const FileKit = (() => {
                   (info.type && info.type.startsWith("audio/"));
 
     // لا نرفض PDF كبيرًا قبل أن يحاول PDF.js التحميل التدريجي.
-    if (isPdfFile) return PdfReader.open(u, title);
+    if (isPdfFile) return PdfReader.open(u, title, options);
     if (isImg || isAud) {
       const wrap = document.createElement("div");
       wrap.className = "fk-viewer";
@@ -293,11 +320,13 @@ const FileKit = (() => {
         ? `<div class="fk-viewer-img"><img src="${escHtml(u)}" alt="${escHtml(title || "")}"></div>`
         : `<div class="fk-viewer-audio"><div class="fk-audio-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div><audio controls autoplay src="${escHtml(u)}"></audio></div>`;
 
+      const downloadButton = options.allowInternalDownload === false ? "" : `<button class="fk-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`;
+      const browserButton = `<button class="fk-icon-btn" data-act="browser" aria-label="تحميل عبر المتصفح"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>`;
       wrap.innerHTML = `
         <div class="fk-viewer-bar">
           <button class="fk-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           <span class="fk-viewer-title">${escHtml(title || "عرض الملف")}</span>
-          <button class="fk-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          ${downloadButton}${browserButton}
         </div>
         <div class="fk-viewer-body">${body}</div>`;
       document.body.appendChild(wrap);
@@ -306,7 +335,9 @@ const FileKit = (() => {
         wrap.classList.remove("open");
         setTimeout(() => wrap.remove(), 220);
       };
-      wrap.querySelector('[data-act="dl"]').onclick = (e) => download(u, title, e.currentTarget);
+      const downloadBtn = wrap.querySelector('[data-act="dl"]');
+      if (downloadBtn) downloadBtn.onclick = (e) => download(u, title, e.currentTarget);
+      wrap.querySelector('[data-act="browser"]').onclick = () => openExternal(u);
       return;
     }
 
@@ -316,9 +347,17 @@ const FileKit = (() => {
     openExternal(u);
   }
 
+  // فتح الكتاب مباشرة داخل عارض التطبيق، من دون ورقة خيارات أو نسخ أو مشاركة.
+  function openBook(url, title) {
+    if (!url) { window.toast && toast("الرابط غير متوفر", "error"); return; }
+    closeSheet();
+    openViewer(normalize(url), title || "كتاب", { allowInternalDownload: false, protectViewer: true });
+  }
+
   // ورقة الخيارات السفلية
   function open(url, title, kind = "ملف") {
     if (!url) { window.toast && toast("الرابط غير متوفر", "error"); return; }
+    if (kind === "كتاب") { openBook(url, title); return; }
     const u = normalize(url);
     closeSheet();
 
@@ -366,7 +405,7 @@ const FileKit = (() => {
     });
   }
 
-  return { open, openViewer, openEmbeddedViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, openExternal };
+  return { open, openBook, openViewer, openEmbeddedViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, openExternal, protectViewer };
 })();
 
 // توافق مع الاستدعاءات القديمة
@@ -385,7 +424,8 @@ const PdfReader = (() => {
 
   function isReady() { return typeof window.pdfjsLib !== "undefined"; }
 
-  function buildOverlay(title) {
+  function buildOverlay(title, options = {}) {
+    const downloadButton = options.allowInternalDownload === false ? "" : `<button class="pdf-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`;
     overlay = document.createElement("div");
     overlay.className = "pdf-overlay";
     overlay.innerHTML = `
@@ -394,8 +434,8 @@ const PdfReader = (() => {
         <span class="pdf-title">${escHtml(title || "قراءة PDF")}</span>
         <span class="pdf-spacer"></span>
         <span class="pdf-page-info">—</span>
-        <button class="pdf-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-        <button class="pdf-icon-btn" data-act="browser" aria-label="فتح خارجيًا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>
+        ${downloadButton}
+        <button class="pdf-icon-btn" data-act="browser" aria-label="تحميل عبر المتصفح"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>
       </div>
       <div class="pdf-toolbar">
         <button class="pdf-icon-btn" data-act="zoom-out" aria-label="تصغير"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
@@ -411,6 +451,7 @@ const PdfReader = (() => {
         <canvas class="pdf-canvas"></canvas>
       </div>`;
     document.body.appendChild(overlay);
+    if (options.protectViewer) FileKit.protectViewer(overlay);
     requestAnimationFrame(() => overlay.classList.add("open"));
     canvasWrap = overlay.querySelector(".pdf-canvas-wrap");
     canvas = overlay.querySelector(".pdf-canvas");
@@ -418,11 +459,11 @@ const PdfReader = (() => {
     return overlay;
   }
 
-  async function open(url, title) {
-    if (!isReady()) { FileKit.openEmbeddedViewer(url, title); return; }
+  async function open(url, title, options = {}) {
+    if (!isReady()) { FileKit.openEmbeddedViewer(url, title, options); return; }
     close();
     const u = FileKit.normalize(url);
-    buildOverlay(title);
+    buildOverlay(title, options);
     overlay.querySelector(".pdf-title").textContent = title || "قراءة PDF";
 
     overlay.addEventListener("click", (e) => {
