@@ -1,4 +1,12 @@
 // ── Profile Page ────────────────────────────────────────────────
+function openNativeLibrary() {
+  if (window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage === "function") {
+    window.ReactNativeWebView.postMessage(JSON.stringify({ type: "open-library" }));
+    return;
+  }
+  alert("قسم كتبي متاح داخل تطبيق المنصة التعليمية السورية لعرض الكتب المحمّلة على جهازك.");
+}
+
 async function renderProfile() {
   updateBottomNav("profile");
   setPageTitle("حسابي");
@@ -18,6 +26,11 @@ async function renderProfile() {
             <p class="guest-sub">سجّل دخولك للوصول إلى حسابك</p>
             <button class="btn-primary" onclick="navigateTo('/login')">
               <i data-feather="log-in"></i> تسجيل الدخول
+            </button>
+          </div>
+          <div class="menu-section" style="width:100%;margin-top:14px">
+            <button class="menu-item" onclick="openNativeLibrary()">
+              <i data-feather="book-open"></i><span><strong>كتبي</strong><small>الكتب المحمّلة على جهازك</small></span><i data-feather="chevron-left"></i>
             </button>
           </div>
         </div>
@@ -63,6 +76,9 @@ async function renderProfile() {
         </div>
 
         <div class="menu-section">
+          <button class="menu-item" onclick="openNativeLibrary()">
+            <i data-feather="book-open"></i><span><strong>كتبي</strong><small>الكتب المحمّلة على جهازك</small></span><i data-feather="chevron-left"></i>
+          </button>
           <button class="menu-item admissions-profile-link" onclick="navigateTo('/university-admissions')">
             <i data-feather="award"></i><span><strong>دليل القبول الجامعي</strong><small>اكتشف التخصصات المطابقة لمجموعك</small></span><i data-feather="chevron-left"></i>
           </button>
