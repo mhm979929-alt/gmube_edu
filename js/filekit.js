@@ -67,8 +67,7 @@ const FileKit = (() => {
         <button class="pdf-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         <span class="pdf-title">${escHtml(title || "عرض PDF")}</span>
         <span class="pdf-spacer"></span>
-        ${downloadButton}
-        <button class="pdf-icon-btn" data-act="browser" aria-label="تحميل عبر المتصفح"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>
+        ${downloadButton}${options.allowExternal === false ? "" : `<button class="pdf-icon-btn" data-act="browser" aria-label="فتح خارج التطبيق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>`}
       </div>
       <div class="pdf-embed-status"><span class="pdf-spinner"></span><span>جارٍ تجهيز المعاينة…</span></div>
       <iframe class="pdf-embed-frame" title="${escHtml(title || "عرض PDF")}" sandbox="allow-scripts allow-same-origin allow-forms" allow="fullscreen" referrerpolicy="no-referrer"></iframe>`;
@@ -83,12 +82,13 @@ const FileKit = (() => {
       setTimeout(() => wrap.remove(), 220);
     };
     wrap.querySelector('[data-act="close"]').onclick = close;
-    wrap.querySelector('[data-act="browser"]').onclick = () => { close(); openExternal(u); };
+    const browserBtn = wrap.querySelector('[data-act="browser"]');
+    if (browserBtn) browserBtn.onclick = () => { close(); openExternal(u); };
     frame.addEventListener("load", () => { if (status) status.style.display = "none"; }, { once: true });
     frame.src = googleViewerUrl(u);
     setTimeout(() => {
       if (status && status.style.display !== "none") {
-        status.querySelector("span:last-child").textContent = "إذا لم تظهر المعاينة، استخدم زر الفتح الخارجي";
+        status.querySelector("span:last-child").textContent = options.allowExternal === false ? "تعذر تجهيز المعاينة داخل التطبيق" : "إذا لم تظهر المعاينة، استخدم زر الفتح الخارجي";
       }
     }, 12000);
     return wrap;
@@ -321,7 +321,7 @@ const FileKit = (() => {
         : `<div class="fk-viewer-audio"><div class="fk-audio-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div><audio controls autoplay src="${escHtml(u)}"></audio></div>`;
 
       const downloadButton = options.allowInternalDownload === false ? "" : `<button class="fk-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`;
-      const browserButton = `<button class="fk-icon-btn" data-act="browser" aria-label="تحميل عبر المتصفح"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>`;
+      const browserButton = options.allowExternal === false ? "" : `<button class="fk-icon-btn" data-act="browser" aria-label="فتح خارج التطبيق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>`;
       wrap.innerHTML = `
         <div class="fk-viewer-bar">
           <button class="fk-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -337,11 +337,18 @@ const FileKit = (() => {
       };
       const downloadBtn = wrap.querySelector('[data-act="dl"]');
       if (downloadBtn) downloadBtn.onclick = (e) => download(u, title, e.currentTarget);
-      wrap.querySelector('[data-act="browser"]').onclick = () => openExternal(u);
+      const browserBtn = wrap.querySelector('[data-act="browser"]');
+      if (browserBtn) browserBtn.onclick = () => openExternal(u);
       return;
     }
 
-    // غير معروف/مكتبي → فتح في المتصفح (بدون معاينة جوجل)
+    if (options.allowExternal === false) {
+      closeSheet();
+      if (window.toast) toast("تعذر تجهيز المعاينة داخل التطبيق", "error");
+      return;
+    }
+
+    // غير معروف/مكتبي → فتح في المتصفح للأنواع الأخرى.
     closeSheet();
     if (window.toast) toast("يُفتح الملف في المتصفح", "info");
     openExternal(u);
@@ -351,7 +358,7 @@ const FileKit = (() => {
   function openBook(url, title) {
     if (!url) { window.toast && toast("الرابط غير متوفر", "error"); return; }
     closeSheet();
-    openViewer(normalize(url), title || "كتاب", { allowInternalDownload: false, protectViewer: true });
+    openViewer(normalize(url), title || "كتاب", { allowInternalDownload: false, allowExternal: false, protectViewer: true });
   }
 
   // ورقة الخيارات السفلية
@@ -426,6 +433,7 @@ const PdfReader = (() => {
 
   function buildOverlay(title, options = {}) {
     const downloadButton = options.allowInternalDownload === false ? "" : `<button class="pdf-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`;
+    const browserButton = options.allowExternal === false ? "" : `<button class="pdf-icon-btn" data-act="browser" aria-label="فتح خارج التطبيق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>`;
     overlay = document.createElement("div");
     overlay.className = "pdf-overlay";
     overlay.innerHTML = `
@@ -434,8 +442,7 @@ const PdfReader = (() => {
         <span class="pdf-title">${escHtml(title || "قراءة PDF")}</span>
         <span class="pdf-spacer"></span>
         <span class="pdf-page-info">—</span>
-        ${downloadButton}
-        <button class="pdf-icon-btn" data-act="browser" aria-label="تحميل عبر المتصفح"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>
+        ${downloadButton}${browserButton}
       </div>
       <div class="pdf-toolbar">
         <button class="pdf-icon-btn" data-act="zoom-out" aria-label="تصغير"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
