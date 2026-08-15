@@ -14,13 +14,26 @@ const FileKit = (() => {
   function isImage(url) { return ["jpg", "jpeg", "png", "webp", "gif"].includes(ext(url)); }
   function isAudio(url) { return ["mp3", "wav", "m4a", "ogg", "aac"].includes(ext(url)); }
 
-  // روابط Google Drive → رابط تحميل/عرض مباشر
+  // تطبيع مصادر الملفات لتعمل داخل Android WebView.
+  // Dropbox عبر www.dropbox.com يمر بتحويلات وصفحات وسيطة؛ النطاق المباشر
+  // يعيد PDF مع دعم Range، وهو المسار الذي يحتاجه PDF.js للملفات الكبيرة.
   function normalize(url) {
     if (!url) return url;
-    const drive = url.match(/drive\.google\.com\/file\/d\/([^/]+)/) ||
-                  url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+    let value = String(url).trim();
+    try {
+      const parsed = new URL(value, window.location.href);
+      if (/(^|\.)dropbox\.com$/i.test(parsed.hostname) &&
+          !/dropboxusercontent\.com$/i.test(parsed.hostname)) {
+        parsed.hostname = "dl.dropboxusercontent.com";
+        parsed.searchParams.delete("raw");
+        parsed.searchParams.set("dl", "1");
+        value = parsed.toString();
+      }
+    } catch {}
+    const drive = value.match(/drive\.google\.com\/file\/d\/([^/]+)/) ||
+                  value.match(/drive\.google\.com\/open\?id=([^&]+)/);
     if (drive) return `https://drive.google.com/uc?export=download&id=${drive[1]}`;
-    return url;
+    return value;
   }
 
   function isGoogleDrive(url) {
@@ -38,10 +51,12 @@ const FileKit = (() => {
     const id = googleDriveId(url);
     // رابط Drive الرسمي يعرض PDF داخل iframe ولا يحاول WebView فتح PDF الخام.
     if (id) return `https://drive.google.com/file/d/${encodeURIComponent(id)}/preview`;
-    return `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(normalize(url))}`;
+    // لا نستخدم docs.google.com/gview للملفات العامة؛ فهو محجوب في بعض WebViews.
+    return normalize(url);
   }
 
-  // عارض مضمّن احتياطي للمصادر التي تمنع PDF.js داخل WebView (خصوصًا Drive)
+  // عارض مضمّن احتياطي للمصادر التي تمنع PDF.js داخل WebView (خصوصًا Drive).
+  // بالنسبة للمصادر المباشرة، نستخدم الرابط المطبع نفسه ولا نمرره إلى gview.
   function openEmbeddedViewer(url, title) {
     const u = normalize(url);
     const wrap = document.createElement("div");
