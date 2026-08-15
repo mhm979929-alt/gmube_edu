@@ -23,6 +23,61 @@ const FileKit = (() => {
     return url;
   }
 
+  function isGoogleDrive(url) {
+    return /(?:drive|docs)\.google\.com/i.test(String(url || ""));
+  }
+
+  function googleDriveId(url) {
+    const s = String(url || "");
+    const m = s.match(/drive\.google\.com\/file\/d\/([^/?#]+)/i) ||
+              s.match(/[?&]id=([^&#]+)/i);
+    return m ? decodeURIComponent(m[1]) : "";
+  }
+
+  function googleViewerUrl(url) {
+    const id = googleDriveId(url);
+    // رابط Drive الرسمي يعرض PDF داخل iframe ولا يحاول WebView فتح PDF الخام.
+    if (id) return `https://drive.google.com/file/d/${encodeURIComponent(id)}/preview`;
+    return `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(normalize(url))}`;
+  }
+
+  // عارض مضمّن احتياطي للمصادر التي تمنع PDF.js داخل WebView (خصوصًا Drive)
+  function openEmbeddedViewer(url, title) {
+    const u = normalize(url);
+    const wrap = document.createElement("div");
+    wrap.className = "pdf-embed-overlay";
+    wrap.innerHTML = `
+      <div class="pdf-embed-bar">
+        <button class="pdf-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <span class="pdf-title">${escHtml(title || "عرض PDF")}</span>
+        <span class="pdf-spacer"></span>
+        <button class="pdf-icon-btn" data-act="download" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        <button class="pdf-icon-btn" data-act="browser" aria-label="فتح خارجيًا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>
+      </div>
+      <div class="pdf-embed-status"><span class="pdf-spinner"></span><span>جارٍ تجهيز المعاينة…</span></div>
+      <iframe class="pdf-embed-frame" title="${escHtml(title || "عرض PDF")}" allow="fullscreen" referrerpolicy="no-referrer"></iframe>`;
+    document.body.appendChild(wrap);
+    requestAnimationFrame(() => wrap.classList.add("open"));
+
+    const frame = wrap.querySelector(".pdf-embed-frame");
+    const status = wrap.querySelector(".pdf-embed-status");
+    const close = () => {
+      wrap.classList.remove("open");
+      setTimeout(() => wrap.remove(), 220);
+    };
+    wrap.querySelector('[data-act="close"]').onclick = close;
+    wrap.querySelector('[data-act="download"]').onclick = () => download(u, title, null);
+    wrap.querySelector('[data-act="browser"]').onclick = () => { close(); openExternal(u); };
+    frame.addEventListener("load", () => { if (status) status.style.display = "none"; }, { once: true });
+    frame.src = googleViewerUrl(u);
+    setTimeout(() => {
+      if (status && status.style.display !== "none") {
+        status.querySelector("span:last-child").textContent = "إذا لم تظهر المعاينة، استخدم زر الفتح الخارجي";
+      }
+    }, 12000);
+    return wrap;
+  }
+
   // كشف نوع الملف من أول بايتات (يعمل مع Drive عبر CORS ورؤوس Range)
   async function sniffType(url) {
     try {
@@ -161,22 +216,22 @@ const FileKit = (() => {
   // عارض داخلي بملء الشاشة
   async function openViewer(url, title) {
     const u = normalize(url);
-    const info = await probe(u);
+
+    // بعد تطبيع Google Drive، نجرّب PDF.js مباشرة أولًا. هذا مهم داخل WebView
+    // لأن Google Viewer نفسه قد لا يعمل أو قد يُمنع من العرض داخل التطبيق.
+    const isDriveFile = isGoogleDrive(u);
+    // روابط Drive لا تسمح عادةً بـ CORS داخل WebView؛ استخدم Preview الرسمي مباشرة.
+    if (isDriveFile) return openEmbeddedViewer(u, title);
+    const directPdf = isPdf(u);
+    const info = directPdf ? { type: "application/pdf", size: 0, ext: "pdf" } : await probe(u);
     const realExt = info.ext || ext(u);
-    const isPdfFile = realExt === "pdf";
+    const isPdfFile = directPdf || realExt === "pdf" || (info.type && info.type.includes("pdf"));
     const isImg = ["jpg", "jpeg", "png", "webp", "gif"].includes(realExt) ||
                   (info.type && info.type.startsWith("image/"));
     const isAud = ["mp3", "wav", "m4a", "ogg", "aac"].includes(realExt) ||
                   (info.type && info.type.startsWith("audio/"));
 
-    // ملف كبير لا يمكن عرضه/تحميله كـ blob → فتح مباشر في المتصفح/مدير التحميل
-    if (info.size > MAX_BLOB_SIZE) {
-      closeSheet();
-      if (window.toast) toast("الملف كبير، يُفتح في المتصفح للتحميل", "info");
-      openExternal(u);
-      return;
-    }
-
+    // لا نرفض PDF كبيرًا قبل أن يحاول PDF.js التحميل التدريجي.
     if (isPdfFile) return PdfReader.open(u, title);
     if (isImg || isAud) {
       const wrap = document.createElement("div");
@@ -258,7 +313,7 @@ const FileKit = (() => {
     });
   }
 
-  return { open, openViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, openExternal };
+  return { open, openViewer, openEmbeddedViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, openExternal };
 })();
 
 // توافق مع الاستدعاءات القديمة
@@ -287,6 +342,7 @@ const PdfReader = (() => {
         <span class="pdf-spacer"></span>
         <span class="pdf-page-info">—</span>
         <button class="pdf-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        <button class="pdf-icon-btn" data-act="browser" aria-label="فتح خارجيًا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>
       </div>
       <div class="pdf-toolbar">
         <button class="pdf-icon-btn" data-act="zoom-out" aria-label="تصغير"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
@@ -310,9 +366,9 @@ const PdfReader = (() => {
   }
 
   async function open(url, title) {
-    if (!isReady()) { FileKit.openExternal(url); return; }
+    if (!isReady()) { FileKit.openEmbeddedViewer(url, title); return; }
     close();
-    const u = normalize(url);
+    const u = FileKit.normalize(url);
     buildOverlay(title);
     overlay.querySelector(".pdf-title").textContent = title || "قراءة PDF";
 
@@ -323,6 +379,7 @@ const PdfReader = (() => {
       const act = btn.dataset.act;
       if (act === "close") close();
       else if (act === "dl") FileKit.download(u, title, null);
+      else if (act === "browser") FileKit.openExternal(u);
       else if (act === "zoom-in") setZoom(scale * 1.2);
       else if (act === "zoom-out") setZoom(scale / 1.2);
       else if (act === "prev") gotoPage(currentPage - 1);
@@ -337,7 +394,14 @@ const PdfReader = (() => {
     });
 
     try {
-      const task = pdfjsLib.getDocument(u);
+      const task = pdfjsLib.getDocument({
+        url: u,
+        // يتيح العرض التدريجي للملفات الكبيرة إذا كان المصدر يدعم Range/CORS.
+        rangeChunkSize: 1024 * 1024,
+        disableStream: false,
+        disableAutoFetch: false,
+        withCredentials: false
+      });
       task.onProgress = (p) => {
         if (p.total) {
           const pct = Math.round((p.loaded / p.total) * 100);
@@ -353,10 +417,10 @@ const PdfReader = (() => {
       updateZoomLabel();
       await renderPage();
     } catch (err) {
-      // pdf.js فشل (ملف كبير أو CORS) → لا معاينة خارجية؛ أغلق ونفتح في المتصفح للتحميل
+      // عند فشل PDF.js بسبب CORS أو مصدر غير مباشر، نبقى داخل التطبيق عبر العارض المضمّن.
       close();
-      openExternal(u);
-      if (window.toast) toast("الملف كبير جداً للمعاينة، يُفتح الآن في المتصفح", "info");
+      FileKit.openEmbeddedViewer(u, title);
+      if (window.toast) toast("تم تحويل الملف إلى عارض بديل داخل التطبيق", "info");
     }
   }
 
@@ -398,9 +462,10 @@ const PdfReader = (() => {
     canvasWrap.scrollTop = 0;
   }
   function close() {
-    if (!overlay) return;
-    overlay.classList.remove("open");
-    setTimeout(() => { if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 220);
+    const oldOverlay = overlay;
+    if (!oldOverlay) return;
+    oldOverlay.classList.remove("open");
+    setTimeout(() => { if (oldOverlay.parentNode) oldOverlay.parentNode.removeChild(oldOverlay); }, 220);
     overlay = null; pdfDoc = null; canvas = null; canvasWrap = null;
   }
 

@@ -1271,3 +1271,32 @@ input, textarea { font-family: inherit; }
 .admissions-profile-link span { display: flex; flex-direction: column; gap: 3px; }
 .admissions-profile-link strong { color: #f2fff3; font-size: 14px; }
 .admissions-profile-link small { color: rgba(214, 247, 217, 0.7); font-size: 11px; }
+
+
+/* ── PDF fallback viewer for WebView ───────────────────────── */
+.pdf-embed-overlay {
+  position: fixed; inset: 0; z-index: 10002; background: #141414;
+  display: flex; flex-direction: column; opacity: 0;
+  transform: translateY(14px); transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.pdf-embed-overlay.open { opacity: 1; transform: none; }
+.pdf-embed-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: calc(10px + env(safe-area-inset-top)) 12px 10px;
+  background: rgba(29,29,29,0.98);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  direction: rtl;
+}
+.pdf-embed-bar .pdf-title { text-align: right; max-width: none; flex: 1; }
+.pdf-embed-status {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; padding: 10px 14px; color: #aaa; font-size: 13px;
+  direction: rtl; text-align: center;
+}
+.pdf-embed-frame {
+  flex: 1; width: 100%; min-height: 0; border: 0; background: #fff;
+}
+@media (max-width: 520px) {
+  .pdf-embed-bar { gap: 6px; padding-inline: 8px; }
+  .pdf-embed-bar .pdf-icon-btn { width: 34px; height: 34px; }
+}

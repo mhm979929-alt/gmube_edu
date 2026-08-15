@@ -1,0 +1,3 @@
+pdf.js 3.11.174 (Apache-2.0)
+pdf.worker.js 3.11.174 (Apache-2.0)
+Source: https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/
