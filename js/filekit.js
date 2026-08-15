@@ -149,8 +149,19 @@ const FileKit = (() => {
     return e.toUpperCase();
   }
 
-  // تحميل مباشر: نحاول blob (يعمل بشكل ممتاز داخل WebView) ثم روابط عادية
-  const MAX_BLOB_SIZE = 15 * 1024 * 1024; // 15MB
+  // تنزيل داخل الصفحة: لا نضع حدًا مصطنعًا لحجم Blob؛ ملفات الكتب الكبيرة
+  // تُقرأ على دفعات حتى يظل المستخدم داخل WebView ولا يعود إلى عارض PDF الخام.
+  function directDownloadLink(url, name) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.setAttribute("download", name);
+    a.rel = "noopener";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 1000);
+  }
 
   async function download(url, title, btn) {
     const u = normalize(url);
@@ -162,7 +173,6 @@ const FileKit = (() => {
       const res = await fetch(u, { mode: "cors" });
       if (!res.ok) throw new Error("bad response");
       const total = Number(res.headers.get("content-length")) || 0;
-      if (total > MAX_BLOB_SIZE) throw new Error("file too large for blob");
       let received = 0;
       const chunks = [];
       const reader = res.body && res.body.getReader ? res.body.getReader() : null;
@@ -179,11 +189,12 @@ const FileKit = (() => {
         chunks.push(new Uint8Array(await res.arrayBuffer()));
       }
 
-      const blob = new Blob(chunks);
+      const blob = new Blob(chunks, { type: res.headers.get("content-type") || "application/octet-stream" });
       const href = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = href;
       a.download = name;
+      a.setAttribute("download", name);
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -192,11 +203,12 @@ const FileKit = (() => {
       if (window.toast) toast("تم تحميل الملف بنجاح", "success");
       return true;
     } catch {
-      // بديل: فتح الرابط مباشرة ليعترضه مدير التحميل/المتصفح (يعمل داخل WebView)
-      setState("فتح في المتصفح…");
-      openExternal(u);
-      if (window.toast) toast("جارٍ الفتح في المتصفح للتحميل", "info");
-      setTimeout(() => setState("تحميل الملف"), 1500);
+      // لا نستخدم window.location؛ فهو يعيد WebView إلى رسالة معاينة PDF القديمة.
+      // رابط Dropbox المطبع يحتوي dl=1، وعنصر download يسمح لمدير التحميل بالتقاطه.
+      setState("جارٍ بدء التحميل…");
+      directDownloadLink(u, name);
+      if (window.toast) toast("بدأ تحميل الملف", "info");
+      setTimeout(() => setState("تحميل الملف"), 1800);
       return false;
     }
   }
