@@ -19,20 +19,21 @@ async function renderProfile() {
           <i data-feather="user" style="color:#4CAF50"></i>
           <span class="inner-title">حسابي</span>
         </div>
-        <div class="guest-wrap">
-          <div class="guest-card">
-            <i data-feather="user" class="guest-icon"></i>
-            <h2 class="guest-title">مرحباً بك في GMube Edu</h2>
-            <p class="guest-sub">سجّل دخولك للوصول إلى حسابك</p>
-            <button class="btn-primary" onclick="navigateTo('/login')">
+        <div class="profile-scroll profile-guest-scroll">
+          <section class="profile-guest-hero">
+            <div class="guest-icon-shell"><i data-feather="user-check"></i></div>
+            <span class="profile-kicker">مساحتك التعليمية</span>
+            <h2 class="guest-title">أهلاً بك في المنصة التعليمية السورية</h2>
+            <p class="guest-sub">سجّل دخولك لمتابعة نشاطك والاحتفاظ بتجربتك التعليمية في مكان واحد.</p>
+            <button class="btn-primary full" onclick="navigateTo('/login')">
               <i data-feather="log-in"></i> تسجيل الدخول
             </button>
-          </div>
-          <div class="menu-section" style="width:100%;margin-top:14px">
-            <button class="menu-item" onclick="openNativeLibrary()">
-              <i data-feather="book-open"></i><span><strong>كتبي</strong><small>الكتب المحمّلة على جهازك</small></span><i data-feather="chevron-left"></i>
-            </button>
-          </div>
+          </section>
+          <button class="profile-library-card" onclick="openNativeLibrary()">
+            <span class="profile-library-icon"><i data-feather="book-open"></i></span>
+            <span class="profile-library-copy"><strong>كتبي</strong><small>افتح الكتب المحمّلة على جهازك واقرأها دون اتصال</small></span>
+            <span class="profile-menu-arrow"><i data-feather="chevron-left"></i></span>
+          </button>
         </div>
       </div>
     `);
@@ -56,9 +57,10 @@ async function renderProfile() {
         <span class="inner-title">حسابي</span>
       </div>
       <div class="profile-scroll">
-        <div class="profile-card-grad" id="profile-card">
+        <section class="profile-card-grad" id="profile-card">
           <div class="profile-avatar-wrap" id="profile-avatar">${avatarHtml(session.name, null, 72)}</div>
           <div class="profile-info">
+            <span class="profile-kicker profile-kicker-light">الحساب التعليمي</span>
             <span class="profile-name">${escHtml(session.name)}</span>
             <span class="profile-role">
               ${session.type === "teacher" ? "معلم" : "طالب"}
@@ -67,27 +69,37 @@ async function renderProfile() {
             </span>
             ${session.role === "admin" ? `<span class="admin-badge">مشرف</span>` : ""}
           </div>
-        </div>
+          <i data-feather="book-open" class="profile-hero-mark"></i>
+        </section>
 
+        <div class="profile-section-heading">
+          <div><span>ملخص نشاطك</span><small>آخر أرقامك التعليمية</small></div>
+          <i data-feather="bar-chart-2"></i>
+        </div>
         <div class="stats-grid" id="profile-stats">
           <div class="stat-card"><span class="stat-value" id="stat-videos">-</span><span class="stat-label">درس</span></div>
           <div class="stat-card"><span class="stat-value" id="stat-views">-</span><span class="stat-label">مشاهدة</span></div>
           <div class="stat-card"><span class="stat-value" id="stat-tests">-</span><span class="stat-label">اختبار</span></div>
         </div>
 
-        <div class="menu-section">
-          <button class="menu-item" onclick="openNativeLibrary()">
-            <i data-feather="book-open"></i><span><strong>كتبي</strong><small>الكتب المحمّلة على جهازك</small></span><i data-feather="chevron-left"></i>
+        <div class="profile-section-heading profile-shortcuts-heading">
+          <div><span>اختصاراتك</span><small>الوصول السريع إلى أدواتك</small></div>
+        </div>
+        <div class="menu-section profile-menu">
+          <button class="profile-library-card" onclick="openNativeLibrary()">
+            <span class="profile-library-icon"><i data-feather="book-open"></i></span>
+            <span class="profile-library-copy"><strong>كتبي</strong><small>الكتب المحمّلة والقراءة دون اتصال</small></span>
+            <span class="profile-menu-arrow"><i data-feather="chevron-left"></i></span>
           </button>
-          <button class="menu-item admissions-profile-link" onclick="navigateTo('/university-admissions')">
+          <button class="menu-item profile-menu-item admissions-profile-link" onclick="navigateTo('/university-admissions')">
             <i data-feather="award"></i><span><strong>دليل القبول الجامعي</strong><small>اكتشف التخصصات المطابقة لمجموعك</small></span><i data-feather="chevron-left"></i>
           </button>
-          <button class="menu-item" onclick="navigateTo('/notifications')">
-            <i data-feather="bell"></i><span>الإشعارات</span><i data-feather="chevron-left"></i>
+          <button class="menu-item profile-menu-item" onclick="navigateTo('/notifications')">
+            <i data-feather="bell"></i><span><strong>الإشعارات</strong><small>تابع الجديد من القنوات والدروس</small></span><i data-feather="chevron-left"></i>
           </button>
           ${session.type === "teacher" && teacherDocId ? `
-          <button class="menu-item" onclick="navigateTo('/channel/${teacherDocId}')">
-            <i data-feather="tv"></i><span>قناتي</span><i data-feather="chevron-left"></i>
+          <button class="menu-item profile-menu-item" onclick="navigateTo('/channel/${teacherDocId}')">
+            <i data-feather="tv"></i><span><strong>قناتي</strong><small>إدارة محتواك التعليمي</small></span><i data-feather="chevron-left"></i>
           </button>` : ""}
         </div>
 
