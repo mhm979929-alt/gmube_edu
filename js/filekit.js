@@ -136,25 +136,35 @@ const FileKit = (() => {
     return { type, size, ext: e };
   }
 
-  // فتح رابط للتحميل/العرض - يعمل داخل WebView (AppCreator24)
-  function openExternal(url) {
-    const u = normalize(url);
-    // افتح رابط الكتاب خارج WebView؛ لا نستخدم location.href حتى لا يعود الملف إلى عارض التطبيق.
-    let opened = false;
+  // إنشاء رابط Android intent يطلب من الغلاف تشغيل متصفح النظام.
+  // روابط wa.me تخرج عادةً لأنها تُسلَّم إلى تطبيق خارجي؛ روابط PDF العادية
+  // قد يعترضها WebView، لذلك نستخدم intent مع رابط احتياطي للمتصفح.
+  function systemBrowserIntent(url) {
+    const raw = String(url || "").trim();
     try {
-      const popup = window.open(u, "_blank", "noopener,noreferrer");
-      opened = !!popup;
-    } catch {}
-    if (!opened) {
-      const a = document.createElement("a");
-      a.href = u;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.style.display = "none";
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => a.remove(), 1000);
+      const parsed = new URL(raw, window.location.href);
+      if (!(parsed.protocol === "http:" || parsed.protocol === "https:")) return raw;
+      const target = `${parsed.host}${parsed.pathname}${parsed.search}${parsed.hash}`;
+      return `intent://${target}#Intent;scheme=${parsed.protocol.slice(0, -1)};action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(raw)};end`;
+    } catch {
+      return raw;
     }
+  }
+
+  // فتح رابط خارج WebView. في مسار الكتب نستخدم Android intent، أما بقية
+  // أنواع الملفات فتحافظ على سلوكها السابق.
+  function openExternal(url, options = {}) {
+    const raw = String(url || "").trim();
+    if (!raw) return;
+    const u = options.systemBrowser ? systemBrowserIntent(raw) : normalize(raw);
+    const a = document.createElement("a");
+    a.href = u;
+    a.target = "_blank";
+    a.rel = "external noopener noreferrer";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 1200);
   }
 
   // حماية واجهة العرض فقط؛ لا تدّعي منع لقطات الشاشة أو أدوات المطوّر.
@@ -358,7 +368,7 @@ const FileKit = (() => {
   function openBook(url, title) {
     if (!url) { window.toast && toast("الرابط غير متوفر", "error"); return; }
     closeSheet();
-    openExternal(url);
+    openExternal(url, { systemBrowser: true });
   }
 
   // ورقة الخيارات السفلية
