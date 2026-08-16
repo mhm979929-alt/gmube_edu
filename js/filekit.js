@@ -354,11 +354,11 @@ const FileKit = (() => {
     openExternal(u);
   }
 
-  // فتح الكتاب مباشرة داخل عارض التطبيق، من دون ورقة خيارات أو نسخ أو مشاركة.
+  // فتح الكتاب مباشرة في متصفح الجهاز الخارجي، من دون معاينة أو عارض داخل التطبيق.
   function openBook(url, title) {
     if (!url) { window.toast && toast("الرابط غير متوفر", "error"); return; }
     closeSheet();
-    openViewer(normalize(url), title || "كتاب", { allowInternalDownload: false, allowExternal: false, protectViewer: true });
+    openExternal(url);
   }
 
   // ورقة الخيارات السفلية

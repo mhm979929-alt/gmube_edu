@@ -87,7 +87,7 @@ async function renderBooks() {
       `).join("");
       featherRefresh();
 
-      // فتح الكتاب مباشرة داخل عارض التطبيق؛ لا نعرض نسخ الرابط أو مشاركته.
+      // فتح الكتاب مباشرة في متصفح الجهاز الخارجي؛ لا ننشئ معاينة داخل التطبيق.
       grid.querySelectorAll('.book-card').forEach(card => {
         const url = card.dataset.url;
         const title = card.dataset.title;
