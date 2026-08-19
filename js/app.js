@@ -1,6 +1,6 @@
 // ── App Bootstrap ───────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async function() {
-  Auth.init();
+  await Auth.init();
 
   // 1. تحميل المواد من قاعدة البيانات
   try {
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   Router.add("/books", renderBooks);
   Router.add("/tests", renderTests);
   Router.add("/profile", renderProfile);
-  Router.add("/login", renderLogin);
+  Router.add("/login(?:\\?.*)?", renderLogin);
   Router.add("/notifications", renderNotifications);
   Router.add("/watch/([^/]+)", renderWatch);
   Router.add("/subject/([^/]+)", renderSubject);
