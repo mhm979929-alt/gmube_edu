@@ -3,6 +3,31 @@ document.addEventListener("DOMContentLoaded", async function() {
   await Auth.init();
 
   let bridgeResumeInFlight = false;
+  let bridgeUiRefreshInFlight = false;
+
+  async function refreshVisibleAuthUi() {
+    if (bridgeUiRefreshInFlight) return;
+    bridgeUiRefreshInFlight = true;
+    try {
+      const path = (location.hash || "#/").replace(/^#/, "") || "/";
+      if (path.includes("/login")) {
+        navigateTo("/");
+        return;
+      }
+      // نحدّث الصفحة الظاهرة مباشرة بعد تثبيت الجلسة، من دون إعادة تحميل التطبيق.
+      // هذا مهم لأن AppCreator24 قد يعود إلى نفس hash ولا يطلق hashchange.
+      if (path === "/" || path === "") {
+        await renderHome();
+      } else if (path === "/profile") {
+        await renderProfile();
+      }
+    } catch (error) {
+      console.warn("oauth_bridge_ui_refresh", error);
+    } finally {
+      bridgeUiRefreshInFlight = false;
+    }
+  }
+
   async function resumeOAuthBridgeIfNeeded() {
     if (bridgeResumeInFlight || Auth.isLoggedIn()) return;
     bridgeResumeInFlight = true;
@@ -10,9 +35,7 @@ document.addEventListener("DOMContentLoaded", async function() {
       const session = await Auth.resumeGoogleBridge();
       if (session) {
         toast("تم تسجيل الدخول بواسطة Google", "success");
-        // لا نعيد تصيير المسار الحالي قسرياً؛ فهذا قد يؤخر تحديث حالة التطبيق.
-        // ننتقل فقط من شاشة الدخول إلى الرئيسية كما كان في المسار المستقر.
-        if (location.hash.includes("/login")) navigateTo("/");
+        await refreshVisibleAuthUi();
       }
     } catch (error) {
       // لا نزعج المستخدم في كل focus؛ صفحة الدخول تعرض الخطأ عند العودة إليها.
