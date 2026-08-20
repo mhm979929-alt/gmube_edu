@@ -58,7 +58,7 @@ function renderLogin() {
         <button class="btn-secondary full" id="google-btn" type="button" style="margin-top:10px">
           <i data-feather="globe"></i> تسجيل الدخول بواسطة Google
         </button>
-        <button id="signup-toggle" type="button" style="width:100%;margin-top:12px;background:none;border:0;color:#2f8f62;cursor:pointer;font-family:inherit;font-size:14px">
+        <button id="signup-toggle" type="button" style="display:none;width:100%;margin-top:12px;background:none;border:0;color:#2f8f62;cursor:pointer;font-family:inherit;font-size:14px">
           إنشاء حساب طالب جديد
         </button>
         <p id="login-help" style="color:#888;font-size:12px;text-align:center;margin-top:8px;line-height:1.7">
@@ -84,19 +84,20 @@ function renderLogin() {
     el("signup-fields").style.display = signup ? "block" : "none";
     el("confirm-wrap").style.display = signup ? "block" : "none";
     el("google-btn").style.display = userType === "student" ? "block" : "none";
-    el("signup-toggle").style.display = userType === "student" ? "block" : "none";
+    // التسجيل الجديد للطلاب يتم عبر Google فقط؛ يبقى تسجيل الاسم للحسابات القديمة.
+    el("signup-toggle").style.display = "none";
     el("identity-label").textContent = signup ? "الاسم الكامل" : (userType === "teacher" ? "اسم الأستاذ" : "الاسم أو البريد الإلكتروني");
     el("login-name").placeholder = signup ? "اكتب اسمك كاملاً" : (userType === "teacher" ? "اكتب اسم الأستاذ" : "اسمك القديم أو بريدك الإلكتروني");
     el("login-name").autocomplete = signup ? "name" : "username";
     el("login-pass").autocomplete = signup ? "new-password" : "current-password";
     el("login-pass").placeholder = signup ? "8 محارف على الأقل" : "كلمة السر";
     el("login-submit").innerHTML = signup ? `<i data-feather="user-plus"></i> إنشاء الحساب` : `<i data-feather="log-in"></i> تسجيل الدخول`;
-    el("signup-toggle").textContent = signup ? "لديك حساب؟ تسجيل الدخول" : "إنشاء حساب طالب جديد";
+    el("signup-toggle").textContent = "";
     el("login-help").textContent = signup
       ? "سيُنشأ حساب الطالب مباشرة في Appwrite. لا يمكن إنشاء حساب أستاذ من التطبيق."
       : (userType === "teacher"
         ? "حسابات المعلمين تُنشأ حصراً من لوحة التحكم، ويمكن تسجيل الدخول هنا بالاسم وكلمة السر."
-        : "يمكن للطلاب القدامى الدخول بالاسم، ويمكن للطلاب الجدد استخدام البريد أو Google.");
+        : "يمكن للطلاب القدامى الدخول بالاسم، أما الطالب الجديد فيضغط زر Google ويختار حسابه للتسجيل تلقائياً.");
     featherRefresh();
   }
 
