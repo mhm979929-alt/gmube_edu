@@ -56,7 +56,7 @@ function renderLogin() {
           <i data-feather="log-in"></i> تسجيل الدخول
         </button>
         <button class="btn-secondary full" id="google-btn" type="button" style="margin-top:10px">
-          <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <svg class="google-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path fill="#4285F4" d="M21.35 12.27c0-.79-.07-1.55-.22-2.27H12v4.3h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.7 2.91-4.2 2.91-7.42z"/>
             <path fill="#34A853" d="M12 21.5c2.64 0 4.86-.87 6.48-2.36l-3.14-2.45c-.87.58-1.98.92-3.34.92-2.56 0-4.73-1.73-5.51-4.06H3.24V16.1A9.79 9.79 0 0 0 12 21.5z"/>
             <path fill="#FBBC05" d="M6.49 13.55A5.89 5.89 0 0 1 6.18 12c0-.54.11-1.07.31-1.55V8.1H3.24A9.48 9.48 0 0 0 2.2 12c0 1.41.34 2.75 1.04 3.9l3.25-2.35z"/>
