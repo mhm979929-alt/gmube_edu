@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   if (oauthUserId && oauthSecret) {
     try {
-      await account.createSession({ userId: oauthUserId, secret: oauthSecret });
+      await account.createSession(oauthUserId, oauthSecret);
       deepLinkOAuth = "success";
     } catch (error) {
       deepLinkOAuth = "failed";
