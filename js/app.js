@@ -27,7 +27,15 @@ document.addEventListener("DOMContentLoaded", async function() {
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") resumeOAuthBridgeIfNeeded();
   });
+  // بعض إصدارات AppCreator24 لا تطلق focus/pageshow عند العودة من Chrome.
+  // لذلك نراقب وجود معاملة OAuth بفحص دوري خفيف؛ لا توجد طلبات عندما لا توجد معاملة.
   setTimeout(resumeOAuthBridgeIfNeeded, 0);
+  const bridgeResumeTimer = window.setInterval(() => {
+    if (localStorage.getItem("gmube_oauth_bridge_tx")) {
+      resumeOAuthBridgeIfNeeded();
+    }
+  }, 1000);
+  window.addEventListener("pagehide", () => window.clearInterval(bridgeResumeTimer), { once: true });
 
   // 1. تحميل المواد من قاعدة البيانات
   try {
