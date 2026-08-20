@@ -1,7 +1,7 @@
 // ── Appwrite SDK Init ───────────────────────────────────────────
 // ملاحظة: لا نستخدم مفتاح API هنا لأن متصفح SDK لا يدعم setKey.
 // القراءة تعمل للجميع، والكتابة تتم عبر جلسة المستخدم المسجّل (permissions: users).
-const { Client, Account, Databases, Query, ID } = Appwrite;
+const { Client, Account, Databases, Query, ID, OAuthProvider } = Appwrite;
 
 const client = new Client()
   .setEndpoint(APPWRITE_ENDPOINT)
@@ -48,11 +48,65 @@ function getYouTubeThumbnail(url) {
 }
 
 // ── Auth ────────────────────────────────────────────────────────
+function withTimeout(promise, milliseconds = 7000) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error("انتهت مهلة الاتصال")), milliseconds);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
 async function getCurrentSession() {
-  try { return await account.get(); } catch { return null; }
+  try { return await withTimeout(account.get(), 7000); } catch { return null; }
+}
+
+function accountCandidates(appUser) {
+  const candidates = [appUser?.$id].filter(Boolean);
+  const email = String(appUser?.email || "").toLowerCase();
+  if (email.endsWith("@gmube.app")) candidates.push(email.slice(0, -"@gmube.app".length));
+  return [...new Set(candidates)];
+}
+
+async function findProfileForAccountUser(appUser) {
+  for (const candidate of accountCandidates(appUser)) {
+    try {
+      const teachers = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TEACHERS, [
+        Query.equal("user_id", candidate), Query.limit(1)
+      ]);
+      if (teachers.documents.length) {
+        return { ...teachers.documents[0], type: "teacher", role: "teacher" };
+      }
+    } catch {}
+    try {
+      const students = await databases.listDocuments(DATABASE_ID, COLLECTIONS.STUDENTS, [
+        Query.equal("user_id", candidate), Query.limit(1)
+      ]);
+      if (students.documents.length) {
+        return { ...students.documents[0], type: "student", role: "student" };
+      }
+    } catch {}
+  }
+  // الحسابات الحديثة لا تحتاج وثيقة عامة؛ أي حساب غير مرتبط بمعلم هو طالب افتراضياً.
+  return {
+    $id: appUser.$id,
+    id: appUser.$id,
+    user_id: appUser.$id,
+    name: appUser.name || appUser.email,
+    type: "student",
+    role: "student",
+  };
 }
 
 async function loginUser(type, name, secret) {
+  // الحسابات الحديثة للطلاب تدخل بالبريد مباشرة.
+  if (type === "student" && String(name).includes("@")) {
+    try {
+      await account.createEmailPasswordSession(name.trim(), secret);
+      return await findProfileForAccountUser(await account.get());
+    } catch {}
+  }
+
+  // توافق الحسابات القديمة: الاسم ← وثيقة users ← بريد اصطناعي داخل Appwrite.
   const collectionId = type === "teacher" ? COLLECTIONS.TEACHERS : COLLECTIONS.STUDENTS;
   const result = await databases.listDocuments(DATABASE_ID, collectionId, [Query.equal("name", name)]);
   if (!result.documents || result.documents.length === 0)
@@ -65,6 +119,33 @@ async function loginUser(type, name, secret) {
   } catch {
     throw new Error("بيانات الدخول غير صحيحة");
   }
+}
+
+async function registerStudentAccount(name, email, password) {
+  const cleanName = String(name || "").trim();
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  if (cleanName.length < 2) throw new Error("اكتب الاسم الكامل");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) throw new Error("أدخل بريداً إلكترونياً صحيحاً");
+  if (String(password || "").length < 8) throw new Error("كلمة السر يجب أن تكون 8 محارف على الأقل");
+
+  const created = await account.create(ID.unique(), cleanEmail, password, cleanName);
+  await account.createEmailPasswordSession(cleanEmail, password);
+  try { await account.updatePrefs({ gmube_role: "student" }); } catch {}
+  return {
+    $id: created.$id,
+    id: created.$id,
+    user_id: created.$id,
+    name: created.name || cleanName,
+    type: "student",
+    role: "student",
+  };
+}
+
+function startGoogleStudentLogin() {
+  const base = `${window.location.origin}${window.location.pathname}`;
+  const success = `${base}#/login?oauth=success`;
+  const failure = `${base}#/login?oauth=failed`;
+  return account.createOAuth2Session(OAuthProvider.Google, success, failure, ["openid", "email", "profile"]);
 }
 
 async function logoutUser() {

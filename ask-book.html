@@ -19,7 +19,8 @@
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    <!-- الإعدادات المشتركة (مفاتيح API) -->
+    <!-- Appwrite SDK + إعدادات عامة غير سرية -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16/dist/iife/sdk.min.js"></script>
     <script src="js/config.js"></script>
 
     <style>
@@ -213,15 +214,21 @@
     </div>
 
     <script>
-        // المفاتيح (Supabase / Groq) موجودة في js/config.js ولا تُعاد كتابتها هنا.
+        // لا نثق بـ localStorage لإثبات تسجيل الدخول؛ نتحقق من جلسة Appwrite الفعلية.
+        const askBookClient = new Appwrite.Client()
+            .setEndpoint(APPWRITE_ENDPOINT)
+            .setProject(APPWRITE_PROJECT_ID);
+        const askBookAccount = new Appwrite.Account(askBookClient);
+        let storedSession = null;
 
-        // ==========================================
-        // التحقق من تسجيل الدخول
-        // ==========================================
-        const storedSession = (() => {
-            try { return JSON.parse(localStorage.getItem('gmube_edu_session')); }
-            catch (e) { return null; }
-        })();
+        async function getVerifiedSession() {
+            try {
+                const user = await askBookAccount.get();
+                return { user_id: user.$id, name: user.name || user.email };
+            } catch (e) {
+                return null;
+            }
+        }
 
         const LOGIN_REQUIRED_HTML = `
             <div style="font-family:'Cairo',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0a1a0a;color:#c0e0c0;text-align:center;padding:20px;">
@@ -293,16 +300,21 @@
         const menuBtn = document.getElementById('menuBtn');
         const changeBookBtn = document.getElementById('changeBookBtn');
 
-        // تهيئة الصفحة (تتطلب تسجيل الدخول)
-        if (!storedSession) {
-            document.body.innerHTML = LOGIN_REQUIRED_HTML;
-        } else if (currentBook) {
-            showChatScreen(currentBook);
-        } else {
-            loadBooks().catch(() => {
-                document.getElementById('bookGrid').innerHTML = '<div style="grid-column:1/-1; text-align:center;color:#ff6b6b;">فشل تحميل الكتب. تحقق من اتصالك.</div>';
-            });
-        }
+        // تهيئة الصفحة (تتطلب جلسة Appwrite فعلية)
+        (async function initAskBook() {
+            storedSession = await getVerifiedSession();
+            if (!storedSession) {
+                document.body.innerHTML = LOGIN_REQUIRED_HTML;
+                return;
+            }
+            if (currentBook) {
+                showChatScreen(currentBook);
+            } else {
+                loadBooks().catch(() => {
+                    document.getElementById('bookGrid').innerHTML = '<div style="grid-column:1/-1; text-align:center;color:#ff6b6b;">فشل تحميل الكتب. تحقق من اتصالك.</div>';
+                });
+            }
+        })();
 
         async function loadBooks() {
             const url = `${SUPABASE_URL}/rest/v1/books?select=id,book_name,book_description&is_active=eq.true`;
@@ -432,6 +444,9 @@
         }
 
         async function askGroq(question, context, bookName) {
+            if (!GROQ_KEY) {
+                throw new Error('ميزة اسأل كتابك متوقفة مؤقتاً لحماية مفتاح الذكاء الاصطناعي. ستعود بعد توفير مسار آمن.');
+            }
             const lastQuestions = conversationHistory.slice(-3);
             let historyText = lastQuestions.map((item, idx) => `السؤال ${idx+1}: ${item.question}\nالإجابة: ${item.answer.substring(0, 150)}...`).join('\n');
 
