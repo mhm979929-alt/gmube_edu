@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تسجيل الدخول بواسطة Google</title>
+</head>
+<body>
+  <p style="font-family:Arial,sans-serif;text-align:center;margin-top:25vh">جاري فتح Google...</p>
+  <script>
+    (function () {
+      const endpoint = "https://cloud.appwrite.io/v1";
+      const project = "6a54cfea00202c1d3e20";
+      const callback = new URL("oauth-callback.html", window.location.href);
+      const success = callback.href;
+      const failure = new URL("oauth-callback.html?oauth=failed", window.location.href).href;
+      const url = new URL(`${endpoint}/account/tokens/oauth2/google`);
+      url.searchParams.set("project", project);
+      url.searchParams.set("success", success);
+      url.searchParams.set("failure", failure);
+      ["openid", "email", "profile"].forEach((scope, index) => {
+        url.searchParams.set(`scopes[${index}]`, scope);
+      });
+      window.location.replace(url.toString());
+    }());
+  </script>
+</body>
+</html>
+

@@ -142,10 +142,17 @@ async function registerStudentAccount(name, email, password) {
 }
 
 function startGoogleStudentLogin() {
-  const base = `${window.location.origin}${window.location.pathname}`;
-  const success = `${base}#/login?oauth=success`;
-  const failure = `${base}#/login?oauth=failed`;
-  return account.createOAuth2Session(OAuthProvider.Google, success, failure, ["openid", "email", "profile"]);
+  const callback = new URL("oauth-callback.html", window.location.href);
+  const success = callback.href;
+  const failure = new URL("oauth-callback.html?oauth=failed", window.location.href).href;
+  const oauthUrl = new URL(`${APPWRITE_ENDPOINT}/account/tokens/oauth2/${OAuthProvider.Google}`);
+  oauthUrl.searchParams.set("project", APPWRITE_PROJECT_ID);
+  oauthUrl.searchParams.set("success", success);
+  oauthUrl.searchParams.set("failure", failure);
+  ["openid", "email", "profile"].forEach((scope, index) => {
+    oauthUrl.searchParams.set(`scopes[${index}]`, scope);
+  });
+  return oauthUrl.toString();
 }
 
 async function logoutUser() {
