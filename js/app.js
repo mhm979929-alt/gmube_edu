@@ -10,7 +10,10 @@ document.addEventListener("DOMContentLoaded", async function() {
       const session = await Auth.resumeGoogleBridge();
       if (session) {
         toast("تم تسجيل الدخول بواسطة Google", "success");
-        if (location.hash.includes("/login")) navigateTo("/");
+        // إعادة تصيير الشاشة الرئيسية مرة واحدة بعد إنشاء جلسة Appwrite.
+        // إذا كان التطبيق على الرئيسية أصلاً، لا يحدث hashchange؛ لذلك نحل المسار يدوياً.
+        if (location.hash !== "#/") navigateTo("/");
+        else if (Router?.routes?.length) Router.resolve("#/");
       }
     } catch (error) {
       // لا نزعج المستخدم في كل focus؛ صفحة الدخول تعرض الخطأ عند العودة إليها.
