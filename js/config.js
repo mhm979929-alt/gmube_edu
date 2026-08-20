@@ -3,6 +3,10 @@ const APPWRITE_ENDPOINT = "https://cloud.appwrite.io/v1";
 const APPWRITE_PROJECT_ID = "6a54cfea00202c1d3e20";
 const DATABASE_ID = "gmube_db";
 
+// جسر OAuth عام بلا أسرار؛ مفاتيح Upstash تبقى داخل Vercel فقط.
+const OAUTH_BRIDGE_ORIGIN = "https://gmube-oauth-bridge.vercel.app";
+const OAUTH_BRIDGE_ENABLED = true;
+
 // لا نضع مفاتيح إدارية أو مفاتيح نماذج الذكاء الاصطناعي في الواجهة العامة.
 // Appwrite SDK يعمل عبر جلسة المستخدم، وProject ID/Endpoint ليسا سريين.
 

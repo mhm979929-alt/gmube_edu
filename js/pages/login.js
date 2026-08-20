@@ -172,12 +172,19 @@ function renderLogin() {
     }
   }
 
-  el("google-btn").addEventListener("click", () => {
+  el("google-btn").addEventListener("click", async () => {
     errBox.style.display = "none";
+    const googleBtn = el("google-btn");
+    googleBtn.disabled = true;
     try {
-      Auth.loginWithGoogle();
+      const result = await Auth.loginWithGoogle();
+      if (result?.pending) {
+        toast("تم فتح المتصفح لاختيار حساب Google. بعد الانتهاء ستعود إلى التطبيق تلقائياً.", "success");
+      }
     } catch (e) {
       showError(e.message || "تعذر بدء تسجيل الدخول بواسطة Google");
+    } finally {
+      googleBtn.disabled = false;
     }
   });
 

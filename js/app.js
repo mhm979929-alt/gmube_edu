@@ -2,6 +2,33 @@
 document.addEventListener("DOMContentLoaded", async function() {
   await Auth.init();
 
+  let bridgeResumeInFlight = false;
+  async function resumeOAuthBridgeIfNeeded() {
+    if (bridgeResumeInFlight || Auth.isLoggedIn()) return;
+    bridgeResumeInFlight = true;
+    try {
+      const session = await Auth.resumeGoogleBridge();
+      if (session) {
+        toast("تم تسجيل الدخول بواسطة Google", "success");
+        if (location.hash.includes("/login")) navigateTo("/");
+      }
+    } catch (error) {
+      // لا نزعج المستخدم في كل focus؛ صفحة الدخول تعرض الخطأ عند العودة إليها.
+      if (location.hash.includes("/login") && error?.message) {
+        console.warn("oauth_bridge_resume", error.message);
+      }
+    } finally {
+      bridgeResumeInFlight = false;
+    }
+  }
+
+  window.addEventListener("pageshow", resumeOAuthBridgeIfNeeded);
+  window.addEventListener("focus", resumeOAuthBridgeIfNeeded);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") resumeOAuthBridgeIfNeeded();
+  });
+  setTimeout(resumeOAuthBridgeIfNeeded, 0);
+
   // 1. تحميل المواد من قاعدة البيانات
   try {
     const subjects = await databases.listDocuments(DATABASE_ID, COLLECTIONS.SUBJECTS, []);
