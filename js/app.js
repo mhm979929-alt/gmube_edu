@@ -1,29 +1,5 @@
 // ── App Bootstrap ───────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async function() {
-  let deepLinkOAuth = null;
-  const query = new URLSearchParams(window.location.search);
-  const hashQuestion = window.location.hash.indexOf("?");
-  const hashQuery = hashQuestion >= 0
-    ? new URLSearchParams(window.location.hash.slice(hashQuestion + 1))
-    : new URLSearchParams();
-  const oauthUserId = query.get("userId") || hashQuery.get("userId");
-  const oauthSecret = query.get("secret") || hashQuery.get("secret");
-
-  if (oauthUserId && oauthSecret) {
-    try {
-      await account.createSession({ userId: oauthUserId, secret: oauthSecret });
-      deepLinkOAuth = "success";
-    } catch (error) {
-      deepLinkOAuth = "failed";
-      console.warn("تعذر إنشاء جلسة Google من الرابط العميق", error);
-    }
-    const cleanUrl = new URL(window.location.href);
-    ["userId", "secret", "oauth"].forEach(key => cleanUrl.searchParams.delete(key));
-    const cleanHash = cleanUrl.hash.split("?")[0];
-    cleanUrl.hash = cleanHash || "#/";
-    window.history.replaceState({}, document.title, cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
-  }
-
   await Auth.init();
 
   // 1. تحميل المواد من قاعدة البيانات
@@ -63,11 +39,4 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   // 4. Start router
   Router.start();
-
-  if (deepLinkOAuth === "success") {
-    toast("تم تسجيل الدخول بواسطة Google", "success");
-    navigateTo("/");
-  } else if (deepLinkOAuth === "failed") {
-    navigateTo("/login?oauth=failed");
-  }
 });
