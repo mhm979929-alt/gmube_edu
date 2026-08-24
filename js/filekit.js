@@ -220,10 +220,108 @@ const FileKit = (() => {
     }
   }
 
+  function loadCoverImage(src) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error("cover image unavailable"));
+      image.src = src;
+    });
+  }
+
+  async function canvasToPngBytes(canvas) {
+    if (canvas.toBlob) {
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob(value => value ? resolve(value) : reject(new Error("cover render failed")), "image/png");
+      });
+      return new Uint8Array(await blob.arrayBuffer());
+    }
+    const data = atob(canvas.toDataURL("image/png").split(",")[1]);
+    const bytes = new Uint8Array(data.length);
+    for (let i = 0; i < data.length; i++) bytes[i] = data.charCodeAt(i);
+    return bytes;
+  }
+
+  // غلاف ثابت ومشترك لكل PDF: لا نستخدم عنوان الكتاب أو المادة أو الصف.
+  // يُرسم محلياً ثم يُضمّن كصفحة أولى في نسخة التنزيل فقط.
+  async function buildStaticPdfCover() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1240;
+    canvas.height = 1754;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("cover canvas unavailable");
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const icon = await loadCoverImage(new URL("assets/pdf-cover-icon.png", document.baseURI).href);
+    const iconSize = 190;
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(icon, (canvas.width - iconSize) / 2, 560, iconSize, iconSize);
+
+    try { if (document.fonts?.ready) await document.fonts.ready; } catch {}
+    ctx.fillStyle = "#171717";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.direction = "rtl";
+    ctx.font = "700 64px Cairo, Arial, sans-serif";
+    ctx.fillText("المنصة التعليمية السورية", canvas.width / 2, 850);
+    return canvasToPngBytes(canvas);
+  }
+
+  function saveBlob(blob, name) {
+    const href = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = href;
+    a.download = name;
+    a.setAttribute("download", name);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(href), 60000);
+  }
+
+  async function downloadPdfWithCover(url, name, setState) {
+    if (!window.PDFLib?.PDFDocument) throw new Error("pdf cover library unavailable");
+    setState("جارٍ تحميل PDF…");
+    const res = await fetch(url, { mode: "cors" });
+    if (!res.ok) throw new Error("pdf response unavailable");
+    const sourceBytes = await res.arrayBuffer();
+    setState("جارٍ تجهيز الغلاف…");
+    const coverBytes = await buildStaticPdfCover();
+    const sourcePdf = await window.PDFLib.PDFDocument.load(sourceBytes);
+    const outputPdf = await window.PDFLib.PDFDocument.create();
+    const coverPage = outputPdf.addPage([595.28, 841.89]);
+    const coverImage = await outputPdf.embedPng(coverBytes);
+    coverPage.drawImage(coverImage, { x: 0, y: 0, width: 595.28, height: 841.89 });
+    const originalPages = await outputPdf.copyPages(sourcePdf, sourcePdf.getPageIndices());
+    originalPages.forEach(page => outputPdf.addPage(page));
+    setState("جارٍ حفظ النسخة…");
+    const resultBytes = await outputPdf.save();
+    saveBlob(new Blob([resultBytes], { type: "application/pdf" }), name);
+  }
+
   async function download(url, title, btn) {
     const u = normalize(url);
+    const pdfFile = isPdf(u);
     const name = `${(title || "file").replace(/[\\/:*?"<>|]+/g, " ").trim()}.${ext(u) || "pdf"}`;
     const setState = (t) => { if (btn) btn.innerHTML = t; };
+
+    // ملفات PDF فقط تمر بمسار الغلاف. بقية الأنواع لا تتغير طريقة تنزيلها.
+    if (pdfFile) {
+      try {
+        await downloadPdfWithCover(u, name, setState);
+        setState("✅ تم الحفظ");
+        if (window.toast) toast("تم تحميل PDF مع الغلاف", "success");
+        return true;
+      } catch (error) {
+        console.warn("pdf_cover_download_failed", error?.message || error);
+        setState("جارٍ بدء التحميل…");
+        directDownloadLink(u, name);
+        if (window.toast) toast("تعذر إضافة الغلاف؛ بدأ تحميل ملف PDF الأصلي", "info");
+        setTimeout(() => setState("تحميل الملف"), 1800);
+        return false;
+      }
+    }
 
     if (requestNativeDownload(u, title)) {
       setState("جارٍ التنزيل في التطبيق…");
@@ -253,15 +351,7 @@ const FileKit = (() => {
       }
 
       const blob = new Blob(chunks, { type: res.headers.get("content-type") || "application/octet-stream" });
-      const href = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = href;
-      a.download = name;
-      a.setAttribute("download", name);
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(href), 60000);
+      saveBlob(blob, name);
       setState("✅ تم الحفظ");
       if (window.toast) toast("تم تحميل الملف بنجاح", "success");
       return true;
