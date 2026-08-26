@@ -1,5 +1,5 @@
 // ── App Bootstrap ───────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", async function() {
+async function bootGMubeApp() {
   await Auth.init();
 
   let bridgeResumeInFlight = false;
@@ -103,4 +103,10 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   // 4. Start router
   Router.start();
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootGMubeApp, { once: true });
+} else {
+  bootGMubeApp();
+}
