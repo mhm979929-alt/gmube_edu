@@ -91,6 +91,18 @@ async function renderHome() {
 
     const firstName = String(session.name || "طالب").trim().split(/\s+/)[0] || "طالب";
     const completed = results.length;
+    const isStudent = session.type === "student";
+    const dashboardCopy = isStudent ? {
+      testsTitle: "اختباراتي", testsMeta: completed ? `${completed} نتيجة` : "ابدأ اختباراً",
+      booksTitle: "الكتب", booksMeta: "مراجعك الدراسية",
+      teachersTitle: "الأساتذة", teachersMeta: "تعلّم مع الأفضل",
+      progressTitle: "تقدمي", progressMeta: "تابع إنجازك",
+    } : {
+      testsTitle: "الاختبارات", testsMeta: "استعرض التقييمات",
+      booksTitle: "الكتب", booksMeta: "المراجع الدراسية",
+      teachersTitle: "الأساتذة", teachersMeta: "قنوات المنصة",
+      progressTitle: "حسابي", progressMeta: "إدارة ملفك",
+    };
     const best = results.reduce((max, result) => {
       const total = Number(result.total) || 0;
       const score = Number(result.score) || 0;
@@ -115,10 +127,10 @@ async function renderHome() {
         </div>
 
         <div class="dashboard-shortcuts" aria-label="اختصارات تعليمية">
-          <button class="dashboard-shortcut dashboard-shortcut-tests" onclick="navigateTo('/tests')"><i data-feather="check-circle"></i><strong>اختباراتي</strong><small>${completed ? `${completed} نتيجة` : "ابدأ اختباراً"}</small></button>
-          <button class="dashboard-shortcut dashboard-shortcut-books" onclick="navigateTo('/books')"><i data-feather="book-open"></i><strong>الكتب</strong><small>مراجعك الدراسية</small></button>
-          <button class="dashboard-shortcut dashboard-shortcut-teachers" onclick="navigateTo('/teachers')"><i data-feather="users"></i><strong>الأساتذة</strong><small>تعلّم مع الأفضل</small></button>
-          <button class="dashboard-shortcut dashboard-shortcut-profile" onclick="navigateTo('/profile')"><i data-feather="bar-chart-2"></i><strong>تقدمي</strong><small>${best ? `أفضل نتيجة ${best}%` : "تابع إنجازك"}</small></button>
+          <button class="dashboard-shortcut dashboard-shortcut-tests" onclick="navigateTo('/tests')"><i data-feather="check-circle"></i><strong>${dashboardCopy.testsTitle}</strong><small>${dashboardCopy.testsMeta}</small></button>
+          <button class="dashboard-shortcut dashboard-shortcut-books" onclick="navigateTo('/books')"><i data-feather="book-open"></i><strong>${dashboardCopy.booksTitle}</strong><small>${dashboardCopy.booksMeta}</small></button>
+          <button class="dashboard-shortcut dashboard-shortcut-teachers" onclick="navigateTo('/teachers')"><i data-feather="users"></i><strong>${dashboardCopy.teachersTitle}</strong><small>${dashboardCopy.teachersMeta}</small></button>
+          <button class="dashboard-shortcut dashboard-shortcut-profile" onclick="navigateTo('/profile')"><i data-feather="bar-chart-2"></i><strong>${dashboardCopy.progressTitle}</strong><small>${isStudent && best ? `أفضل نتيجة ${best}%` : dashboardCopy.progressMeta}</small></button>
         </div>
 
         <button class="dashboard-continue" onclick="navigateTo('${escHtml(activityRoute)}')">
