@@ -91,7 +91,10 @@ async function renderBooks() {
       grid.querySelectorAll('.book-card').forEach(card => {
         const url = card.dataset.url;
         const title = card.dataset.title;
-        const openBook = () => FileKit.openBook(url, title);
+        const openBook = () => {
+          saveLearningActivity({ type: "book", id: url || title, title, meta: "كتاب" });
+          FileKit.openBook(url, title);
+        };
         card.addEventListener('click', openBook);
         card.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') {

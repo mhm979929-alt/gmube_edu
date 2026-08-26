@@ -28,6 +28,12 @@ async function renderWatch(videoId) {
 
   setPageTitle(video.title);
   if (el("watch-title")) el("watch-title").textContent = video.title;
+  saveLearningActivity({
+    type: "video",
+    id: video.$id,
+    title: video.title,
+    meta: [video.category, video.grade].filter(Boolean).join(" · "),
+  });
 
   try {
     const likedList = JSON.parse(localStorage.getItem("liked_videos") || "[]");

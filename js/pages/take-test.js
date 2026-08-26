@@ -56,6 +56,12 @@ async function renderTakeTest(testId) {
 
   setPageTitle(test.title);
   if (el("test-page-title")) el("test-page-title").textContent = test.title;
+  saveLearningActivity({
+    type: "test",
+    id: test.$id || testId,
+    title: test.title,
+    meta: [test.subject, `${(test.questions || []).length} سؤال`].filter(Boolean).join(" · "),
+  });
 
   const questions = test.questions || [];
   const answers = {};

@@ -31,6 +31,7 @@ async function renderHome() {
         <input id="search-input" class="search-input" placeholder="ابحث عن درس أو أستاذ..." type="text">
       </div>
 
+      <div id="student-dashboard"></div>
       <div id="cat-bar-wrap"></div>
 
 
@@ -56,6 +57,82 @@ async function renderHome() {
   let allVideos = [];
   let currentCategory = "الكل";
   let searchTerm = "";
+
+  async function renderStudentDashboard() {
+    const wrap = el("student-dashboard");
+    if (!wrap) return;
+
+    if (!session) {
+      wrap.innerHTML = `
+        <section class="home-guest-card">
+          <div class="home-guest-icon"><i data-feather="compass"></i></div>
+          <div class="home-guest-copy">
+            <span class="home-dashboard-kicker">رحلتك التعليمية تبدأ هنا</span>
+            <strong>تعلّم، اختبر، وتابع تقدمك</strong>
+            <small>سجّل الدخول لحفظ نشاطك ونتائج اختباراتك في مكان واحد.</small>
+          </div>
+          <button class="home-guest-action" onclick="navigateTo('/login')">دخول</button>
+        </section>`;
+      featherRefresh();
+      return;
+    }
+
+    wrap.innerHTML = `<section class="student-dashboard student-dashboard-loading"><div class="dashboard-loading-line"></div><div class="dashboard-loading-grid"><span></span><span></span><span></span></div></section>`;
+
+    const activity = getLearningActivity();
+    let results = [];
+    let latestTest = null;
+    if (session.type === "student") {
+      results = await getTestResults(session.user_id).catch(() => []);
+      if (results[0]?.test_id) {
+        latestTest = await getTestById(results[0].test_id).catch(() => null);
+      }
+    }
+
+    const firstName = String(session.name || "طالب").trim().split(/\s+/)[0] || "طالب";
+    const completed = results.length;
+    const best = results.reduce((max, result) => {
+      const total = Number(result.total) || 0;
+      const score = Number(result.score) || 0;
+      return Math.max(max, total ? Math.round((score / total) * 100) : 0);
+    }, 0);
+    const latest = results[0];
+    const activityType = activity ? learningActivityLabel(activity.type) : "";
+    const activityAction = activity
+      ? (activity.type === "test" ? "فتح الاختبار" : activity.type === "book" ? "فتح الكتب" : "متابعة الآن")
+      : "استكشف المحتوى";
+    const activityRoute = activity ? learningActivityRoute(activity) : "/tests";
+
+    wrap.innerHTML = `
+      <section class="student-dashboard">
+        <div class="student-dashboard-head">
+          <div>
+            <span class="home-dashboard-kicker">مساحتك التعليمية</span>
+            <h2>أهلاً ${escHtml(firstName)}</h2>
+            <p>ماذا تريد أن تنجز اليوم؟</p>
+          </div>
+          <button class="dashboard-profile-btn" onclick="navigateTo('/profile')" aria-label="فتح الحساب"><i data-feather="user"></i></button>
+        </div>
+
+        <div class="dashboard-shortcuts" aria-label="اختصارات تعليمية">
+          <button class="dashboard-shortcut dashboard-shortcut-tests" onclick="navigateTo('/tests')"><i data-feather="check-circle"></i><strong>اختباراتي</strong><small>${completed ? `${completed} نتيجة` : "ابدأ اختباراً"}</small></button>
+          <button class="dashboard-shortcut dashboard-shortcut-books" onclick="navigateTo('/books')"><i data-feather="book-open"></i><strong>الكتب</strong><small>مراجعك الدراسية</small></button>
+          <button class="dashboard-shortcut dashboard-shortcut-teachers" onclick="navigateTo('/teachers')"><i data-feather="users"></i><strong>الأساتذة</strong><small>تعلّم مع الأفضل</small></button>
+          <button class="dashboard-shortcut dashboard-shortcut-profile" onclick="navigateTo('/profile')"><i data-feather="bar-chart-2"></i><strong>تقدمي</strong><small>${best ? `أفضل نتيجة ${best}%` : "تابع إنجازك"}</small></button>
+        </div>
+
+        <button class="dashboard-continue" onclick="navigateTo('${escHtml(activityRoute)}')">
+          <span class="dashboard-continue-icon"><i data-feather="${activity ? (activity.type === "test" ? "check-square" : activity.type === "book" ? "book-open" : "play-circle") : "arrow-left-circle"}"></i></span>
+          <span class="dashboard-continue-copy">
+            <small>${activity ? `آخر ما فتحت · ${activityType}` : "ابدأ بخطوة بسيطة"}</small>
+            <strong>${escHtml(activity ? activity.title : (latestTest?.title || "اكتشف الاختبارات والدروس"))}</strong>
+            <em>${escHtml(activity?.meta || (latest ? `آخر نتيجة: ${latest.score}/${latest.total}` : "اختر محتوى يناسب مستواك"))}</em>
+          </span>
+          <span class="dashboard-continue-cta">${activityAction}<i data-feather="chevron-left"></i></span>
+        </button>
+      </section>`;
+    featherRefresh();
+  }
 
   function renderCatBar() {
     const wrap = el("cat-bar-wrap");
@@ -156,7 +233,7 @@ async function renderHome() {
   }
 
   renderCatBar();
-  await Promise.all([loadVideos(), loadTeachers()]);
+  await Promise.all([loadVideos(), loadTeachers(), renderStudentDashboard()]);
   renderAd();
   setupSearch();
 }

@@ -67,6 +67,43 @@ function confirm(msg, onOk) {
 function featherRefresh() { if (window.feather) feather.replace(); }
 function setPageTitle(title) { document.title = title ? `${title} | GMube Edu` : "GMube Edu"; }
 
+// ── Student learning continuity (local only; no new Appwrite fields) ──
+const LEARNING_ACTIVITY_KEY = "gmube_last_learning_activity";
+function learningActivityStorageKey() {
+  const userId = window.Auth?.get?.()?.user_id || window.getCurrentUserId?.() || "guest";
+  return `${LEARNING_ACTIVITY_KEY}_${userId}`;
+}
+function saveLearningActivity(activity) {
+  if (!activity || !activity.id) return;
+  try {
+    localStorage.setItem(learningActivityStorageKey(), JSON.stringify({
+      type: activity.type || "content",
+      id: String(activity.id),
+      title: String(activity.title || "محتوى تعليمي"),
+      meta: String(activity.meta || ""),
+      updatedAt: Date.now(),
+    }));
+  } catch {}
+}
+function getLearningActivity() {
+  try {
+    const raw = localStorage.getItem(learningActivityStorageKey());
+    if (!raw) return null;
+    const activity = JSON.parse(raw);
+    return activity && activity.id ? activity : null;
+  } catch { return null; }
+}
+function learningActivityLabel(type) {
+  return ({ video: "فيديو", book: "كتاب", test: "اختبار", summary: "ملخص", audio: "صوتيات" })[type] || "محتوى";
+}
+function learningActivityRoute(activity) {
+  if (!activity) return "/";
+  const routes = { video: "/watch/", book: "/books", test: "/take-test/", summary: "/", audio: "/" };
+  const prefix = routes[activity.type] || "/";
+  return prefix.endsWith("/") && activity.type !== "book" ? prefix + encodeURIComponent(activity.id) : prefix;
+}
+
+
 // ── دالة عرض نوع القائمة (تم تعديلها للعربية ودعم "صور") ──
 function getPlaylistTypeLabel(type) {
   const map = {
