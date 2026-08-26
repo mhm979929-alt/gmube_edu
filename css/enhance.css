@@ -449,3 +449,11 @@ body::before {
   .dashboard-continue { padding:9px; }
   .dashboard-continue-cta { font-size:8px; }
 }
+
+
+/* ── Progressive lesson discovery ─────────────────────────────── */
+.videos-more-wrap { display:flex; justify-content:center; padding:0 14px 14px; }
+.videos-more-btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:36px; padding:0 14px; border:1px solid rgba(76,175,80,0.25); border-radius:11px; background:rgba(76,175,80,0.08); color:#8bd490; font:inherit; font-size:10px; font-weight:700; cursor:pointer; transition:background .16s ease-out, border-color .16s ease-out, transform .16s ease-out; }
+.videos-more-btn:hover { border-color:rgba(76,175,80,0.55); background:rgba(76,175,80,0.14); }
+.videos-more-btn:active { transform:scale(.97); }
+.videos-more-btn i { width:15px; height:15px; }

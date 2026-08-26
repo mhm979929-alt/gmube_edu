@@ -48,6 +48,7 @@ async function renderHome() {
           <span class="section-title">الدروس</span>
         </div>
         <div id="videos-grid" class="videos-grid">${spinner()}</div>
+        <div id="videos-more-wrap" class="videos-more-wrap"></div>
       </div>
     </div>
   `);
@@ -57,6 +58,7 @@ async function renderHome() {
   let allVideos = [];
   let currentCategory = "الكل";
   let searchTerm = "";
+  let videosExpanded = false;
 
   async function renderStudentDashboard() {
     const wrap = el("student-dashboard");
@@ -160,6 +162,7 @@ async function renderHome() {
           return;
         }
         currentCategory = cat;
+        videosExpanded = false;
         renderCatBar();
         loadVideos();
       });
@@ -191,11 +194,25 @@ async function renderHome() {
       featherRefresh();
       return;
     }
-    grid.innerHTML = list.map(videoCardHtml).join("");
+    const visibleList = q || videosExpanded ? list : list.slice(0, 6);
+    grid.innerHTML = visibleList.map(videoCardHtml).join("");
     featherRefresh();
     grid.querySelectorAll(".video-card").forEach(card => {
       card.addEventListener("click", () => navigateTo(`/watch/${card.dataset.id}`));
     });
+
+    const moreWrap = el("videos-more-wrap");
+    if (moreWrap) {
+      moreWrap.innerHTML = !q && list.length > 6
+        ? `<button class="videos-more-btn" type="button"><span>${videosExpanded ? "إخفاء الدروس الإضافية" : `عرض كل الدروس (${list.length})`}</span><i data-feather="${videosExpanded ? "chevron-up" : "chevron-down"}"></i></button>`
+        : "";
+      const moreBtn = moreWrap.querySelector(".videos-more-btn");
+      if (moreBtn) moreBtn.addEventListener("click", () => {
+        videosExpanded = !videosExpanded;
+        renderVideos();
+      });
+      featherRefresh();
+    }
   }
 
   async function loadTeachers() {
