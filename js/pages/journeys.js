@@ -203,7 +203,9 @@ function journeyLessonLink(stage, lesson) {
   const type = String(stage.lesson_type || '').toLowerCase();
   if (stage.lesson_url) return { href: stage.lesson_url, external: true };
   if (!stage.lesson_id) return null;
-  const routes = { video: `/watch/${encodeURIComponent(stage.lesson_id)}`, playlist: `/playlist/${encodeURIComponent(stage.lesson_id)}`, book: '/books' };
+  // الروابط الداخلية يجب أن تبقى داخل صفحة GitHub Pages الحالية داخل AppCreator24؛
+  // استخدام href يبدأ بـ / ينقل المتصفح إلى جذر النطاق وليس إلى /gmube_edu/.
+  const routes = { video: `#/watch/${encodeURIComponent(stage.lesson_id)}`, playlist: `#/playlist/${encodeURIComponent(stage.lesson_id)}`, book: '#/books', summary: '#/books', audio: '#/books' };
   if (routes[type]) return { href: routes[type], external: false };
   if (lesson?.url) return { href: lesson.url, external: true };
   return null;
