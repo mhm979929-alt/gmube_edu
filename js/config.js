@@ -32,7 +32,11 @@ const COLLECTIONS = {
   AUDIOS: "audios",
   PHOTOS: "photos",
   SUBJECTS: "subjects",
-  SHORTS: "shorts"
+  SHORTS: "shorts",
+  LEARNING_JOURNEYS: "learning_journeys",
+  LEARNING_JOURNEY_STAGES: "learning_journey_stages",
+  LEARNING_JOURNEY_PROGRESS: "learning_journey_progress",
+  LEARNING_JOURNEY_ATTEMPTS: "learning_journey_attempts"
 };
 
 let CATEGORIES = ["الكل"]; 

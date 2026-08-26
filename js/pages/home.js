@@ -92,8 +92,19 @@ async function renderHome() {
     }
 
     const firstName = String(session.name || "طالب").trim().split(/\s+/)[0] || "طالب";
-    const completed = results.length;
     const isStudent = session.type === "student";
+    let featuredJourney = null;
+    let featuredJourneyProgress = null;
+    if (isStudent) {
+      try {
+        const activeJourneys = await getLearningJourneys({ activeOnly: true });
+        featuredJourney = activeJourneys[0] || null;
+        if (featuredJourney) featuredJourneyProgress = await getLearningJourneyProgress(featuredJourney.$id).catch(() => null);
+      } catch (error) {
+        console.warn("journeys_home", error);
+      }
+    }
+    const completed = results.length;
     const dashboardCopy = isStudent ? {
       testsTitle: "اختباراتي", testsMeta: completed ? `${completed} نتيجة` : "ابدأ اختباراً",
       booksTitle: "الكتب", booksMeta: "مراجعك الدراسية",
@@ -128,6 +139,8 @@ async function renderHome() {
           <button class="dashboard-profile-btn" onclick="navigateTo('/profile')" aria-label="فتح الحساب"><i data-feather="user"></i></button>
         </div>
 
+        ${featuredJourney ? `<div class="home-journey-promo">${journeyCardHtml(featuredJourney, featuredJourneyProgress)}</div>` : ''}
+
         <div class="dashboard-shortcuts" aria-label="اختصارات تعليمية">
           <button class="dashboard-shortcut dashboard-shortcut-tests" onclick="navigateTo('/tests')"><i data-feather="check-circle"></i><strong>${dashboardCopy.testsTitle}</strong><small>${dashboardCopy.testsMeta}</small></button>
           <button class="dashboard-shortcut dashboard-shortcut-books" onclick="navigateTo('/books')"><i data-feather="book-open"></i><strong>${dashboardCopy.booksTitle}</strong><small>${dashboardCopy.booksMeta}</small></button>
@@ -146,6 +159,8 @@ async function renderHome() {
         </button>
       </section>`;
     featherRefresh();
+    const journeyPromoCard = wrap.querySelector('.home-journey-promo .journey-card');
+    journeyPromoCard?.addEventListener('click', () => navigateTo(journeyRoute(journeyPromoCard.dataset.journeyId)));
   }
 
   function renderCatBar() {

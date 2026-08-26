@@ -13,6 +13,10 @@ function typesetTestMath(container) {
 async function renderTakeTest(testId) {
   setPageTitle("الاختبار");
   const session = Auth.get();
+  const journeyParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+  const journeyId = journeyParams.get('journey');
+  const journeyStageId = journeyParams.get('stage');
+  let journeyContext = null;
 
   if (!session) {
     renderPage(`
@@ -47,6 +51,15 @@ async function renderTakeTest(testId) {
 
   let test = null;
   try { test = await getTestById(testId); } catch {}
+  if (journeyId && journeyStageId) {
+    try {
+      const [journey, stages] = await Promise.all([getLearningJourneyById(journeyId), getLearningJourneyStages(journeyId)]);
+      const stage = stages.find(item => item.$id === journeyStageId && item.test_id === testId);
+      if (journey && stage) journeyContext = { journey, stage, totalStages: stages.length };
+    } catch (error) {
+      console.warn('journey_context_load', error);
+    }
+  }
 
   if (!test) {
     el("test-body").innerHTML = emptyBox("الاختبار غير موجود");
@@ -135,7 +148,21 @@ async function renderTakeTest(testId) {
 
     try {
       await submitTestResult({ user_id: session.user_id, test_id: testId, score, total, answers: answerArray });
-      renderResult(score, total, answerArray);
+      let journeyResult = null;
+      if (journeyContext) {
+        journeyResult = await recordLearningJourneyAttempt({
+          userId: session.user_id,
+          journeyId: journeyContext.journey.$id,
+          stageId: journeyContext.stage.$id,
+          stageOrder: journeyContext.stage.stage_order,
+          testId,
+          score,
+          total,
+          passingScore: journeyContext.stage.passing_score ?? journeyContext.journey.passing_score,
+          totalStages: journeyContext.totalStages,
+        });
+      }
+      renderResult(score, total, answerArray, journeyResult);
     } catch {
       toast("فشل إرسال النتيجة، جرّب مرة أخرى", "error");
       submitted = false;
@@ -143,9 +170,14 @@ async function renderTakeTest(testId) {
     }
   }
 
-  function renderResult(score, total, answerArray) {
+  function renderResult(score, total, answerArray, journeyResult = null) {
     const pct = total > 0 ? Math.round((score / total) * 100) : 0;
-    const pass = pct >= 70;
+    const threshold = journeyContext ? Number(journeyContext.stage.passing_score ?? journeyContext.journey.passing_score ?? 70) : 70;
+    const pass = journeyContext ? Boolean(journeyResult?.passed ?? (pct >= threshold)) : pct >= 70;
+    const journeyDone = Boolean(journeyContext && journeyResult?.progress?.progress_percent >= 100);
+    const journeyCta = journeyContext
+      ? `<button class="btn-primary" style="margin-top:20px;width:100%" onclick="navigateTo('${journeyDone ? '/journeys' : `/journey/${encodeURIComponent(journeyContext.journey.$id)}`}')"><i data-feather="arrow-right"></i>${journeyDone ? 'إنهاء الرحلة' : pass ? 'العودة إلى خريطة الرحلة' : 'مراجعة الدرس وإعادة الاختبار'}</button>`
+      : `<button class="btn-primary" style="margin-top:20px;width:100%" onclick="goBack()"><i data-feather="arrow-right"></i>العودة</button>`;
     const body = el("test-body");
     if (!body) return;
     body.innerHTML = `
@@ -154,7 +186,8 @@ async function renderTakeTest(testId) {
           <span class="result-score">${score}/${total}</span>
           <span class="result-pct">${pct}%</span>
         </div>
-        <p class="result-label">${pass ? "🎉 أحسنت! نتيجة ممتازة" : "📚 حاول مرة أخرى، واجتهد"}</p>
+        <p class="result-label">${journeyContext ? (pass ? (journeyDone ? "🎉 أتممت الرحلة التعليمية" : "🎉 نجحت في المرحلة وفتحت المرحلة التالية") : "📚 راجع الدرس ثم أعد اختبار المرحلة") : (pass ? "🎉 أحسنت! نتيجة ممتازة" : "📚 حاول مرة أخرى، واجتهد")}</p>
+        ${journeyContext ? `<div class="journey-result-note"><span>نسبة النجاح المطلوبة: ${threshold}%</span><span>${pass ? `تقدم الرحلة: ${Number(journeyResult?.progress?.progress_percent || 0)}%` : 'المرحلة التالية ما زالت مقفلة حتى تنجح'}</span></div>` : ''}
         <div class="review-list">
           ${questions.map((q, i) => {
             const isCorrect = answerArray[i] === q.correct;
@@ -168,9 +201,7 @@ async function renderTakeTest(testId) {
             </div>`;
           }).join("")}
         </div>
-        <button class="btn-primary" style="margin-top:20px;width:100%" onclick="goBack()">
-          <i data-feather="arrow-right"></i> العودة
-        </button>
+        ${journeyCta}
       </div>
     `;
     typesetTestMath(body);

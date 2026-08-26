@@ -486,6 +486,133 @@ async function markNotificationAsRead(id) {
   await databases.updateDocument(DATABASE_ID, COLLECTIONS.NOTIFICATIONS, id, { is_read: true });
 }
 
+// ── Learning Journeys ────────────────────────────────────────────
+function parseJourneyJson(value, fallback = []) {
+  if (Array.isArray(value)) return value;
+  try {
+    const parsed = JSON.parse(value || '');
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch { return fallback; }
+}
+
+function journeyUserPermission(action, userId) {
+  return `${action}("user:${String(userId)}")`;
+}
+
+async function getLearningJourneys(options = {}) {
+  const { subject = '', grade = '', activeOnly = true } = options || {};
+  const queries = [Query.orderAsc('sort_order'), Query.limit(100)];
+  if (activeOnly) queries.push(Query.equal('is_active', true));
+  if (subject && subject !== 'الكل') queries.push(Query.equal('subject', subject));
+  if (grade) queries.push(Query.equal('grade', grade));
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.LEARNING_JOURNEYS, queries);
+  return (result.documents || []).map(journey => ({
+    ...journey,
+    passing_score: Number(journey.passing_score ?? 70),
+    sort_order: Number(journey.sort_order ?? 0),
+    is_active: journey.is_active !== false,
+    version: Number(journey.version ?? 1),
+  }));
+}
+
+async function getLearningJourneyById(journeyId) {
+  try {
+    const journey = await databases.getDocument(DATABASE_ID, COLLECTIONS.LEARNING_JOURNEYS, journeyId);
+    return {
+      ...journey,
+      passing_score: Number(journey.passing_score ?? 70),
+      sort_order: Number(journey.sort_order ?? 0),
+      is_active: journey.is_active !== false,
+      version: Number(journey.version ?? 1),
+    };
+  } catch { return null; }
+}
+
+async function getLearningJourneyStages(journeyId) {
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.LEARNING_JOURNEY_STAGES, [
+    Query.equal('journey_id', journeyId),
+    Query.orderAsc('stage_order'),
+    Query.limit(100),
+  ]);
+  return (result.documents || [])
+    .filter(stage => stage.is_active !== false)
+    .map(stage => ({
+      ...stage,
+      stage_order: Number(stage.stage_order ?? 0),
+      passing_score: stage.passing_score === null || stage.passing_score === undefined || stage.passing_score === '' ? null : Number(stage.passing_score),
+      estimated_minutes: Number(stage.estimated_minutes ?? 0),
+    }));
+}
+
+async function getLearningJourneyProgress(journeyId, userId = _userId) {
+  if (!journeyId || !userId) return null;
+  try {
+    const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.LEARNING_JOURNEY_PROGRESS, [
+      Query.equal('journey_id', journeyId), Query.equal('user_id', userId), Query.limit(1),
+    ]);
+    const doc = result.documents?.[0];
+    if (!doc) return null;
+    return {
+      ...doc,
+      completed_stage_orders: parseJourneyJson(doc.completed_stage_orders),
+      progress_percent: Number(doc.progress_percent ?? 0),
+      current_stage_order: Number(doc.current_stage_order ?? 1),
+      last_score: doc.last_score === null || doc.last_score === undefined ? null : Number(doc.last_score),
+    };
+  } catch { return null; }
+}
+
+async function getLearningJourneyAttempts(journeyId, userId = _userId) {
+  if (!journeyId || !userId) return [];
+  try {
+    const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.LEARNING_JOURNEY_ATTEMPTS, [
+      Query.equal('journey_id', journeyId), Query.equal('user_id', userId),
+      Query.orderDesc('attempted_at'), Query.limit(200),
+    ]);
+    return result.documents || [];
+  } catch { return []; }
+}
+
+async function recordLearningJourneyAttempt({ userId = _userId, journeyId, stageId, stageOrder, testId, score, total, passingScore, totalStages }) {
+  if (!userId || !journeyId || !stageId || !testId) throw new Error('بيانات المرحلة غير مكتملة');
+  const numericScore = Number(score) || 0;
+  const numericTotal = Number(total) || 0;
+  const percentage = numericTotal > 0 ? Math.round((numericScore / numericTotal) * 100) : 0;
+  const threshold = Math.max(0, Math.min(100, Number(passingScore ?? 70)));
+  const passed = percentage >= threshold;
+  const existingAttempts = await getLearningJourneyAttempts(journeyId, userId);
+  const attemptNo = existingAttempts.filter(a => a.stage_id === stageId).length + 1;
+  const permissions = [journeyUserPermission('read', userId), journeyUserPermission('update', userId)];
+  const attempt = await databases.createDocument(DATABASE_ID, COLLECTIONS.LEARNING_JOURNEY_ATTEMPTS, ID.unique(), {
+    user_id: userId, journey_id: journeyId, stage_id: stageId, test_id: testId,
+    score: numericScore, total: numericTotal, percentage, passed, attempt_no: attemptNo,
+    attempted_at: new Date().toISOString(),
+  }, permissions);
+
+  const previous = await getLearningJourneyProgress(journeyId, userId);
+  const completed = new Set((previous?.completed_stage_orders || []).map(Number));
+  if (passed) completed.add(Number(stageOrder));
+  const completedOrders = [...completed].sort((a, b) => a - b);
+  const stageCount = Math.max(1, Number(totalStages) || completedOrders.length || 1);
+  const progressPercent = Math.min(100, Math.round((completedOrders.length / stageCount) * 100));
+  const currentStageOrder = passed ? Math.max(Number(stageOrder) + 1, Number(previous?.current_stage_order || 1)) : Math.max(Number(stageOrder), Number(previous?.current_stage_order || 1));
+  const status = progressPercent >= 100 ? 'completed' : (completedOrders.length ? 'in_progress' : 'not_started');
+  const data = {
+    user_id: userId, journey_id: journeyId, current_stage_order: currentStageOrder,
+    completed_stage_orders: JSON.stringify(completedOrders), progress_percent: progressPercent,
+    status, last_score: percentage, updated_at: new Date().toISOString(),
+  };
+  let progress;
+  if (previous?.$id) {
+    progress = await databases.updateDocument(DATABASE_ID, COLLECTIONS.LEARNING_JOURNEY_PROGRESS, previous.$id, data);
+  } else {
+    progress = await databases.createDocument(DATABASE_ID, COLLECTIONS.LEARNING_JOURNEY_PROGRESS, ID.unique(), {
+      ...data, created_at: new Date().toISOString(),
+    }, permissions);
+  }
+  return { attempt, progress: { ...progress, completed_stage_orders: completedOrders, progress_percent: progressPercent, status }, percentage, threshold, passed };
+}
+
 // ── Format helpers ──────────────────────────────────────────────
 function formatNumber(n) {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";

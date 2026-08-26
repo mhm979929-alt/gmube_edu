@@ -85,7 +85,11 @@ document.addEventListener("DOMContentLoaded", async function() {
   // تم تعديل مسار القناة ليدعم معرف الوثيقة
   Router.add("/channel/([^/]+)", renderChannel);
   Router.add("/playlist/([^/]+)", renderPlaylist);
-  Router.add("/take-test/([^/]+)", renderTakeTest);
+  Router.add("/take-test/([^/?]+)(?:\\?.*)?", renderTakeTest);
+  Router.add("/journeys", renderJourneys);
+  Router.add("/journeys/([^/]+)", renderJourneys);
+  Router.add("/journey/([^/]+)/stage/([^/]+)", renderJourneyStage);
+  Router.add("/journey/([^/]+)", renderJourney);
   Router.add("/university-admissions", renderUniversityAdmissions);
 
   // 3. Bottom nav click handlers

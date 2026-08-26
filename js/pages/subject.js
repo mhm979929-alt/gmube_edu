@@ -14,18 +14,22 @@ async function renderSubject(subjectEncoded) {
   `);
   featherRefresh();
 
-  // 1. جلب القوائم الخاصة بهذه المادة
+  // 1. جلب القوائم والرحلات الخاصة بهذه المادة
   const playlists = await getPlaylistsBySubject(subject);
+  let journeys = [];
+  try { journeys = await getLearningJourneys({ subject, activeOnly: true }); } catch (error) { console.warn("journeys_subject", error); }
   const content = el("subject-content");
+  const journeyHtml = journeys.length ? `<div class="subject-journey-entry"><div class="subject-journey-copy"><span class="journey-kicker">مسار منظم للمادة</span><strong>الرحلة التعليمية</strong><small>${journeys.length} رحلة مفعلة · درس واختبار في كل مرحلة</small></div><button type="button" class="subject-journey-btn" data-journey-id="${escHtml(journeys[0].$id)}">ابدأ الآن <i data-feather="chevron-left"></i></button></div>` : "";
 
   if (!playlists.length) {
-    content.innerHTML = emptyBox("لا توجد قوائم مرتبة بعد", "سيقوم الأدمن بترتيب المحتوى في قوائم قريباً");
+    content.innerHTML = journeyHtml || emptyBox("لا توجد قوائم مرتبة بعد", "سيقوم الأدمن بترتيب المحتوى في قوائم قريباً");
+    content.querySelector('.subject-journey-btn')?.addEventListener('click', (event) => navigateTo(journeyRoute(event.currentTarget.dataset.journeyId)));
     featherRefresh();
     return;
   }
 
-  // 2. عرض القوائم كبطاقات (مع نوع القائمة بالإنجليزية)
-  content.innerHTML = playlists.map(p => `
+  // 2. عرض الرحلة ثم القوائم كبطاقات
+  content.innerHTML = journeyHtml + playlists.map(p => `
     <div class="playlist-card" data-id="${p.$id}" data-type="${p.type}" style="background:#141414;border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.04);cursor:pointer;margin:0 14px 8px;display:flex;align-items:center;gap:12px">
       <div class="generic-icon orange"><i data-feather="list"></i></div>
       <div class="generic-info" style="flex:1;text-align:right">
@@ -37,6 +41,7 @@ async function renderSubject(subjectEncoded) {
     </div>
   `).join("");
   featherRefresh();
+  content.querySelector('.subject-journey-btn')?.addEventListener('click', (event) => navigateTo(journeyRoute(event.currentTarget.dataset.journeyId)));
 
   // 3. عند الضغط على القائمة، ننتقل إلى صفحة عرض محتوى القائمة
   content.querySelectorAll(".playlist-card").forEach(card => {
