@@ -30,7 +30,7 @@ function emptyBox(msg, sub = "") {
 }
 
 function videoCardHtml(video) {
-  const thumb = isYouTubeUrl(video.url) ? getYouTubeThumbnail(video.url) : (video.thumbnail || video.thumbnail_url || "");
+  const thumb = video.thumbnail || video.thumbnail_url || (isYouTubeUrl(video.url) ? getYouTubeThumbnail(video.url) : "");
   const thumbHtml = thumb ? `<img src="${escHtml(thumb)}" class="video-thumb-img" loading="lazy" onerror="this.parentElement.innerHTML='<div class=thumb-fallback><i data-feather=\\'play-circle\\'></i></div>'">` : `<div class="thumb-fallback"><i data-feather="play-circle"></i></div>`;
   return `<div class="video-card" data-id="${escHtml(video.$id)}"><div class="video-thumb">${thumbHtml}</div><p class="video-title">${escHtml(video.title)}</p><p class="video-meta">${escHtml(video.user_name || "")} · ${formatNumber(video.views || 0)} مشاهدة</p></div>`;
 }
