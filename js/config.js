@@ -26,6 +26,7 @@ const COLLECTIONS = {
   FOLLOWS: "follows",
   NOTIFICATIONS: "notifications",
   BOOKS: "books",
+  MINISTRY_BOOKS: "ministry_books",
   TESTS: "tests",
   TEST_RESULTS: "test_results",
   SUMMARIES: "summaries",

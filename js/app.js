@@ -76,6 +76,7 @@ async function bootGMubeApp() {
   Router.add("/", renderHome);
   Router.add("/teachers", renderTeachers);
   Router.add("/books", renderBooks);
+  Router.add("/ministry-books", renderMinistryBooks);
   Router.add("/tests", renderTests);
   Router.add("/profile", renderProfile);
   Router.add("/login(?:\\?.*)?", renderLogin);
@@ -96,7 +97,7 @@ async function bootGMubeApp() {
   document.querySelectorAll(".nav-item").forEach(function(item) {
     item.addEventListener("click", function() {
       const page = this.dataset.page;
-      const routes = { home: "/", teachers: "/teachers", books: "/books", tests: "/tests", profile: "/profile" };
+      const routes = { home: "/", teachers: "/teachers", books: "/books", "ministry-books": "/ministry-books", tests: "/tests", profile: "/profile" };
       if (routes[page]) navigateTo(routes[page]);
     });
   });
