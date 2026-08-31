@@ -249,7 +249,7 @@ input, textarea { font-family: inherit; }
   width: 100%; height: 120px; background: #242424; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
-.ministry-book-thumb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ministry-book-thumb-img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .ministry-book-thumb-fallback { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .ministry-book-thumb-fallback i { width: 32px; height: 32px; color: rgba(255,255,255,0.4); }
 .ministry-book-title {
