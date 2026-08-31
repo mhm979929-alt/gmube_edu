@@ -357,6 +357,20 @@ async function getBooks(subject, grade) {
   return result.documents;
 }
 
+// ── Ministry Books ──────────────────────────────────────────────
+async function getMinistryBooks(subject, grade) {
+  const key = `ministry_books_${subject || 'all'}_${grade || 'all'}`;
+  const cached = sessionStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
+  const queries = [Query.orderDesc("created_at"), Query.limit(100)];
+  if (subject && subject !== "الكل") queries.push(Query.equal("subject", subject));
+  if (grade) queries.push(Query.equal("grade", grade));
+  const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.MINISTRY_BOOKS, queries);
+  sessionStorage.setItem(key, JSON.stringify(result.documents));
+  return result.documents;
+}
+
 // ── Tests ───────────────────────────────────────────────────────
 async function getTests(subject) {
   const key = `tests_${subject || 'all'}`;
