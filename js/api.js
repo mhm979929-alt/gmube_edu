@@ -401,11 +401,12 @@ async function getTestById(id) {
 async function submitTestResult(data) {
   // مسح الكاش عند تقديم نتيجة جديدة
   sessionStorage.removeItem(`results_${data.user_id}`);
+  const permissions = userRwPermissions(data.user_id);
   return await databases.createDocument(DATABASE_ID, COLLECTIONS.TEST_RESULTS, ID.unique(), {
     user_id: data.user_id, test_id: data.test_id,
     score: data.score, total: data.total,
     answers: JSON.stringify(data.answers), created_at: new Date().toISOString(),
-  });
+  }, permissions);
 }
 
 async function getTestResults(userId) {
@@ -475,9 +476,10 @@ async function isFollowing(studentId, teacherId) {
 }
 
 async function followTeacher(studentId, teacherId) {
+  const permissions = userRwPermissions(studentId);
   await databases.createDocument(DATABASE_ID, COLLECTIONS.FOLLOWS, ID.unique(), {
     student_user_id: studentId, teacher_user_id: teacherId, created_at: new Date().toISOString(),
-  });
+  }, permissions);
 }
 
 async function unfollowTeacher(studentId, teacherId) {
@@ -511,6 +513,12 @@ function parseJourneyJson(value, fallback = []) {
 
 function journeyUserPermission(action, userId) {
   return `${action}("user:${String(userId)}")`;
+}
+
+function userRwPermissions(userId) {
+  const id = String(userId ?? "");
+  if (!id) return [];
+  return [`read("user:${id}")`, `update("user:${id}")`, `delete("user:${id}")`];
 }
 
 async function getLearningJourneys(options = {}) {
