@@ -104,7 +104,7 @@ body::before {
   display: block;
 }
 
-.simple-brand strong { font-size: 17px; }
+.simple-brand strong { font-size: 13px; line-height: 1.35; max-width: 190px; }
 .simple-brand small { color: var(--s-mute); font-size: 12px; }
 
 .simple-icon-btn,

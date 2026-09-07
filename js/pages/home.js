@@ -9,9 +9,9 @@ async function renderHome() {
     <div class="page-home simple-home">
       <header class="simple-top">
         <div class="simple-brand">
-          <span class="simple-logo">G</span>
+          <span class="simple-logo">م</span>
           <div>
-            <strong>GMube</strong>
+            <strong>المنصة التعليمية السورية</strong>
             <small>${session ? `أهلاً ${escHtml(firstName)}` : "ادرس بسهولة"}</small>
           </div>
         </div>

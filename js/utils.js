@@ -93,7 +93,7 @@ function confirm(msg, onOk) {
 }
 
 function featherRefresh() { if (window.feather) feather.replace(); }
-function setPageTitle(title) { document.title = title ? `${title} | GMube Edu` : "GMube Edu"; }
+function setPageTitle(title) { document.title = title ? `${title} | المنصة التعليمية السورية` : "المنصة التعليمية السورية"; }
 
 // ── Student learning continuity (local only; no new Appwrite fields) ──
 const LEARNING_ACTIVITY_KEY = "gmube_last_learning_activity";

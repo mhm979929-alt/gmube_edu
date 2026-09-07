@@ -8,7 +8,7 @@ function renderLogin() {
         <button class="back-btn" onclick="goBack()" style="align-self:flex-start;margin-bottom:16px"><i data-feather="arrow-right"></i></button>
         <div class="login-logo">
           <div class="logo-icon big"><i data-feather="book-open"></i></div>
-          <h1 class="logo-text" style="font-size:24px;margin-top:12px">GMube Edu</h1>
+          <h1 class="logo-text" style="font-size:22px;margin-top:12px">المنصة التعليمية السورية</h1>
           <p style="color:#777;font-size:14px;margin-top:4px">منصة التعليم السوري</p>
         </div>
 
