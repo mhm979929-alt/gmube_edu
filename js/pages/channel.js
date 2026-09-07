@@ -1,6 +1,7 @@
 
 // ── Channel Page ──────────────────────────────────────────────────────────────
 async function renderChannel(teacherDocId) {
+  updateBottomNav("learn");
   setPageTitle("القناة");
   renderPage(`
     <div class="page">

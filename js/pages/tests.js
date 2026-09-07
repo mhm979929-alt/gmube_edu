@@ -40,23 +40,12 @@ async function renderTests() {
 
   renderPage(`
     <div class="page tests-page">
-      <div class="inner-header">
-        <button class="back-btn" onclick="goBack()" aria-label="رجوع"><i data-feather="arrow-right"></i></button>
-        <i data-feather="check-square" style="color:#4CAF50"></i>
-        <span class="inner-title">الاختبارات</span>
-      </div>
-
-      <section class="tests-hero" aria-labelledby="tests-hero-title">
-        <div class="tests-hero-copy">
-          <span class="tests-kicker">تقييم نفسك</span>
-          <h1 id="tests-hero-title">اختبر فهمك</h1>
-          <p>اختر اختباراً مناسباً وتابع تقدّمك ونتائجك من مكان واحد.</p>
+      <header class="simple-page-head">
+        <div>
+          <h1>الاختبارات</h1>
+          <p><span id="tests-total-count">—</span> اختبار · أنجزت <span id="tests-done-count">—</span></p>
         </div>
-        <div class="tests-hero-stats" aria-label="ملخص الاختبارات">
-          <div class="tests-stat"><strong id="tests-total-count">—</strong><span>اختبار</span></div>
-          <div class="tests-stat"><strong id="tests-done-count">—</strong><span>منجز</span></div>
-        </div>
-      </section>
+      </header>
 
       <div class="tests-search" role="search">
         <i data-feather="search" aria-hidden="true"></i>

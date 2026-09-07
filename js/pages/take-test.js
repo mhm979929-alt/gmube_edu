@@ -11,6 +11,7 @@ function typesetTestMath(container) {
 }
 
 async function renderTakeTest(testId) {
+  updateBottomNav("tests");
   setPageTitle("الاختبار");
   const session = Auth.get();
   const journeyParams = new URLSearchParams(window.location.hash.split('?')[1] || '');

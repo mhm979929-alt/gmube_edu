@@ -41,7 +41,7 @@ function admissionsResultCard(row) {
 }
 
 async function renderUniversityAdmissions() {
-  updateBottomNav("");
+  updateBottomNav("profile");
   setPageTitle("دليل القبول");
   renderPage(`
     <main class="page admissions-page">

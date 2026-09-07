@@ -15,25 +15,19 @@ async function renderProfile() {
   if (!session) {
     renderPage(`
       <div class="page">
-        <div class="inner-header">
-          <i data-feather="user" style="color:#4CAF50"></i>
-          <span class="inner-title">حسابي</span>
-        </div>
+        <header class="simple-page-head">
+          <div>
+            <h1>حسابي</h1>
+            <p>سجّل الدخول لمتابعة تقدمك.</p>
+          </div>
+        </header>
         <div class="profile-scroll profile-guest-scroll">
-          <section class="profile-guest-hero">
-            <div class="guest-icon-shell"><i data-feather="user-check"></i></div>
-            <span class="profile-kicker">مساحتك التعليمية</span>
-            <h2 class="guest-title">أهلاً بك في المنصة التعليمية السورية</h2>
-            <p class="guest-sub">سجّل دخولك لمتابعة نشاطك والاحتفاظ بتجربتك التعليمية في مكان واحد.</p>
+          <section class="simple-guest">
+            <p>سجّل دخولك لحفظ نتائجك وتقدمك.</p>
             <button class="btn-primary full" onclick="navigateTo('/login')">
               <i data-feather="log-in"></i> تسجيل الدخول
             </button>
           </section>
-          <button class="profile-library-card" onclick="openNativeLibrary()">
-            <span class="profile-library-icon"><i data-feather="book-open"></i></span>
-            <span class="profile-library-copy"><strong>كتبي</strong><small>افتح الكتب المحمّلة على جهازك واقرأها دون اتصال</small></span>
-            <span class="profile-menu-arrow"><i data-feather="chevron-left"></i></span>
-          </button>
         </div>
       </div>
     `);
@@ -52,54 +46,57 @@ async function renderProfile() {
 
   renderPage(`
     <div class="page">
-      <div class="inner-header">
-        <i data-feather="user" style="color:#4CAF50"></i>
-        <span class="inner-title">حسابي</span>
-      </div>
+      <header class="simple-page-head">
+        <div>
+          <h1>حسابي</h1>
+          <p>ملخص نشاطك واختصاراتك.</p>
+        </div>
+      </header>
       <div class="profile-scroll">
-        <section class="profile-card-grad" id="profile-card">
-          <div class="profile-avatar-wrap" id="profile-avatar">${avatarHtml(session.name, null, 72)}</div>
+        <section class="simple-profile-card" id="profile-card">
+          <div class="profile-avatar-wrap" id="profile-avatar">${avatarHtml(session.name, null, 64)}</div>
           <div class="profile-info">
-            <span class="profile-kicker profile-kicker-light">الحساب التعليمي</span>
             <span class="profile-name">${escHtml(session.name)}</span>
             <span class="profile-role">
               ${session.type === "teacher" ? "معلم" : "طالب"}
               ${session.subject ? " · " + escHtml(session.subject) : ""}
               ${session.grade ? " · " + escHtml(session.grade) : ""}
             </span>
-            ${session.role === "admin" ? `<span class="admin-badge">مشرف</span>` : ""}
           </div>
-          <i data-feather="book-open" class="profile-hero-mark"></i>
         </section>
 
-        <div class="profile-section-heading">
-          <div><span>ملخص نشاطك</span><small>آخر أرقامك التعليمية</small></div>
-          <i data-feather="bar-chart-2"></i>
-        </div>
-        <div class="stats-grid" id="profile-stats">
-          <div class="stat-card"><span class="stat-value" id="stat-videos">-</span><span class="stat-label">درس</span></div>
-          <div class="stat-card"><span class="stat-value" id="stat-views">-</span><span class="stat-label">مشاهدة</span></div>
-          <div class="stat-card"><span class="stat-value" id="stat-tests">-</span><span class="stat-label">اختبار</span></div>
+        <div class="simple-stats" id="profile-stats">
+          <div><strong id="stat-videos">-</strong><span>درس</span></div>
+          <div><strong id="stat-tests">-</strong><span>اختبار</span></div>
+          <div><strong id="stat-views">-</strong><span>مشاهدة</span></div>
         </div>
 
-        <div class="profile-section-heading profile-shortcuts-heading">
-          <div><span>اختصاراتك</span><small>الوصول السريع إلى أدواتك</small></div>
-        </div>
-        <div class="menu-section profile-menu">
-          <button class="profile-library-card" onclick="openNativeLibrary()">
-            <span class="profile-library-icon"><i data-feather="book-open"></i></span>
-            <span class="profile-library-copy"><strong>كتبي</strong><small>الكتب المحمّلة والقراءة دون اتصال</small></span>
-            <span class="profile-menu-arrow"><i data-feather="chevron-left"></i></span>
+        <div class="simple-list profile-menu">
+          <button class="simple-row" type="button" onclick="navigateTo('/journeys')">
+            <span class="simple-row-icon icon-purple"><i data-feather="map"></i></span>
+            <span class="simple-row-copy"><strong>الرحلات التعليمية</strong><small>مسار مرتب درس ثم اختبار</small></span>
+            <i data-feather="chevron-left"></i>
           </button>
-          <button class="menu-item profile-menu-item admissions-profile-link" onclick="navigateTo('/university-admissions')">
-            <i data-feather="award"></i><span><strong>دليل القبول الجامعي</strong><small>اكتشف التخصصات المطابقة لمجموعك</small></span><i data-feather="chevron-left"></i>
+          <button class="simple-row" type="button" onclick="navigateTo('/university-admissions')">
+            <span class="simple-row-icon icon-orange"><i data-feather="award"></i></span>
+            <span class="simple-row-copy"><strong>دليل القبول</strong><small>التخصصات حسب مجموعك</small></span>
+            <i data-feather="chevron-left"></i>
           </button>
-          <button class="menu-item profile-menu-item" onclick="navigateTo('/notifications')">
-            <i data-feather="bell"></i><span><strong>الإشعارات</strong><small>تابع الجديد من القنوات والدروس</small></span><i data-feather="chevron-left"></i>
+          <a class="simple-row" href="ask-book.html">
+            <span class="simple-row-icon icon-green"><i data-feather="message-circle"></i></span>
+            <span class="simple-row-copy"><strong>اسأل كتابك</strong><small>اسأل من داخل الكتاب</small></span>
+            <i data-feather="chevron-left"></i>
+          </a>
+          <button class="simple-row" type="button" onclick="navigateTo('/notifications')">
+            <span class="simple-row-icon icon-blue"><i data-feather="bell"></i></span>
+            <span class="simple-row-copy"><strong>الإشعارات</strong><small>جديد الدروس والقنوات</small></span>
+            <i data-feather="chevron-left"></i>
           </button>
           ${session.type === "teacher" && teacherDocId ? `
-          <button class="menu-item profile-menu-item" onclick="navigateTo('/channel/${teacherDocId}')">
-            <i data-feather="tv"></i><span><strong>قناتي</strong><small>إدارة محتواك التعليمي</small></span><i data-feather="chevron-left"></i>
+          <button class="simple-row" type="button" onclick="navigateTo('/channel/${teacherDocId}')">
+            <span class="simple-row-icon icon-green"><i data-feather="tv"></i></span>
+            <span class="simple-row-copy"><strong>قناتي</strong><small>محتواك التعليمي</small></span>
+            <i data-feather="chevron-left"></i>
           </button>` : ""}
         </div>
 

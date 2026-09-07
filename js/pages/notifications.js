@@ -1,5 +1,6 @@
 // ── Notifications Page ──────────────────────────────────────────
 async function renderNotifications() {
+  updateBottomNav("profile");
   setPageTitle("الإشعارات");
   const session = Auth.get();
 

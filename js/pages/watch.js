@@ -1,5 +1,6 @@
 // ── Watch Page ──────────────────────────────────────────────────
 async function renderWatch(videoId) {
+  updateBottomNav("learn");
   setPageTitle("جاري التحميل...");
   renderPage(`
     <div class="page watch-page">

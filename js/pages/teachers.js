@@ -1,15 +1,17 @@
 // ── Teachers Page ───────────────────────────────────────────────
 async function renderTeachers() {
-  updateBottomNav("teachers");
+  updateBottomNav("learn");
   setPageTitle("الأساتذة");
 
   renderPage(`
     <div class="page">
-      <div class="inner-header">
-        <button class="back-btn" onclick="goBack()"><i data-feather="arrow-right"></i></button>
-        <i data-feather="users" style="color:#4CAF50"></i>
-        <span class="inner-title">الأساتذة</span>
-      </div>
+      <header class="simple-page-head">
+        <button class="back-btn" onclick="goBack()" aria-label="رجوع"><i data-feather="arrow-right"></i></button>
+        <div>
+          <h1>الأساتذة</h1>
+          <p>اختر أستاذاً لفتح دروسه.</p>
+        </div>
+      </header>
       <div class="search-bar">
         <i data-feather="search"></i>
         <input id="teacher-search" class="search-input" placeholder="ابحث عن أستاذ..." type="text">

@@ -48,6 +48,21 @@ function videoCardHtml(video) {
   return `<div class="video-card" data-id="${escHtml(video.$id)}"><div class="video-thumb">${thumbHtml}</div><p class="video-title">${escHtml(video.title)}</p><p class="video-meta">${escHtml(video.user_name || "")} · ${formatNumber(video.views || 0)} مشاهدة</p></div>`;
 }
 
+function simpleLessonRow(video) {
+  const thumb = normalizeVideoThumbnailUrl(video.thumbnail || video.thumbnail_url || (isYouTubeUrl(video.url) ? getYouTubeThumbnail(video.url) : ""));
+  const thumbHtml = thumb
+    ? `<img src="${escHtml(thumb)}" alt="" loading="lazy">`
+    : `<i data-feather="play-circle"></i>`;
+  return `<button class="simple-row" type="button" data-id="${escHtml(video.$id)}">
+    <span class="simple-row-thumb">${thumbHtml}</span>
+    <span class="simple-row-copy">
+      <strong>${escHtml(video.title || "درس")}</strong>
+      <small>${escHtml(video.user_name || video.category || "درس")}</small>
+    </span>
+    <i data-feather="chevron-left"></i>
+  </button>`;
+}
+
 function categoryBarHtml(selected) {
   return `<div class="cat-bar">${CATEGORIES.map(c => `<button class="cat-btn${c === selected ? " active" : ""}" data-cat="${escHtml(c)}">${escHtml(c)}</button>`).join("")}</div>`;
 }

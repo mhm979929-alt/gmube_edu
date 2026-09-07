@@ -1,6 +1,7 @@
 // ── Subject Page ────────────────────────────────────────────────
 async function renderSubject(subjectEncoded) {
   const subject = decodeURIComponent(subjectEncoded || "");
+  updateBottomNav("learn");
   setPageTitle(subject);
 
   renderPage(`

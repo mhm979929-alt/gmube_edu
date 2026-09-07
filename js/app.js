@@ -72,18 +72,19 @@ async function bootGMubeApp() {
     console.warn("تعذر تحميل المواد من قاعدة البيانات، استخدام القائمة الاحتياطية.");
   }
 
-  // 2. Register routes
   Router.add("/", renderHome);
+  Router.add("/learn", renderLearn);
+  Router.add("/library", renderLibrary);
+  Router.add("/library/ministry", () => renderLibrary("ministry"));
   Router.add("/teachers", renderTeachers);
-  Router.add("/books", renderBooks);
-  Router.add("/ministry-books", renderMinistryBooks);
+  Router.add("/books", () => renderLibrary("books"));
+  Router.add("/ministry-books", () => renderLibrary("ministry"));
   Router.add("/tests", renderTests);
   Router.add("/profile", renderProfile);
   Router.add("/login(?:\\?.*)?", renderLogin);
   Router.add("/notifications", renderNotifications);
   Router.add("/watch/([^/]+)", renderWatch);
   Router.add("/subject/([^/]+)", renderSubject);
-  // تم تعديل مسار القناة ليدعم معرف الوثيقة
   Router.add("/channel/([^/]+)", renderChannel);
   Router.add("/playlist/([^/]+)", renderPlaylist);
   Router.add("/take-test/([^/?]+)(?:\\?.*)?", renderTakeTest);
@@ -93,11 +94,10 @@ async function bootGMubeApp() {
   Router.add("/journey/([^/]+)", renderJourney);
   Router.add("/university-admissions", renderUniversityAdmissions);
 
-  // 3. Bottom nav click handlers
   document.querySelectorAll(".nav-item").forEach(function(item) {
     item.addEventListener("click", function() {
       const page = this.dataset.page;
-      const routes = { home: "/", teachers: "/teachers", books: "/books", "ministry-books": "/ministry-books", tests: "/tests", profile: "/profile" };
+      const routes = { home: "/", learn: "/learn", library: "/library", tests: "/tests", profile: "/profile" };
       if (routes[page]) navigateTo(routes[page]);
     });
   });

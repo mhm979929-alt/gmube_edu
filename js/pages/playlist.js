@@ -1,5 +1,6 @@
 // ── Playlist Page ───────────────────────────────────────────────
 async function renderPlaylist(playlistId) {
+  updateBottomNav("learn");
   setPageTitle("قائمة التشغيل");
   renderPage(`
     <div class="page">
