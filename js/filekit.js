@@ -454,11 +454,12 @@ const FileKit = (() => {
     openExternal(u);
   }
 
-  // فتح الكتاب مباشرة في متصفح الجهاز الخارجي، من دون معاينة أو عارض داخل التطبيق.
+  // فتح الكتاب داخل عارض المنصة أولاً، مع إبقاء التنزيل والفتح الخارجي كخيارات داخل العارض.
+  // هذا يمنع خروج الطالب إلى Chrome لمجرد قراءة الكتاب ويجعل التجربة أسرع داخل التطبيق.
   function openBook(url, title) {
     if (!url) { window.toast && toast("الرابط غير متوفر", "error"); return; }
     closeSheet();
-    openExternal(url, { systemBrowser: true });
+    openViewer(url, title, { allowExternal: true, allowInternalDownload: true, protectViewer: false });
   }
 
   // ورقة الخيارات السفلية
