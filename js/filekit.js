@@ -459,7 +459,14 @@ const FileKit = (() => {
   function openBook(url, title) {
     if (!url) { window.toast && toast("الرابط غير متوفر", "error"); return; }
     closeSheet();
-    openViewer(url, title, { allowExternal: true, allowInternalDownload: true, protectViewer: false });
+    const u = normalize(url);
+    // معظم عناصر المكتبة كتب PDF. افتح العارض فوراً بدلاً من انتظار HEAD/RANGE
+    // ثم اترك PdfReader يتولى التحميل التدريجي والتحويل الاحتياطي عند الحاجة.
+    if (isGoogleDrive(String(url)) || isGoogleDrive(u)) {
+      openEmbeddedViewer(u, title, { allowExternal: true, allowInternalDownload: true });
+      return;
+    }
+    PdfReader.open(u, title, { allowExternal: true, allowInternalDownload: true, protectViewer: false });
   }
 
   // ورقة الخيارات السفلية
