@@ -218,6 +218,29 @@ async function getTeacherByUserId(userId) {
   return result.documents[0] ?? null;
 }
 
+async function getTeacherStatuses() {
+  const key = "teacher_statuses_active";
+  const cached = sessionStorage.getItem(key);
+  if (cached) {
+    try {
+      const saved = JSON.parse(cached);
+      if (Date.now() - saved.time < 120000) return saved.items || [];
+    } catch {}
+  }
+  try {
+    const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TEACHER_STATUSES, [
+      Query.equal("active", true), Query.orderAsc("sort_order"), Query.limit(100)
+    ]);
+    const now = Date.now();
+    const items = (result.documents || []).filter(item => !item.expires_at || Date.parse(item.expires_at) > now);
+    sessionStorage.setItem(key, JSON.stringify({ time: now, items }));
+    return items;
+  } catch (error) {
+    console.warn("getTeacherStatuses", error);
+    return [];
+  }
+}
+
 // ── Comments ────────────────────────────────────────────────────
 async function getComments(videoId) {
   const result = await databases.listDocuments(DATABASE_ID, COLLECTIONS.COMMENTS, [

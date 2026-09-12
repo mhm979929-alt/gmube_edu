@@ -19,6 +19,7 @@ const GROQ_KEY = "";
 
 const COLLECTIONS = {
   TEACHERS: "teachers",
+  TEACHER_STATUSES: "teacher_statuses",
   STUDENTS: "students",
   VIDEOS: "videos",
   PLAYLISTS: "playlists",

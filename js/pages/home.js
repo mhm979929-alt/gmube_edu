@@ -29,6 +29,14 @@ async function renderHome() {
         <i data-feather="chevron-left"></i>
       </button>
 
+      <section class="teacher-status-section" aria-label="حالات الأستاذة">
+        <div class="simple-section-head">
+          <h2>حالات الأستاذة</h2>
+          <button type="button" data-go="/teachers">الكل</button>
+        </div>
+        <div id="home-teacher-statuses" class="teacher-status-row"><span class="teacher-status-loading"></span><span class="teacher-status-loading"></span><span class="teacher-status-loading"></span></div>
+      </section>
+
       <section class="simple-steps" aria-label="ماذا تريد؟">
         <button class="simple-step" type="button" data-go="/learn">
           <span class="step-num">1</span>
@@ -74,6 +82,38 @@ async function renderHome() {
   el("home-continue")?.addEventListener("click", () => {
     navigateTo(activity ? learningActivityRoute(activity) : "/learn");
   });
+
+  const statusRow = el("home-teacher-statuses");
+  try {
+    const statuses = await getTeacherStatuses();
+    const unique = [];
+    const seen = new Set();
+    for (const item of statuses) {
+      const teacherKey = item.teacher_id || item.teacher_name || item.$id;
+      if (seen.has(teacherKey)) continue;
+      seen.add(teacherKey);
+      unique.push(item);
+    }
+    statusRow.innerHTML = unique.length
+      ? unique.slice(0, 12).map(item => {
+          const label = item.teacher_name || "أستاذة";
+          const avatar = item.teacher_avatar || "";
+          return `<button class="teacher-status-item" type="button" data-status-url="${escHtml(item.url)}" data-status-title="${escHtml(item.title || label)}" aria-label="حالة ${escHtml(label)}">
+            <span class="teacher-status-ring"><span class="teacher-status-avatar">${avatar ? `<img src="${escHtml(avatar)}" alt="${escHtml(label)}" loading="lazy" decoding="async">` : `<span>${escHtml(label.slice(0, 1))}</span>`}</span></span>
+            <span class="teacher-status-name">${escHtml(label)}</span>
+          </button>`;
+        }).join("")
+      : `<div class="teacher-status-empty">ستظهر حالات الأستاذة هنا</div>`;
+    statusRow.querySelectorAll("[data-status-url]").forEach(btn => btn.addEventListener("click", () => {
+      const url = btn.dataset.statusUrl;
+      if (!url) return;
+      if (typeof FileKit !== "undefined" && FileKit.openViewer && (FileKit.isImage(url) || FileKit.isPdf(url) || FileKit.isAudio(url))) FileKit.openViewer(url, btn.dataset.statusTitle || "حالة الأستاذة", { allowExternal: true });
+      else window.open(url, "_blank", "noopener,noreferrer");
+    }));
+  } catch {
+    statusRow.innerHTML = `<div class="teacher-status-empty">لا توجد حالات حالياً</div>`;
+  }
+  featherRefresh();
 
   const chips = el("home-subjects");
   const subjects = (CATEGORIES || []).filter(name => name && name !== "الكل").slice(0, 8);

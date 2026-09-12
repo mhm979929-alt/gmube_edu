@@ -422,3 +422,75 @@ body::before {
   #app-view,
   #bottom-nav { max-width: 480px; }
 }
+
+/* حالات الأستاذة في الشاشة الرئيسية */
+.teacher-status-section { padding: 2px 0 10px; }
+.teacher-status-row {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 2px 16px 8px;
+  scrollbar-width: none;
+  direction: rtl;
+  min-height: 92px;
+}
+.teacher-status-row::-webkit-scrollbar { display: none; }
+.teacher-status-item {
+  width: 66px;
+  flex: 0 0 66px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--s-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.teacher-status-ring {
+  width: 62px;
+  height: 62px;
+  padding: 3px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(from 20deg, #3dbe7a, #a3f28a, #4ea3ff, #3dbe7a);
+  box-shadow: 0 0 0 2px rgba(61,190,122,.10), 0 5px 18px rgba(0,0,0,.22);
+}
+.teacher-status-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: #1d2930;
+  color: var(--s-green);
+  font-size: 21px;
+  font-weight: 900;
+  border: 2px solid var(--s-bg);
+}
+.teacher-status-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.teacher-status-name {
+  width: 72px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: var(--s-mute);
+  font-size: 11px;
+  font-weight: 700;
+}
+.teacher-status-item:active .teacher-status-ring { transform: scale(.94); }
+.teacher-status-empty { color: var(--s-mute); font-size: 12px; padding: 26px 0; }
+.teacher-status-loading {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  border-radius: 50%;
+  background: linear-gradient(100deg, rgba(255,255,255,.05), rgba(255,255,255,.12), rgba(255,255,255,.05));
+  background-size: 220% 100%;
+  animation: teacher-status-shimmer 1.2s ease-in-out infinite;
+}
+@keyframes teacher-status-shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+@media (prefers-reduced-motion: reduce) { .teacher-status-loading { animation: none; } }
