@@ -107,7 +107,7 @@ async function renderHome() {
     statusRow.querySelectorAll("[data-status-url]").forEach(btn => btn.addEventListener("click", () => {
       const url = btn.dataset.statusUrl;
       if (!url) return;
-      if (typeof FileKit !== "undefined" && FileKit.openViewer && (FileKit.isImage(url) || FileKit.isPdf(url) || FileKit.isAudio(url))) FileKit.openViewer(url, btn.dataset.statusTitle || "حالة الأستاذة", { allowExternal: true });
+      if (typeof FileKit !== "undefined" && FileKit.openViewer && (FileKit.isImage(url) || FileKit.isPdf(url) || FileKit.isAudio(url) || FileKit.isVideo(url))) FileKit.openViewer(url, btn.dataset.statusTitle || "حالة الأستاذة", { allowExternal: true });
       else window.open(url, "_blank", "noopener,noreferrer");
     }));
   } catch {

@@ -13,6 +13,8 @@ const FileKit = (() => {
   function isPdf(url) { return ext(url) === "pdf"; }
   function isImage(url) { return ["jpg", "jpeg", "png", "webp", "gif"].includes(ext(url)); }
   function isAudio(url) { return ["mp3", "wav", "m4a", "ogg", "aac"].includes(ext(url)); }
+  // حالات الفيديو تقبل MP4 فقط، كما تفرض لوحة التحكم.
+  function isVideo(url) { return ext(url) === "mp4"; }
 
   // تطبيع مصادر الملفات لتعمل داخل Android WebView.
   // Dropbox عبر www.dropbox.com يمر بتحويلات وصفحات وسيطة؛ النطاق المباشر
@@ -393,9 +395,32 @@ const FileKit = (() => {
     if (s) { s.classList.remove("open"); setTimeout(() => s.remove(), 220); }
   }
 
+  function openVideoViewer(url, title, options = {}) {
+    const u = normalize(url);
+    const wrap = document.createElement("div");
+    wrap.className = "fk-viewer fk-video-viewer";
+    const downloadButton = options.allowInternalDownload === false ? "" : `<button class="fk-icon-btn" data-act="dl" aria-label="تحميل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>`;
+    const browserButton = options.allowExternal === false ? "" : `<button class="fk-icon-btn" data-act="browser" aria-label="فتح خارج التطبيق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></button>`;
+    wrap.innerHTML = `
+      <div class="fk-viewer-bar">
+        <button class="fk-icon-btn" data-act="close" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <span class="fk-viewer-title">${escHtml(title || "فيديو")}</span>${downloadButton}${browserButton}
+      </div>
+      <div class="fk-viewer-body fk-video-body"><video class="fk-video-element" controls autoplay playsinline preload="metadata" src="${escHtml(u)}"></video></div>`;
+    document.body.appendChild(wrap);
+    requestAnimationFrame(() => wrap.classList.add("open"));
+    wrap.querySelector('[data-act="close"]').onclick = () => { wrap.classList.remove("open"); setTimeout(() => wrap.remove(), 220); };
+    const downloadBtn = wrap.querySelector('[data-act="dl"]');
+    if (downloadBtn) downloadBtn.onclick = (e) => download(u, title, e.currentTarget);
+    const browserBtn = wrap.querySelector('[data-act="browser"]');
+    if (browserBtn) browserBtn.onclick = () => openExternal(u);
+  }
+
   // عارض داخلي بملء الشاشة
   async function openViewer(url, title, options = {}) {
     const u = normalize(url);
+    // لا نستخدم probe للفيديو؛ MP4 يفتح فوراً داخل المشغل الداخلي.
+    if (isVideo(u)) return openVideoViewer(u, title, options);
 
     // بعد تطبيع Google Drive، نجرّب PDF.js مباشرة أولًا. هذا مهم داخل WebView
     // لأن Google Viewer نفسه قد لا يعمل أو قد يُمنع من العرض داخل التطبيق.
@@ -520,7 +545,7 @@ const FileKit = (() => {
     });
   }
 
-  return { open, openBook, openViewer, openEmbeddedViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, openExternal, protectViewer };
+  return { open, openBook, openViewer, openEmbeddedViewer, openVideoViewer, download, share, copyLink, normalize, isPdf, isImage, isAudio, isVideo, openExternal, protectViewer };
 })();
 
 // توافق مع الاستدعاءات القديمة
