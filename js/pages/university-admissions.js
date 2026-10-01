@@ -56,7 +56,7 @@ async function renderUniversityAdmissions() {
         <div>
           <span class="admissions-kicker">المفاضلة العامة <bdi dir="ltr">2026–2027</bdi></span>
           <h1>اكتشف خيارات قبولك</h1>
-          <p>أدخل مجموعك واختر فرعك لتظهر لك التخصصات التي تحقق حدها الأدنى.</p><button class="admissions-source-link" id="admissions-source-pdf" type="button">عرض إعلان الحدود الدنيا 2026–2027</button>
+          <p>أدخل مجموعك واختر فرعك لتظهر لك التخصصات التي تحقق حدها الأدنى.</p><button class="admissions-source-link" id="admissions-source-pdf" type="button">عرض إعلان العلمي 2026–2027</button>
         </div>
       </section>
 
@@ -98,8 +98,17 @@ async function renderUniversityAdmissions() {
   const resultsEl = el("admissions-results");
   const disclaimerEl = el("admissions-disclaimer");
   const sourcePdfButton = el("admissions-source-pdf");
+  const admissionsSource = {
+    scientific: { url: "assets/university-admissions-2026-2027-scientific.pdf", label: "إعلان العلمي 2026–2027" },
+    literary: { url: "assets/university-admissions-2026-2027-literary.pdf", label: "إعلان الأدبي 2026–2027" }
+  };
+  const updateAdmissionsSource = () => {
+    const source = admissionsSource[selectedBranch];
+    if (sourcePdfButton && source) sourcePdfButton.textContent = `عرض ${source.label}`;
+  };
   sourcePdfButton?.addEventListener("click", () => {
-    if (typeof FileKit !== "undefined" && FileKit.openViewer) FileKit.openViewer("assets/university-admissions-2026-2027-scientific.pdf", "إعلان الحدود الدنيا 2026–2027");
+    const source = admissionsSource[selectedBranch];
+    if (source && typeof FileKit !== "undefined" && FileKit.openViewer) FileKit.openViewer(source.url, source.label);
   });
   let catalog;
   let lastRows = [];
@@ -119,6 +128,7 @@ async function renderUniversityAdmissions() {
   form.querySelectorAll('input[name="branch"]').forEach(input => {
     input.addEventListener("change", () => {
       selectedBranch = input.value;
+      updateAdmissionsSource();
       form.querySelectorAll(".admission-branch-option").forEach(option => {
         option.classList.toggle("active", option.querySelector("input").checked);
       });

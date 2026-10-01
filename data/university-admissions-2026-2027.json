@@ -12,9 +12,10 @@
       "officialPdf": "assets/university-admissions-2026-2027-scientific.pdf"
     },
     "literary": {
-      "label": "الفرع الأدبي",
+      "label": "الفرع الأدبي — إعلان رقم /4/ لعام 2026",
       "announcement": "إعلان رقم /4/",
-      "file": "unisy-ad4_260814_170541.pdf"
+      "file": "assets/university-admissions-2026-2027-literary.pdf",
+      "officialPdf": "assets/university-admissions-2026-2027-literary.pdf"
     }
   },
   "branches": {
