@@ -1,14 +1,15 @@
 {
   "schemaVersion": 1,
-  "academicYear": "2025–2026",
+  "academicYear": "2026–2027",
   "country": "سوريا",
-  "lastUpdated": "2026-08-14",
+  "lastUpdated": "2026-10-01",
   "disclaimer": "النتائج ترشيحية وفق الحد الأدنى للمفاضلة العامة في الدليل المرفق، ولا تمثل قبولاً نهائياً. تحقق من الشروط الخاصة والاختبارات والوثائق من المصدر الرسمي قبل التقدم.",
   "sources": {
     "scientific": {
-      "label": "الفرع العلمي",
+      "label": "الفرع العلمي — إعلان رقم /2/ لعام 2026",
       "announcement": "إعلان رقم /2/",
-      "file": "unisy-ad2_260814_170116.pdf"
+      "file": "assets/university-admissions-2026-2027-scientific.pdf",
+      "officialPdf": "assets/university-admissions-2026-2027-scientific.pdf"
     },
     "literary": {
       "label": "الفرع الأدبي",

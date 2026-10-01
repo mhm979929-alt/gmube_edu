@@ -3,7 +3,7 @@ let admissionsCatalogCache = null;
 
 async function getAdmissionsCatalog() {
   if (admissionsCatalogCache) return admissionsCatalogCache;
-  const response = await fetch("data/university-admissions-2025-2026.json", { cache: "no-cache" });
+  const response = await fetch("data/university-admissions-2026-2027.json", { cache: "no-cache" });
   if (!response.ok) throw new Error("تعذر تحميل دليل القبول");
   admissionsCatalogCache = await response.json();
   return admissionsCatalogCache;
@@ -41,7 +41,7 @@ function admissionsResultCard(row) {
 }
 
 async function renderUniversityAdmissions() {
-  updateBottomNav("profile");
+  updateBottomNav("");
   setPageTitle("دليل القبول");
   renderPage(`
     <main class="page admissions-page">
@@ -54,9 +54,9 @@ async function renderUniversityAdmissions() {
       <section class="admissions-hero">
         <div class="admissions-hero-icon"><i data-feather="award"></i></div>
         <div>
-          <span class="admissions-kicker">المفاضلة العامة <bdi dir="ltr">2025–2026</bdi></span>
+          <span class="admissions-kicker">المفاضلة العامة <bdi dir="ltr">2026–2027</bdi></span>
           <h1>اكتشف خيارات قبولك</h1>
-          <p>أدخل مجموعك واختر فرعك لتظهر لك التخصصات التي تحقق حدها الأدنى.</p>
+          <p>أدخل مجموعك واختر فرعك لتظهر لك التخصصات التي تحقق حدها الأدنى.</p><button class="admissions-source-link" id="admissions-source-pdf" type="button">عرض إعلان الحدود الدنيا 2026–2027</button>
         </div>
       </section>
 
@@ -97,6 +97,10 @@ async function renderUniversityAdmissions() {
   const form = el("admissions-form");
   const resultsEl = el("admissions-results");
   const disclaimerEl = el("admissions-disclaimer");
+  const sourcePdfButton = el("admissions-source-pdf");
+  sourcePdfButton?.addEventListener("click", () => {
+    if (typeof FileKit !== "undefined" && FileKit.openViewer) FileKit.openViewer("assets/university-admissions-2026-2027-scientific.pdf", "إعلان الحدود الدنيا 2026–2027");
+  });
   let catalog;
   let lastRows = [];
   let selectedBranch = "scientific";
