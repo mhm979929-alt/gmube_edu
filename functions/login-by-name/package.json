@@ -1,0 +1,10 @@
+{
+  "name": "login-by-name",
+  "version": "1.0.0",
+  "description": "تسجيل الدخول بالاسم عبر الخادم — يمنع تعداد حسابات الطلاب من المتصفح",
+  "type": "module",
+  "main": "src/main.js",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
