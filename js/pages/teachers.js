@@ -37,7 +37,7 @@ async function renderTeachers() {
     }
     list.innerHTML = filtered.map(t => `
       <div class="teacher-card" data-id="${escHtml(t.$id)}">
-        ${avatarHtml(t.name, t.avatar, 52)}
+        ${avatarHtml(t.name, t.avatar, 46)}
         <div class="teacher-info">
           <span class="teacher-name">${escHtml(t.name)}</span>
           <span class="teacher-subject">${escHtml(t.subject || "")}</span>

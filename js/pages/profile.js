@@ -16,7 +16,7 @@ async function renderProfile() {
     renderPage(`
       <div class="page">
         <div class="inner-header">
-          <i data-feather="user" style="color:#4CAF50"></i>
+          <i data-feather="user" style="color:var(--brand-2)"></i>
           <span class="inner-title">حسابي</span>
         </div>
         <div class="profile-scroll profile-guest-scroll">
@@ -34,6 +34,24 @@ async function renderProfile() {
             <span class="profile-library-copy"><strong>كتبي</strong><small>افتح الكتب المحمّلة على جهازك واقرأها دون اتصال</small></span>
             <span class="profile-menu-arrow"><i data-feather="chevron-left"></i></span>
           </button>
+
+          <div class="profile-section-heading profile-shortcuts-heading">
+            <div><span>استكشف المنصة</span><small>تصفّح المحتوى دون تسجيل</small></div>
+          </div>
+          <div class="menu-section profile-menu">
+            <button class="menu-item profile-menu-item" onclick="navigateTo('/teachers')">
+              <i data-feather="users"></i><span><strong>الأساتذة</strong><small>تصفّح قنوات المعلمين ودروسهم</small></span><i data-feather="chevron-left"></i>
+            </button>
+            <button class="menu-item profile-menu-item" onclick="navigateTo('/books')">
+              <i data-feather="book"></i><span><strong>الكتب والملازم</strong><small>مراجع دراسية قابلة للقراءة داخل التطبيق</small></span><i data-feather="chevron-left"></i>
+            </button>
+            <button class="menu-item profile-menu-item" onclick="navigateTo('/tests')">
+              <i data-feather="check-square"></i><span><strong>الاختبارات</strong><small>اختبر مستواك في كل مادة</small></span><i data-feather="chevron-left"></i>
+            </button>
+            <button class="menu-item profile-menu-item admissions-profile-link" onclick="navigateTo('/university-admissions')">
+              <i data-feather="award"></i><span><strong>دليل القبول الجامعي</strong><small>اكتشف التخصصات المطابقة لمجموعك</small></span><i data-feather="chevron-left"></i>
+            </button>
+          </div>
         </div>
       </div>
     `);
@@ -53,7 +71,7 @@ async function renderProfile() {
   renderPage(`
     <div class="page">
       <div class="inner-header">
-        <i data-feather="user" style="color:#4CAF50"></i>
+        <i data-feather="user" style="color:var(--brand-2)"></i>
         <span class="inner-title">حسابي</span>
       </div>
       <div class="profile-scroll">

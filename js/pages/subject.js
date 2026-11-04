@@ -36,7 +36,7 @@ async function renderSubject(subjectEncoded) {
       <div class="generic-info" style="flex:1;text-align:right">
         <span class="generic-title" style="font-weight:600">📂 ${escHtml(p.name)}</span>
         <span class="generic-meta" style="color:#777;display:block;font-size:12px">${escHtml(p.description || '')}</span>
-        <span class="generic-meta" style="color:#4CAF50;display:block;font-size:11px">${getPlaylistTypeLabel(p.type)}</span>
+        <span class="generic-meta" style="color:var(--brand-2);display:block;font-size:11px">${getPlaylistTypeLabel(p.type)}</span>
       </div>
       <i data-feather="chevron-left" class="chevron" style="color:#555"></i>
     </div>

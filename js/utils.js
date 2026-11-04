@@ -9,13 +9,28 @@ function escHtml(v) {
 }
 
 function avatarHtml(name, avatarUrl, size = 40) {
-  if (avatarUrl) return `<img src="${escHtml(avatarUrl)}" class="avatar-img" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover" onerror="this.outerHTML=avatarInitialEl('${escHtml(name)}',${size})">`;
+  if (avatarUrl) {
+    // القيم تُمرَّر عبر data-* ولا تُحقن داخل سلسلة JS، ما يمنع كسر السمة (XSS)
+    return `<img src="${escHtml(avatarUrl)}" alt="${escHtml(name || '')}" class="avatar-img" data-fallback-name="${escHtml(name || '')}" data-fallback-size="${size}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover" onerror="this.replaceWith(avatarInitialEl(this.dataset.fallbackName, Number(this.dataset.fallbackSize)))">`;
+  }
   return avatarInitialEl(name, size);
 }
 function avatarInitialEl(name, size = 40) {
-  const initial = (name || "?").charAt(0).toUpperCase();
-  const fontSize = Math.round(size * 0.45);
-  return `<div class="avatar-init" style="width:${size}px;height:${size}px;border-radius:50%;background:#4CAF50;display:flex;align-items:center;justify-content:center;font-size:${fontSize}px;color:#fff;font-weight:700;flex-shrink:0">${initial}</div>`;
+  const initial = (name || "?").trim().charAt(0).toUpperCase();
+  const fontSize = Math.round(size * 0.42);
+  // تدرّج ثابت مشتق من الاسم: يعطي كل أستاذ لوناً مميزاً بلا عشوائية
+  const palettes = [
+    ["#10B981", "#34D399"],
+    ["#0EA5E9", "#38BDF8"],
+    ["#8B5CF6", "#A78BFA"],
+    ["#F59E0B", "#FBBF24"],
+    ["#EC4899", "#F472B6"],
+    ["#14B8A6", "#2DD4BF"],
+  ];
+  let hash = 0;
+  for (let i = 0; i < String(name || "").length; i++) hash = (hash * 31 + String(name).charCodeAt(i)) >>> 0;
+  const [c1, c2] = palettes[hash % palettes.length];
+  return `<div class="avatar-init" style="width:${size}px;height:${size}px;border-radius:50%;background:linear-gradient(140deg,${c1},${c2});display:flex;align-items:center;justify-content:center;font-size:${fontSize}px;color:#04150F;font-weight:800;flex-shrink:0;letter-spacing:-0.5px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.28)">${escHtml(initial)}</div>`;
 }
 
 function spinner() { return `<div class="spinner-wrap"><div class="spinner"></div></div>`; }
@@ -44,8 +59,9 @@ function normalizeVideoThumbnailUrl(value) {
 
 function videoCardHtml(video) {
   const thumb = normalizeVideoThumbnailUrl(video.thumbnail || video.thumbnail_url || (isYouTubeUrl(video.url) ? getYouTubeThumbnail(video.url) : ""));
-  const thumbHtml = thumb ? `<img src="${escHtml(thumb)}" class="video-thumb-img" loading="lazy" onerror="this.parentElement.innerHTML='<div class=thumb-fallback><i data-feather=\\'play-circle\\'></i></div>'">` : `<div class="thumb-fallback"><i data-feather="play-circle"></i></div>`;
-  return `<div class="video-card" data-id="${escHtml(video.$id)}"><div class="video-thumb">${thumbHtml}</div><p class="video-title">${escHtml(video.title)}</p><p class="video-meta">${escHtml(video.user_name || "")} · ${formatNumber(video.views || 0)} مشاهدة</p></div>`;
+  // الأيقونة الاحتياطية موجودة دائماً تحت الصورة؛ إن فشل التحميل تُحذف الصورة وتظهر هي
+  const imgHtml = thumb ? `<img src="${escHtml(thumb)}" class="video-thumb-img" loading="lazy" alt="" onerror="this.remove()">` : "";
+  return `<div class="video-card" data-id="${escHtml(video.$id)}"><div class="video-thumb"><div class="thumb-fallback"><i data-feather="play-circle"></i></div>${imgHtml}</div><p class="video-title">${escHtml(video.title)}</p><p class="video-meta">${escHtml(video.user_name || "")} · ${formatNumber(video.views || 0)} مشاهدة</p></div>`;
 }
 
 function simpleLessonRow(video) {

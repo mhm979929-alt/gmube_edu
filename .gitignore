@@ -1,0 +1,7 @@
+# أدوات وملفات محلية لا تُرفع
+.shots/
+.workbuddy-ai/
+node_modules/
+.DS_Store
+Thumbs.db
+*.log

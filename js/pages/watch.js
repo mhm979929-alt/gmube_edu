@@ -86,7 +86,7 @@ async function renderWatch(videoId) {
       });
       const root = document.getElementById("plyr-container");
       if (root) {
-        root.style.setProperty("--plyr-color-main", "#4CAF50");
+        root.style.setProperty("--plyr-color-main", "var(--brand-2)");
         root.style.setProperty("--plyr-video-background", "#000");
       }
     } catch(e) { console.warn("Plyr init error", e); }

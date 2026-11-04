@@ -7,7 +7,7 @@ async function renderBooks() {
     <div class="page">
       <div class="inner-header">
         <button class="back-btn" onclick="goBack()"><i data-feather="arrow-right"></i></button>
-        <i data-feather="book" style="color:#4CAF50"></i>
+        <i data-feather="book" style="color:var(--brand-2)"></i>
         <span class="inner-title">الكتب</span>
       </div>
       <div class="fk-search"><input id="books-search" type="search" placeholder="ابحث عن كتاب…" autocomplete="off"></div>

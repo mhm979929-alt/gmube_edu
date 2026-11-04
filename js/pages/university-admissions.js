@@ -47,7 +47,7 @@ async function renderUniversityAdmissions() {
     <main class="page admissions-page">
       <div class="inner-header">
         <button class="back-btn" onclick="goBack()" aria-label="رجوع"><i data-feather="arrow-right"></i></button>
-        <i data-feather="compass" style="color:#4CAF50"></i>
+        <i data-feather="compass" style="color:var(--brand-2)"></i>
         <span class="inner-title">دليل القبول الجامعي</span>
       </div>
 

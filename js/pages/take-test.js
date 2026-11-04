@@ -194,7 +194,7 @@ async function renderTakeTest(testId) {
             const isCorrect = answerArray[i] === q.correct;
             return `<div class="review-card ${isCorrect ? "correct" : "wrong"}">
               <div class="review-header">
-                <i data-feather="${isCorrect ? "check-circle" : "x-circle"}" style="color:${isCorrect ? "#4CAF50" : "#ef4444"};flex-shrink:0"></i>
+                <i data-feather="${isCorrect ? "check-circle" : "x-circle"}" style="color:${isCorrect ? "var(--brand-2)" : "#ef4444"};flex-shrink:0"></i>
                 <p class="review-q math-content">${renderMathText(q.question)}</p>
               </div>
               <p class="review-answer math-content">إجابتك: ${renderMathText((q.options || [])[answerArray[i]] || "لم تُجب")}</p>

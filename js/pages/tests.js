@@ -42,7 +42,7 @@ async function renderTests() {
     <div class="page tests-page">
       <div class="inner-header">
         <button class="back-btn" onclick="goBack()" aria-label="رجوع"><i data-feather="arrow-right"></i></button>
-        <i data-feather="check-square" style="color:#4CAF50"></i>
+        <i data-feather="check-square" style="color:var(--brand-2)"></i>
         <span class="inner-title">الاختبارات</span>
       </div>
 

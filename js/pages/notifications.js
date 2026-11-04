@@ -28,7 +28,7 @@ async function renderNotifications() {
     <div class="page">
       <div class="inner-header">
         <button class="back-btn" onclick="goBack()"><i data-feather="arrow-right"></i></button>
-        <i data-feather="bell" style="color:#4CAF50"></i>
+        <i data-feather="bell" style="color:var(--brand-2)"></i>
         <span class="inner-title">الإشعارات</span>
       </div>
       <div id="notifs-list">${spinner()}</div>

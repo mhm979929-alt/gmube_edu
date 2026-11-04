@@ -2,10 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>المنصة التعليمية السورية</title>
   <meta name="description" content="المنصة التعليمية السورية - دروس، كتب، اختبارات">
-  <meta name="theme-color" content="#0a0a0a">
+  <meta name="theme-color" content="#070A0F">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/favicon.png">
@@ -41,137 +44,9 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css?v=ministry-books-contain-20260831-1">
-  <link rel="stylesheet" href="css/enhance.css?v=journeys-20260826-1">
-  
-  <style>
-    /* ===== تنسيق زر اسأل كتابك في القائمة السفلية ===== */
-    #bottom-nav a.nav-item {
-      flex: 1 0 auto;
-      min-width: 44px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      background: transparent;
-      border: none;
-      color: #888;
-      font-family: 'Cairo', sans-serif;
-      font-size: 10px;
-      font-weight: 500;
-      padding: 4px 2px;
-      cursor: pointer;
-      transition: color 0.2s;
-      position: relative;
-      white-space: nowrap;
-      text-decoration: none;
-    }
-    #bottom-nav a.nav-item i {
-      width: 20px;
-      height: 20px;
-      stroke-width: 2;
-    }
-    #bottom-nav a.nav-item span {
-      font-size: 9px;
-      line-height: 1.2;
-    }
-    #bottom-nav a.nav-item:hover {
-      color: #6C63FF;
-    }
-    #bottom-nav a.nav-item.active {
-      color: #6C63FF;
-    }
-    @media (max-width: 400px) {
-      #bottom-nav a.nav-item span {
-        font-size: 8px;
-      }
-      #bottom-nav a.nav-item i {
-        width: 18px;
-        height: 18px;
-      }
-    }
-
-    /* ===== زر البث المباشر - غير مزعج ===== */
-    .live-float-btn {
-      position: fixed;
-      bottom: 80px;
-      right: 16px;
-      z-index: 1000;
-      background: rgba(108, 99, 255, 0.15);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(108, 99, 255, 0.25);
-      border-radius: 50px;
-      padding: 8px 14px 8px 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #6C63FF;
-      font-family: 'Cairo', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      box-shadow: 0 4px 20px rgba(108, 99, 255, 0.2);
-      cursor: pointer;
-      border: none;
-    }
-    .live-float-btn i {
-      width: 18px;
-      height: 18px;
-      stroke-width: 2.5;
-    }
-    .live-float-btn .live-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: #ff3b30;
-      border-radius: 50%;
-      animation: pulse-dot 1.5s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.3;
-        transform: scale(0.7);
-      }
-    }
-    .live-float-btn:hover {
-      background: rgba(108, 99, 255, 0.25);
-      transform: scale(1.05);
-      box-shadow: 0 6px 30px rgba(108, 99, 255, 0.35);
-    }
-    .live-float-btn:active {
-      transform: scale(0.95);
-    }
-
-    /* إخفاء الزر في الصفحات غير الرئيسية */
-    body:not([data-page="home"]) .live-float-btn {
-      display: none;
-    }
-
-    @media (max-width: 500px) {
-      .live-float-btn {
-        bottom: 72px;
-        right: 12px;
-        padding: 6px 12px 6px 14px;
-        font-size: 11px;
-      }
-      .live-float-btn i {
-        width: 16px;
-        height: 16px;
-      }
-      .live-float-btn .live-dot {
-        width: 6px;
-        height: 6px;
-      }
-    }
-  </style>
+  <!-- Styles: Design System v2 -->
+  <link rel="stylesheet" href="css/style.css?v=design-v2">
+  <link rel="stylesheet" href="css/enhance.css?v=design-v2">
 </head>
 <body>
 
