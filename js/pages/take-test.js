@@ -143,9 +143,18 @@ async function renderTakeTest(testId) {
     if (btn) { btn.disabled = true; btn.textContent = "جاري الإرسال..."; }
 
     let score = 0;
-    questions.forEach((q, i) => { if (answers[i] === q.correct) score++; });
     const total = questions.length;
     const answerArray = questions.map((_, i) => answers[i] ?? -1);
+
+    // التصحيح على الخادم: مستند الاختبار لم يعد يحمل الحقل correct
+    const graded = await gradeTest(testId, answerArray);
+    if (!graded) {
+      toast("تعذر تصحيح الاختبار، تحقق من اتصالك وأعد المحاولة", "error");
+      submitted = false;
+      if (btn) { btn.disabled = false; btn.textContent = "إرسال الإجابات"; }
+      return;
+    }
+    score = graded.score;
 
     try {
       await submitTestResult({ user_id: session.user_id, test_id: testId, score, total, answers: answerArray });
@@ -163,7 +172,7 @@ async function renderTakeTest(testId) {
           totalStages: journeyContext.totalStages,
         });
       }
-      renderResult(score, total, answerArray, journeyResult);
+      renderResult(score, total, answerArray, journeyResult, graded.correctOptions);
     } catch {
       toast("فشل إرسال النتيجة، جرّب مرة أخرى", "error");
       submitted = false;
@@ -171,7 +180,7 @@ async function renderTakeTest(testId) {
     }
   }
 
-  function renderResult(score, total, answerArray, journeyResult = null) {
+  function renderResult(score, total, answerArray, journeyResult = null, correctOptions = []) {
     const pct = total > 0 ? Math.round((score / total) * 100) : 0;
     const threshold = journeyContext ? Number(journeyContext.stage.passing_score ?? journeyContext.journey.passing_score ?? 70) : 70;
     const pass = journeyContext ? Boolean(journeyResult?.passed ?? (pct >= threshold)) : pct >= 70;
@@ -191,14 +200,15 @@ async function renderTakeTest(testId) {
         ${journeyContext ? `<div class="journey-result-note"><span>نسبة النجاح المطلوبة: ${threshold}%</span><span>${pass ? `تقدم الرحلة: ${Number(journeyResult?.progress?.progress_percent || 0)}%` : 'المرحلة التالية ما زالت مقفلة حتى تنجح'}</span></div>` : ''}
         <div class="review-list">
           ${questions.map((q, i) => {
-            const isCorrect = answerArray[i] === q.correct;
+            const correctIdx = correctOptions[i];
+            const isCorrect = correctIdx !== undefined && answerArray[i] === correctIdx;
             return `<div class="review-card ${isCorrect ? "correct" : "wrong"}">
               <div class="review-header">
                 <i data-feather="${isCorrect ? "check-circle" : "x-circle"}" style="color:${isCorrect ? "var(--brand-2)" : "#ef4444"};flex-shrink:0"></i>
                 <p class="review-q math-content">${renderMathText(q.question)}</p>
               </div>
               <p class="review-answer math-content">إجابتك: ${renderMathText((q.options || [])[answerArray[i]] || "لم تُجب")}</p>
-              ${!isCorrect ? `<p class="review-correct math-content">الصحيحة: ${renderMathText((q.options || [])[q.correct] || "")}</p>` : ""}
+              ${!isCorrect && correctIdx !== undefined ? `<p class="review-correct math-content">الصحيحة: ${renderMathText((q.options || [])[correctIdx] || "")}</p>` : ""}
             </div>`;
           }).join("")}
         </div>

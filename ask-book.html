@@ -302,6 +302,20 @@
 
         // تهيئة الصفحة (تتطلب جلسة Appwrite فعلية)
         (async function initAskBook() {
+            // الميزة معطّلة حتى يتوفر مسار آمن للمفاتيح — لا نطلق أي طلب شبكي هنا
+            if (typeof ASK_BOOK_ENABLED === 'undefined' || !ASK_BOOK_ENABLED || !SUPABASE_URL || !SUPABASE_KEY) {
+                document.body.innerHTML = `
+                    <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:32px;text-align:center;font-family:'Cairo',sans-serif;direction:rtl;background:#070A0F;color:#EDF2F7">
+                        <div style="width:64px;height:64px;border-radius:20px;background:rgba(16,185,129,0.12);display:grid;place-items:center;font-size:28px">📚</div>
+                        <h2 style="font-size:19px;font-weight:800;margin:0">اسأل كتابك — قيد التجهيز</h2>
+                        <p style="font-size:13px;line-height:1.8;color:#9BABBB;max-width:320px;margin:0">
+                            الخدمة متوقفة مؤقتاً لأنها كانت تعتمد على مفتاح مكشوف في الواجهة.
+                            ستعود بعد ربطها بمسار خادمي آمن يحمي المفتاح.
+                        </p>
+                        <a href="index.html" style="margin-top:6px;padding:11px 26px;border-radius:12px;background:linear-gradient(135deg,#0E9F6E,#34D399);color:#04150F;font-size:13px;font-weight:800;text-decoration:none">العودة إلى المنصة</a>
+                    </div>`;
+                return;
+            }
             storedSession = await getVerifiedSession();
             if (!storedSession) {
                 document.body.innerHTML = LOGIN_REQUIRED_HTML;

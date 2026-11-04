@@ -7,15 +7,27 @@ const DATABASE_ID = "gmube_db";
 const OAUTH_BRIDGE_ORIGIN = "https://gmube-oauth-bridge.vercel.app";
 const OAUTH_BRIDGE_ENABLED = true;
 
+// معرّف دالة تسجيل الدخول بالاسم (Appwrite Function).
+// مفعّل: تحويل الاسم إلى بريد الحساب يحدث على الخادم بمفتاح إداري،
+// فلا يحتاج المتصفح إلى قراءة students/teachers إطلاقاً.
+const LOGIN_FUNCTION_ID = "login-by-name";
+
+// معرّف دالة تصحيح الاختبارات. الأجوبة الصحيحة لم تعد في مستند الاختبار
+// العام؛ تُقرأ على الخادم فقط وتُرجع النتيجة ومؤشرات الصح.
+const TEST_GRADE_FUNCTION_ID = "test-grade";
+
 // لا نضع مفاتيح إدارية أو مفاتيح نماذج الذكاء الاصطناعي في الواجهة العامة.
 // Appwrite SDK يعمل عبر جلسة المستخدم، وProject ID/Endpoint ليسا سريين.
 
-// ── خدمة "اسأل كتابك" (Supabase) ─────────────────────────────────
-// مفتاح anon عام بطبيعته، ولا يُعد حماية بحد ذاته؛ يجب فرض RLS في Supabase.
-const SUPABASE_URL = "https://omcdeuyumsyrwhtkvono.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tY2RldXl1bXN5cndodGt2b25vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0ODUwOTcsImV4cCI6MjEwMDA2MTA5N30.-HWniBIpRDxvpwugATN8TWsVaaOrxbH-P4KJC77w7Bc";
-// لا يمكن استدعاء Groq بأمان من المتصفح؛ ميزة اسأل كتابك ستعرض رسالة تعطيل مؤقتاً بدلاً من كشف مفتاح.
+// ── خدمة "اسأل كتابك" (Supabase + Groq) ─────────────────────────
+// لا يُخزَّن أي مفتاح في مستودع عام. المفتاح السابق كان تالفاً (ليس JWT صالحاً)
+// ومكشوفاً للعامة، وقد أُزيل. عند التفعيل: مرّر القيم من متغيّرات بيئة النشر
+// أو من js/config.local.js (مستثنى من git) قبل تحميل هذا الملف.
+const ASK_BOOK_ENABLED = false;
+const SUPABASE_URL = "";
+const SUPABASE_KEY = "";
 const GROQ_KEY = "";
+
 
 const COLLECTIONS = {
   TEACHERS: "teachers",

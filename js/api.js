@@ -1,7 +1,7 @@
 // ── Appwrite SDK Init ───────────────────────────────────────────
 // ملاحظة: لا نستخدم مفتاح API هنا لأن متصفح SDK لا يدعم setKey.
 // القراءة تعمل للجميع، والكتابة تتم عبر جلسة المستخدم المسجّل (permissions: users).
-const { Client, Account, Databases, Query, ID, OAuthProvider } = Appwrite;
+const { Client, Account, Databases, Query, ID, OAuthProvider, Functions } = Appwrite;
 
 const client = new Client()
   .setEndpoint(APPWRITE_ENDPOINT)
@@ -9,6 +9,7 @@ const client = new Client()
 
 const account = new Account(client);
 const databases = new Databases(client);
+const functions = new Functions(client);
 
 // ── Session State ───────────────────────────────────────────────
 let _userId = null;
@@ -97,18 +98,63 @@ async function findProfileForAccountUser(appUser) {
   };
 }
 
-async function loginUser(type, name, secret) {
-  // الحسابات الحديثة للطلاب تدخل بالبريد مباشرة.
-  if (type === "student" && String(name).includes("@")) {
-    try {
-      await account.createEmailPasswordSession(name.trim(), secret);
-      return await findProfileForAccountUser(await account.get());
-    } catch {}
+async function loginByNameViaFunction(type, name, password) {
+  let execution;
+  try {
+    execution = await functions.createExecution(
+      LOGIN_FUNCTION_ID,
+      JSON.stringify({ type, name, password }),
+      false
+    );
+  } catch {
+    throw new Error("تعذر الوصول إلى خدمة الدخول، تحقق من اتصالك بالإنترنت");
   }
 
-  // توافق الحسابات القديمة: الاسم ← وثيقة users ← بريد اصطناعي داخل Appwrite.
+  let result = {};
+  try { result = JSON.parse(execution.responseBody || "{}"); } catch {}
+  if (!result.ok || !result.userId || !result.secret) {
+    throw new Error("بيانات الدخول غير صحيحة");
+  }
+
+  // الجلسة تُنشأ محلياً من السر الذي أنتجته الدالة بعد التحقق الفعلي
+  await account.createSession(result.userId, result.secret);
+  const appUser = await account.get();
+  const profile = result.profile || {};
+  return {
+    ...profile,
+    $id: appUser.$id,
+    id: appUser.$id,
+    user_id: appUser.$id,
+    name: profile.name || appUser.name,
+    type,
+    role: profile.role || type,
+  };
+}
+
+async function loginUser(type, name, secret) {
+  const identity = String(name || "").trim();
+
+  // 1) بريد إلكتروني حقيقي ← مسار مباشر بلا أي استعلام عام
+  if (identity.includes("@")) {
+    try {
+      await account.createEmailPasswordSession(identity.toLowerCase(), secret);
+      return await findProfileForAccountUser(await account.get());
+    } catch {
+      throw new Error("بيانات الدخول غير صحيحة");
+    }
+  }
+
+  // 2) اسم قديم ← دالة خادمية (المسار الآمن: لا تعداد، لا استعلام من المتصفح)
+  if (typeof LOGIN_FUNCTION_ID !== "undefined" && LOGIN_FUNCTION_ID) {
+    return await loginByNameViaFunction(type, identity, secret);
+  }
+
+  // 3) احتياطي مؤقت قبل نشر الدالة.
+  //    ⚠ يعمل فقط ما دامت students/teachers مقروءة للزوار — وهو ما يجب إغلاقه.
+  //    بعد نشر الدالة وضبط LOGIN_FUNCTION_ID، هذا الفرع يصبح غير قابل للوصول.
+  console.warn("[auth] login-by-name function not configured; using deprecated public lookup");
   const collectionId = type === "teacher" ? COLLECTIONS.TEACHERS : COLLECTIONS.STUDENTS;
-  const result = await databases.listDocuments(DATABASE_ID, collectionId, [Query.equal("name", name)]);
+  const result = await databases.listDocuments(DATABASE_ID, collectionId, [Query.equal("name", identity)]);
   if (!result.documents || result.documents.length === 0)
     throw new Error("بيانات الدخول غير صحيحة");
   const user = result.documents[0];
@@ -430,6 +476,33 @@ async function submitTestResult(data) {
     score: data.score, total: data.total,
     answers: JSON.stringify(data.answers), created_at: new Date().toISOString(),
   }, permissions);
+}
+
+/**
+ * تصحيح الاختبار على الخادم.
+ * مستند الاختبار العام لم يعد يحمل الحقل correct، لذلك لا يمكن الحساب محلياً.
+ * يعيد { score, total, correct: [مؤشرات الأسئلة الصحيحة] } أو null عند الفشل.
+ */
+async function gradeTest(testId, answers) {
+  if (typeof TEST_GRADE_FUNCTION_ID === "undefined" || !TEST_GRADE_FUNCTION_ID) return null;
+  try {
+    const execution = await functions.createExecution(
+      TEST_GRADE_FUNCTION_ID,
+      JSON.stringify({ testId, answers }),
+      false
+    );
+    const result = JSON.parse(execution.responseBody || "{}");
+    if (!result.ok || !Number.isInteger(result.score)) return null;
+    return {
+      score: result.score,
+      total: Number.isInteger(result.total) ? result.total : answers.length,
+      correct: Array.isArray(result.correct) ? result.correct : [],
+      correctOptions: Array.isArray(result.correctOptions) ? result.correctOptions : [],
+    };
+  } catch (e) {
+    console.warn("[tests] grading function unavailable", e?.message || e);
+    return null;
+  }
 }
 
 async function getTestResults(userId) {
