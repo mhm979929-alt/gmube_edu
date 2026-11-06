@@ -56,7 +56,11 @@ async function appwrite(path, { method = 'GET', body, key } = {}) {
   const text = await res.text();
   let data;
   try { data = JSON.parse(text); } catch { data = text; }
-  return { ok: res.ok, status: res.status, data };
+  const resHeaders = {};
+  if (res.headers && typeof res.headers.forEach === 'function') {
+    res.headers.forEach((value, name) => { resHeaders[String(name).toLowerCase()] = value; });
+  }
+  return { ok: res.ok, status: res.status, data, headers: resHeaders };
 }
 
 const sanitize = (value, max) => String(value ?? '').trim().slice(0, max);
@@ -114,22 +118,64 @@ export default async ({ req, res, log, error }) => {
     const email = `${doc.user_id}@${DOMAIN}`;
 
     // التحقق من كلمة السر: إنشاء جلسة فعلية. النجاح وحده يعني صحتها.
+    //
+    // key = null إجباري: عند إنشاء الجلسة بمفتاح إداري تُحتسب الجلسة ضمن جلسات
+    // المستخدم بلا فائدة. الطلب المجهول هو ما يفعله المتصفح نفسه.
     const session = await appwrite('/account/sessions/email', {
       method: 'POST',
+      key: null,
       body: { email, password },
     });
 
-    if (!session.ok || !session.data?.secret || !session.data?.userId) {
+    // Appwrite 2.x لا يضع السرّ في جسم الاستجابة للطلبات المجهولة (الحقل secret
+    // يصل فارغاً)، بل يضعه في كوكي a_session_<project> وترويسة X-Fallback-Cookies.
+    // قيمة الكوكي هي نفسها السرّ الذي يُعيده الإصدار الأقدم في الجسم.
+    let sessionSecret = typeof session.data?.secret === 'string' ? session.data.secret : '';
+    if (!sessionSecret) {
+      const cookieName = `a_session_${PROJECT}`;
+      const fallback = session.headers?.['x-fallback-cookies'];
+      if (fallback) {
+        try {
+          const jar = JSON.parse(fallback);
+          if (jar && typeof jar[cookieName] === 'string') sessionSecret = jar[cookieName];
+        } catch { /* ترويسة غير صالحة — ننتقل للبديل */ }
+      }
+      if (!sessionSecret) {
+        const rawCookie = session.headers?.['set-cookie'] || '';
+        const match = rawCookie.match(new RegExp(`${cookieName}=([^;,\\s]+)`));
+        if (match) sessionSecret = match[1];
+      }
+    }
+
+    if (!session.ok || !sessionSecret || !session.data?.userId) {
       await padTo(startedAt);
-      log(`login miss: ${type} bad password`);
+      // نوع الخطأ يفرّق بين كلمة سر خاطئة (user_invalid_credentials)
+      // وصلاحية ناقصة للدالة (general_unauthorized_scope) — بلا أي بيانات حساسة.
+      log(`login miss: ${type} bad password (${session.data?.type || session.status})`);
       return res.json({ ok: false });
+    }
+
+    // العميل الذي ينشئ جلسته بنفسه (الويب) لا يحتاج جلسة الخادم، فنحذفها
+    // فوراً كي لا تتراكم جلسات يتيمة مع كل تسجيل دخول.
+    // الحذف يتم بسرّ الجلسة نفسها عبر /account/sessions/current — لا يحتاج مفتاحاً.
+    if (payload.clientCreatesSession === true) {
+      try {
+        const del = await fetch(`${ENDPOINT}/account/sessions/current`, {
+          method: 'DELETE',
+          headers: { 'X-Appwrite-Project': PROJECT, 'X-Appwrite-Session': sessionSecret },
+        });
+        log(`dispose session: ${del.status}`);
+      } catch (e) { log(`dispose session failed: ${e.message}`); }
     }
 
     log(`login ok: ${type} ${session.data.userId}`);
     return res.json({
       ok: true,
       userId: session.data.userId,
-      secret: session.data.secret,
+      secret: sessionSecret,
+      // البريد الاصطناعي — يُعيده للعميل الذي يستطيع إنشاء جلسته بنفسه (الويب).
+      // لا يُكشف إلا بعد التحقق من كلمة السر، وهو بريد المستخدم نفسه.
+      email,
       profile: {
         name: doc.name || '',
         subject: doc.subject || '',

@@ -103,7 +103,7 @@ async function loginByNameViaFunction(type, name, password) {
   try {
     execution = await functions.createExecution(
       LOGIN_FUNCTION_ID,
-      JSON.stringify({ type, name, password }),
+      JSON.stringify({ type, name, password, clientCreatesSession: true }),
       false
     );
   } catch {
@@ -112,12 +112,21 @@ async function loginByNameViaFunction(type, name, password) {
 
   let result = {};
   try { result = JSON.parse(execution.responseBody || "{}"); } catch {}
-  if (!result.ok || !result.userId || !result.secret) {
+  if (!result.ok || !result.userId) {
     throw new Error("بيانات الدخول غير صحيحة");
   }
 
-  // الجلسة تُنشأ محلياً من السر الذي أنتجته الدالة بعد التحقق الفعلي
-  await account.createSession(result.userId, result.secret);
+  // الجلسة تُنشأ هنا في المتصفح، لا تُمرَّر من الخادم.
+  // السبب: منذ Appwrite 2.x صار السرّ الذي تُنتجه الجلسة هو قيمة الكوكي
+  // (base64 يحوي id + secret) وطوله 396 محرفاً، بينما account.createSession
+  // يرفض أي سرّ يتجاوز 256 محرفاً. لذلك نستخدم البريد الذي تعيده الدالة —
+  // بعد التحقق الفعلي من كلمة السر — وننشئ الجلسة بالطريقة المدعومة.
+  if (result.email) {
+    await account.createEmailPasswordSession(result.email, password);
+  } else {
+    // توافق مع نسخة قديمة من الدالة لا تُعيد البريد
+    await account.createSession(result.userId, result.secret);
+  }
   const appUser = await account.get();
   const profile = result.profile || {};
   return {
